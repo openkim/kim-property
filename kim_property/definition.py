@@ -2,7 +2,6 @@
 
 import re
 
-
 __all__ = [
     "KIMPropertyError",
     "required_keys",
@@ -230,8 +229,9 @@ def check_optional_key_type_format(s):
         str_type = ("string", "float", "int", "bool", "file")
         if (s in str_type):
             return
-        msg = '\nERROR: A string defining the variable type is not valid.\n'
-        msg += 'A string defining the variable type can be set to one of :: \n'
+        msg = '\nERROR: input string defining the variable type is not '
+        msg += 'valid. A string defining the variable type can be set to '
+        msg += 'one of :: \n'
         msg += '"string", "float", "int", "bool", or "file".'
     else:
         msg = '\nERROR: Input to the function is not a `str`.'
@@ -443,7 +443,7 @@ def check_property_definition(fp, _m=KEY_FORMAT.match):
 
     Arguments:
         fp (a ``.read()``-supporting file-like object,
-            or a name string to a file containing a KIM EDN document
+            or a name string to a file containing a KIM-EDN document
             or a string
             or a KIM-EDN object) to a property definition Python object.
 
@@ -473,5 +473,5 @@ def check_property_definition(fp, _m=KEY_FORMAT.match):
     else:
         msg = '\nERROR: Input to the function :\n'
         msg += '{} \n'.format(fp)
-        msg += 'is not a correct KIM EDN type.'
+        msg += 'is not a correct KIM-EDN type.'
         raise KIMPropertyError(msg)
