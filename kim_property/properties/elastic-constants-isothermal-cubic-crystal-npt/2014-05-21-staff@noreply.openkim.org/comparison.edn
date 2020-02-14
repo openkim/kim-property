@@ -1,0 +1,26 @@
+{
+   "property" "elastic-constants-isothermal-cubic-crystal-npt"
+
+   "match-keys" [ "basis-atom-coordinates", "cauchy-stress", "species",
+"temperature" ]
+
+   "comparison-keys" [
+     {
+       "definition-item-key" "c11"
+       "definition-item-key-display" "C11"  ;; An optional field to say
+this should be in uppercase when displayed to the user
+       "unit" "GPa"
+     }
+     {
+       "definition-item-key" "c12"
+       "definition-item-key-display" "C12"
+       "unit" "GPa"
+     }
+     {
+       "definition-item-key" "c44"
+       "definition-item-key-display" "C44"
+       "unit" "GPa"
+     }
+   ]
+}
+

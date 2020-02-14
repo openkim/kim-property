@@ -1,0 +1,99 @@
+{
+  "property-id" "tag:staff@noreply.openkim.org,2015-05-26:property/shear-stress-path-cubic-crystal"
+
+  "property-title" "Shear strain and stability versus first Piola-Kirchhoff shear stress path of a cubic crystal"
+
+  "property-description" "Shear strain and stability versus first Piola-Kirchhoff (nominal) shear stress path under stress control boundary conditions for a cubic crystal at zero absolute temperature.  The applied nominal shear stress is defined by a shearing direction and shear plane normal relative to the reference conventional crystal coordinate system."
+
+  "short-name" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     false
+    "description"  "Short name defining the cubic crystal type."
+  }
+  "species" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     true
+    "description"  "The element symbols of the basis atoms.  The order in which the species are specified must correspond to the order of the atoms listed in 'basis-atom-coordinates'."
+  }
+  "a" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "Equilibrium conventional lattice constant of the reference (unsheared) cubic crystal at zero temperature under stress-free boundary conditions."
+  }
+  "basis-atom-coordinates" {
+    "type"         "float"
+    "has-unit"     false
+    "extent"       [":",3]
+    "required"     true
+    "description"  "Fractional coordinates of the basis atoms in the conventional unit cell for the reference stress-free crystal.  If the unit cell vectors are denoted by <a>, <b>, and <c>, and the fractional coordinates of atom 'i' are [afrac_i, bfrac_i, cfrac_i], the value of 'basis-atom-coordinates' will be of the form [[afrac_1 bfrac_1 cfrac_1] [afrac_2 bfrac_2 cfrac_2] ... ].  All components of each basis atom should be between zero and one, inclusive of zero."
+  }
+  "space-group" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       []
+    "required"     false
+    "description"  "Hermann-Mauguin designation for the space group associated with the symmetry of the crystal (e.g. Immm, Fm-3m, P6_3/mmc)."
+  }
+  "wyckoff-species" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     false
+    "description"  "The element symbol of the atomic species of the unique Wyckoff sites used in the fully symmetry-reduced description of the crystal.  The order of the entries must correspond to the order of the entries in 'wyckoff-multiplicity-and-letter' and 'wyckoff-coordinates'."
+  }
+  "wyckoff-multiplicity-and-letter" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     false
+    "description"  "Multiplicity and standard letter of the unique Wyckoff sites used in the fully symmetry-reduced description of the crystal (e.g. 4a, 2b).  Note that the sum of the Wyckoff multiplicities should equal the total number of elements in 'basis-atom-coordinates'.  The order of elements in this array must correspond to the order of the entries listed in 'wyckoff-species' and 'wyckoff-coordinates'."
+  }
+  "wyckoff-coordinates" {
+    "type"         "float"
+    "has-unit"     false
+    "extent"       [":",3]
+    "required"     false
+    "description"  "Coordinates of the unique Wyckoff sites used in the fully symmetry-reduced description of the crystal, given as fractions of the lattice vectors.  The order of elements in this array must correspond to the order of the entries listed in 'wyckoff-species' and 'wyckoff-multiplicity-and-letter'."
+  }
+  "shear-direction" {
+    "type"          "int"
+    "has-unit"      false
+    "extent"        [3]
+    "required"      true
+    "description"   "The shear stress direction given as a crystallographic direction consisting of three integers relative to the conventional crystal coordinate system."
+  }
+  "shear-plane-normal" {
+    "type"          "int"
+    "has-unit"      false
+    "extent"        [3]
+    "required"      true
+    "description"   "The shear stress plane normal given as a vector of Miller indices (three integers) relative to the conventional crystal coordinate system."
+  }
+  "nominal-shear-stress" {
+    "type"          "float"
+    "has-unit"      true
+    "extent"        [":"]
+    "required"      true
+    "description"   "A vector of nominal shear stress, tau, values, defined such that the first Piola-Kirchhoff stress tensor is P = tau * (s \\otimes n + n \\otimes s), where s is the unit vector associated with 'shear-stress-direction' and n is the unit vector associated with 'shear-plane-normal'."
+  }
+  "nominal-shear-strain" {
+    "type"         "float"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     true
+    "description"  "A vector of nominal shear strain, gamma, values work conjugate to the nominal shear stress, and defined as gamma = tr(P^T(F-I))/tau, where P^T is the transpose of the first Piola-Kirchhoff stress, tr() is the trace, and I is the 3D identity tensor."
+  }
+  "cauchy-born-stability" {
+    "type"         "bool"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     true
+    "description"  "A vector of boolean values indicating the Cauchy-Born stability, with respect to the conventional unit cell, of the stressed crystal.  Rigid rotation is not considered an instability in this definition."
+  }
+}

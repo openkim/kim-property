@@ -1,0 +1,64 @@
+{
+  "property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/monovacancy-formation-energy-monoatomic-cubic-diamond"
+
+  "property-title" "Formation energy of a monovacancy in a monoatomic cubic diamond crystal at zero absolute temperature"
+
+  "property-description" "Unrelaxed and relaxed formation potential energies of a monovacancy in a monoatomic cubic diamond crystal with stress-free boundary conditions at zero absolute temperature."
+
+  "species" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       []
+    "required"     true
+    "description"  "The element symbol of the atoms."
+  }
+  "a" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "Equilibrium (conventional) lattice constant of the perfect cubic diamond crystal (i.e. without the monovacancy introduced) at zero absolute temperature under zero stress conditions."
+  }
+  "unrelaxed-configuration-positions" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [":",3]
+    "required"     true
+    "description"  "The [x,y,z] coordinates of each particle in the initial unrelaxed configuration.  Corresponds to the initial guess used in the minimization."
+  }
+  "unrelaxed-configuration-forces" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [":",3]
+    "required"     false
+    "description"  "The [x,y,z] components of the force on each particle in the initial unrelaxed configuration."
+  }
+  "unrelaxed-formation-energy" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "Formation potential energy of the monovacancy in the unrelaxed configuration."
+  }
+  "relaxed-configuration-positions" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [":",3]
+    "required"     true
+    "description"  "The [x,y,z] coordinates of each particle in the relaxed configuration."
+  }
+  "relaxed-configuration-forces" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [":",3]
+    "required"     false
+    "description"  "The [x,y,z] components of the force on each particle in the relaxed configuration.  These should be zero.  The deviation is an indication of the accuracy of the relaxation."
+  }
+  "relaxed-formation-energy" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "Formation potential energy of the monovacancy in the relaxed configuration."
+  }
+}

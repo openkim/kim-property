@@ -1,0 +1,92 @@
+{
+  "property-id" "tag:staff@noreply.openkim.org,2014-05-21:property/phonon-dispersion-dos-cubic-crystal-npt"
+  
+  "property-title" "Phonon dispersion density of states for a cubic crystal"
+
+  "property-description" "Density of states of the phonon dispersion energies of a cubic crystal at given temperature and pressure."
+
+  "short-name" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     false
+    "description"  "Short name defining the cubic crystal type."
+  }
+  "species" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     true
+    "description"  "The element symbols of the basis atoms.  The order in which the species are specified must correspond to the order of the atoms listed in 'basis-atom-coordinates'."
+  }
+  "a" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "Average equilibrium conventional lattice constant of the cubic crystal."
+  }
+  "basis-atom-coordinates" {
+    "type"         "float"
+    "has-unit"     false
+    "extent"       [":",3]
+    "required"     true
+    "description"  "Fractional coordinates of the basis atoms in the conventional unit cell.  If the unit cell vectors are denoted by <a>, <b>, and <c>, and the fractional coordinates of atom 'i' are [afrac_i, bfrac_i, cfrac_i], the value of 'basis-atom-coordinates' will be of the form [[afrac_1 bfrac_1 cfrac_1] [afrac_2 bfrac_2 cfrac_2] ... ].  All components of each basis atom should be between zero and one, inclusive of zero."
+  }
+  "space-group" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       []
+    "required"     false
+    "description"  "Hermann-Mauguin designation for the space group associated with the symmetry of the crystal (e.g. Immm, Fm-3m, P6_3/mmc)."
+  }
+  "wyckoff-species" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     false
+    "description"  "The element symbol of the atomic species of the unique Wyckoff sites used in the fully symmetry-reduced description of the crystal.  The order of the entries must correspond to the order of the entries in 'wyckoff-multiplicity-and-letter' and 'wyckoff-coordinates'."
+  }
+  "wyckoff-multiplicity-and-letter" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     false
+    "description"  "Multiplicity and standard letter of the unique Wyckoff sites used in the fully symmetry-reduced description of the crystal (e.g. 4a, 2b).  Note that the sum of the Wyckoff multiplicities should equal the total number of elements in 'basis-atom-coordinates'.  The order of elements in this array must correspond to the order of the entries listed in 'wyckoff-species' and 'wyckoff-coordinates'."
+  }
+  "wyckoff-coordinates" {
+    "type"         "float"
+    "has-unit"     false
+    "extent"       [":",3]
+    "required"     false
+    "description"  "Coordinates of the unique Wyckoff sites used in the fully symmetry-reduced description of the crystal, given as fractions of the lattice vectors.  The order of elements in this array must correspond to the order of the entries listed in 'wyckoff-species' and 'wyckoff-multiplicity-and-letter'."
+  }
+  "temperature" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "Temperature of the crystal."
+  }
+  "cauchy-stress" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [6]
+    "required"     true
+    "description"  "The [xx,yy,zz,yz,xz,xy] (i.e. [11,22,33,23,13,12]) components of the Cauchy stress acting on the periodic cell.  The orthonormal basis used to express the stress should be aligned with the cubic 4-fold axes of the crystal and the expected form of the stress tensor should be [d d d 0 0 0], where d > 0 indicates tensile stress."
+  }
+  "energy" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    [":"]
+    "required"  true
+    "description" "Energy of the wave, the dependent variable.  Must be same length as density-of-states."
+  }
+  "density-of-states" {
+    "type"      "float"
+    "has-unit"  false
+    "extent"    [":"]
+    "required"  true
+    "description" "Density of states at a particular energy, the number of phonon modes at a particular wavelength. Same length as 'energy'."
+  }
+}

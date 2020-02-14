@@ -1,0 +1,64 @@
+{
+  "property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/configuration-nonorthogonal-periodic-3d-cell-fixed-particles-fixed"
+
+  "property-title" "Static calculation of a non-orthogonal periodic cell of particles (cell fixed, particles fixed)"
+
+  "property-description" "Energy (and, optionally, forces and stresses) of a non-orthogonal periodic cell of particles at zero absolute temperature in a fixed configuration."
+
+  "species" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     true
+    "description"  "The element symbol for each particle."
+  }
+  "unrelaxed-periodic-cell-vector-1" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [3]
+    "required"     true
+    "description"  "The [x,y,z] components of periodic cell vector 1.  Note that periodic cell vector 1, periodic cell vector 2, and periodic cell vector 3 must form a right-handed triad."
+  }
+  "unrelaxed-periodic-cell-vector-2" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [3]
+    "required"     true
+    "description"  "The [x,y,z] components of periodic cell vector 2.  Note that periodic cell vector 1, periodic cell vector 2, and periodic cell vector 3 must form a right-handed triad."
+  }
+  "unrelaxed-periodic-cell-vector-3" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [3]
+    "required"     true
+    "description"  "The [x,y,z] components of periodic cell vector 3.  Note that periodic cell vector 1, periodic cell vector 2, and periodic cell vector 3 must form a right-handed triad."
+  }
+  "unrelaxed-cauchy-stress" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [6]
+    "required"     false
+    "description"  "The [xx,yy,zz,yz,xz,xy] (i.e. [11,22,33,23,13,12]) components of the Cauchy stress conjugate to the shape of the periodic cell."
+  }
+  "unrelaxed-configuration-positions" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [":",3]
+    "required"     true
+    "description"  "The [x,y,z] coordinates of each particle."
+  }
+  "unrelaxed-configuration-forces" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [":",3]
+    "required"     false
+    "description"  "The [x,y,z] components of the force on each particle."
+  }
+  "unrelaxed-potential-energy" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "The potential energy of the system."
+  }
+}

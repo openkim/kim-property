@@ -1,0 +1,47 @@
+{
+   "property-id" "tag:staff@noreply.openkim.org,2015-05-26:property/unstable-stacking-fault-relaxed-energy-fcc-crystal-npt"
+
+   "property-title" "Relaxed unstable stacking energy for a monoatomic fcc crystal at zero temperature and a given pressure"
+
+   "property-description" "The relaxed unstable stacking energy (USE) for a monoatomic fcc crystal at zero temperature and a specified pressure. The USE corresponds to the energy barrier for rigidly slipping one-half of an infinite crystal relative to the other along a <112> direction (fcc partial dislocation direction). Relaxation of the atomic positions is performed perpendicular to the fault plane."
+
+   "a" {
+       "type"         "float"
+       "has-unit"     true
+       "extent"       []
+       "required"     true
+       "description"  "Zero-temperature, equilibrium conventional lattice constant of the fcc crystal consistent with the specified pressure."
+   }
+
+   "species" {
+       "type"         "string"
+       "has-unit"     false
+       "extent"       [":"]
+       "required"     true
+       "description"  "The element symbol of the fcc crystal material. This should contain only a single entry."
+   }
+
+   "cauchy-stress" {
+      "type"         "float"
+      "has-unit"     true
+      "extent"       [6]
+      "required"     true
+      "description"  "The [xx,yy,zz,yz,xz,xy] (i.e. [11,22,33,23,13,12]) components of the Cauchy stress acting on the crystal.  The orthonormal basis used to express the stress should be aligned with the cubic 4-fold axes of the ideal crystal and the expected form of the stress tensor should be [d d d 0 0 0], where d > 0 indicates tensile stress."
+   }
+
+   "unstable-slip-fraction" {
+       "type"         "float"
+       "has-unit"     false
+       "extent"       []
+       "required"     false
+       "description"  "The relative displacement in the 1/6<112> direction between the two crystal parts where the energy is maximum. The slip is normalized by the partial dislocation Burgers vector a0/sqrt(6). Therefore 'unstable-slip-fraction' must be between 0.0 and 1.0."
+   }
+
+   "unstable-stacking-energy" {
+       "type"         "float"
+       "has-unit"     true
+       "extent"       []
+       "required"     true
+       "description"  "Relaxed unstable stacking energy in units of energy per area."
+   }
+}

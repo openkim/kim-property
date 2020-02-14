@@ -1,0 +1,127 @@
+{
+  "property-id"  "tag:staff@noreply.openkim.org,2017-07-31:property/enthalpy-of-mixing-curve-substitutional-binary-cubic-crystal-nvt"
+
+  "property-title" "Enthalpy of Mixing versus Concentration for Substitutional Random Binary A-B Cubic Crystal Alloys under NVT Conditions"
+
+  "property-description" "Enthalpy of mixing per atom versus concentration for a random solid solution binary alloy of species A and B at constant volume and temperature. The enthalpy of mixing per atom is defined as the enthalpy of the binary alloy less the enthalpies of each species in the same crystal structure normalized by the number of atoms. This property is defined for the case where at zero concentration the crystal consists entirely of A atoms, and at concentration one, the crystal is entirely of species B. At each concentration the potential energy of the binary alloy is minimized."
+
+  "short-name" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     false
+    "description"  "Short name defining the cubic crystal type for both the crystal made of A atoms, the crystal made of B atoms, and the random alloy."
+  }
+  "basis-atom-coordinates" {
+    "type"         "float"
+    "has-unit"     false
+    "extent"       [":",3]
+    "required"     true
+    "description"  "Fractional coordinates of the basis atoms in the conventional unit cell.  If the unit cell vectors are denoted by <a>, <b>, and <c>, and the fractional coordinates of atom 'i' are [afrac_i, bfrac_i, cfrac_i], the value of 'basis-atom-coordinates' will be of the form [[afrac_1 bfrac_1 cfrac_1] [afrac_2 bfrac_2 cfrac_2] ... ].  All components of each basis atom should be between zero and one, inclusive of zero."
+  }
+  "space-group" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       []
+    "required"     false
+    "description"  "Hermann-Mauguin designation for the space group associated with the symmetry of the crystal (e.g. Immm, Fm-3m, P6_3/mmc)."
+  }
+  "wyckoff-multiplicity-and-letter" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     false
+    "description"  "Multiplicity and standard letter of the unique Wyckoff sites used in the fully symmetry-reduced description of the crystal (e.g. 4a, 2b).  Note that the sum of the Wyckoff multiplicities should equal the total number of elements in 'basis-atom-coordinates'.  The order of elements in this array must correspond to the order of the entries listed in 'wyckoff-species' and 'wyckoff-coordinates'."
+  }
+  "wyckoff-coordinates" {
+    "type"         "float"
+    "has-unit"     false
+    "extent"       [":",3]
+    "required"     false
+    "description"  "Coordinates of the unique Wyckoff sites used in the fully symmetry-reduced description of the crystal, given as fractions of the lattice vectors.  The order of elements in this array must correspond to the order of the entries listed in 'wyckoff-species' and 'wyckoff-multiplicity-and-letter'."
+  }
+  "A-species" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       []
+    "required"     true
+    "description"  "The element symbol of the A-type atom."
+  }
+  "A-a" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "The lattice constant of the A-type crystal."
+  }
+  "A-wyckoff-species" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     false
+    "description"  "The element symbol of the atomic species of the unique Wyckoff sites used in the fully symmetry-reduced description of the A-type crystal.  The order of the entries must correspond to the order of the entries in 'wyckoff-multiplicity-and-letter' and 'wyckoff-coordinates'."
+  }
+  "B-species" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       []
+    "required"     true
+    "description"  "The element symbol of the B-type atom."
+  }
+  "B-a" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "The lattice constant of the B-type crystal."
+  }
+  "B-wyckoff-species" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     false
+    "description"  "The element symbol of the atomic species of the unique Wyckoff sites used in the fully symmetry-reduced description of the B-type crystal.  The order of the entries must correspond to the order of the entries in 'wyckoff-multiplicity-and-letter' and 'wyckoff-coordinates'."
+  }
+  "a" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [":"]
+    "required"     true
+    "description"  "A vector of conventional unit cell lattice constants of the cubic crystal that are used at each concentration (the order of elements in this array must correspond to the order of the entries listed in 'concentration'). At the concentration corresponding to all A-type atoms, the value in this array should be identical to the value of the 'A-a' key; similarly, at the concentration corresponding to all B-type atoms, the value in this array should be identical to the value of the 'B-a' key."
+  }
+  "cauchy-stress" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [":", 6]
+    "required"     false
+    "description"  "A two-dimensional array containing the [xx,yy,zz,yz,xz,xy] (i.e. [11,22,33,23,13,12]) components of the Cauchy stress acting on the periodic cell of the crystal at each concentration.  The orthonormal basis (<e_1>,<e_2>,<e_3>) used to express the stress should be such that e_1 is in the direction of <a>, e_2 is in the direction of (<c> x <a>), and e_3 is in the direction of (<e_1> x <e_2>).  The six-dimensional vectors collected this key should be ordered so as to be consistent with the entries listed in 'concentration'."
+  }
+  "concentration" {
+    "type"         "float"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     true
+    "description"  "The fraction of lattice sites occupied by B atoms with the rest occupied by A atoms. For example, a concentration of 0 means all lattice sites are occupied by A atoms, and a concentration of 1 means all lattice sites are occupied by B atoms. The concentration must be in the range [0,1]."
+  }
+  "temperature" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "Temperature of the crystal."
+  }
+  "enthalpy-of-mixing" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [":"]
+    "required"     true
+    "description"  "Enthalpy of mixing per atom associated with the corresponding concentration (the order of elements in this array must correspond to the order of the entries listed in 'concentration'). Enthalpy of mixing per atom is defined as H_mix = H_A+B - (N_A*H_A - N_B*H_B)/(N_A + N_B), where H_A+B is the average enthalpy of mixing per atom of the random alloy at a given concentration, H_A is the enthalpy of mixing per atom of the crystal when entirely made of A atoms, H_B is the enthalpy of mixing per atom of the crystal when entirely made of B atoms, N_A is the number of A atoms, N_B is the number of B atoms. The total number of atoms is N_A + N_B."
+  }
+  "crystal-is-stable" {
+    "type"         "bool"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     true
+    "description"  "If true, the crystal at the corresponding concentration is locally stable with respect to both macroscopic modes (Cauchy-Born stability) and microscopic modes (phonon stability). Local stability implies the existence of a barrier to reach other stable states.  The order of elements in this array must correspond to the order of the entries listed in 'concentration'."
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/structure-triclinic-crystal-npt"
+  
+  "property-title" "Equilibrium triclinic crystal structure at a given temperature and stress state"
+
+  "property-description" "Conventional lattice parameters and basis atom positions of a triclinic crystal at a given temperature and stress state."
+
+  "short-name" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     false
+    "description"  "Short name defining the triclinic crystal type."
+  }
+  "species" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     true
+    "description"  "The element symbols of the basis atoms.  The order in which the species are specified must correspond to the order of the atoms listed in 'basis-atom-coordinates'."
+  }
+  "a" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "The average length of unit cell vector <a>.  The associated direction must correspond to the first component of the entries of 'basis-atom-coordinates'.  The triad (<a>,<b>,<c>) must form a right-handed system."
+  }
+  "b" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "The average length of unit cell vector <b>.  The associated direction must correspond to the second component of the entries of 'basis-atom-coordinates'.  The triad (<a>,<b>,<c>) must form a right-handed system."
+  }
+  "c" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "The average length of unit cell vector <c>.  The associated direction must correspond to the third component of the entries of 'basis-atom-coordinates'.  The triad (<a>,<b>,<c>) must form a right-handed system."
+  }
+  "alpha" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "The angle between unit cell vectors <b> and <c> (which correspond to the second and third components of the entries of 'basis-atom-coordinates', respectively).  Must be strictly greater than zero and strictly less than 90 degrees."
+  }
+  "beta" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "The angle between unit cell vectors <a> and <c> (which correspond to the first and third components of the entries of 'basis-atom-coordinates', respectively).  Must be strictly greater than zero and strictly less than 90 degrees."
+  }
+  "gamma" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "The angle between unit cell vectors <a> and <b> (which correspond to the first and second components of the entries of 'basis-atom-coordinates', respectively).  Must be strictly greater than zero and strictly less than 90 degrees."
+  }
+  "basis-atom-coordinates" {
+    "type"         "float"
+    "has-unit"     false
+    "extent"       [":",3]
+    "required"     true
+    "description"  "Fractional coordinates of the basis atoms in the conventional unit cell.  If the unit cell vectors are denoted by <a>, <b>, and <c>, and the fractional coordinates of atom 'i' are [afrac_i, bfrac_i, cfrac_i], the value of 'basis-atom-coordinates' will be of the form [[afrac_1 bfrac_1 cfrac_1] [afrac_2 bfrac_2 cfrac_2] ... ].  All components of each basis atom should be between zero and one, inclusive of zero."
+  }
+  "space-group" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       []
+    "required"     false
+    "description"  "Hermann-Mauguin designation for the space group associated with the symmetry of the crystal (e.g. Immm, Fm-3m, P6_3/mmc)."
+  }
+  "wyckoff-species" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     false
+    "description"  "The element symbol of the atomic species of the unique Wyckoff sites used in the fully symmetry-reduced description of the crystal.  The order of the entries must correspond to the order of the entries in 'wyckoff-multiplicity-and-letter' and 'wyckoff-coordinates'."
+  }
+  "wyckoff-multiplicity-and-letter" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     false
+    "description"  "Multiplicity and standard letter of the unique Wyckoff sites used in the fully symmetry-reduced description of the crystal (e.g. 4a, 2b).  Note that the sum of the Wyckoff multiplicities should equal the total number of elements in 'basis-atom-coordinates'.  The order of elements in this array must correspond to the order of the entries listed in 'wyckoff-species' and 'wyckoff-coordinates'."
+  }
+  "wyckoff-coordinates" {
+    "type"         "float"
+    "has-unit"     false
+    "extent"       [":",3]
+    "required"     false
+    "description"  "Coordinates of the unique Wyckoff sites used in the fully symmetry-reduced description of the crystal, given as fractions of the lattice vectors.  The order of elements in this array must correspond to the order of the entries listed in 'wyckoff-species' and 'wyckoff-multiplicity-and-letter'."
+  }
+  "temperature" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "Temperature of the crystal."
+  }
+  "cauchy-stress" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [6]
+    "required"     true
+    "description"  "The [xx,yy,zz,yz,xz,xy] (i.e. [11,22,33,23,13,12]) components of the Cauchy stress acting on the periodic cell.  The orthonormal basis (<e_1>,<e_2>,<e_3>) used to express the stress should be such that e_1 is in the direction of <a>, e_2 is in the direction of (<c> x <a>), and e_3 is in the direction of (<e_1> x <e_2>).  The expected form should be [d e f r s t]."
+  }
+}

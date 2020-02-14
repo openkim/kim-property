@@ -1,0 +1,169 @@
+{
+  "property-id" "tag:staff@noreply.openkim.org,2016-05-24:property/elastic-constants-first-strain-gradient-isothermal-cubic-crystal-npt"
+
+  "property-title" "Isothermal first strain gradient elastic constants for a cubic crystal at its equilibrium lattice spacing"
+
+  "property-description" "The three independent isothermal classical elastic constants c11, c12 and c44, and eleven independent isothermal strain gradient elastic constants d-1-1, d-1-2, d-1-3, d-2-2, d-2-3, d-2-4, d-2-5, d-3-3, d-3-5, d-16-16 and d-16-17, for a cubic crystal at 0 K and zero stress. (The classical and strain gradient elastic constants are the 2nd derivatives of the strain energy density with respect to the Lagrangian strain and the Lagrangian strain gradient respectively.)"
+
+  "short-name" {
+    "type"      "string"
+    "has-unit"  false
+    "extent"    [":"]
+    "required"     false
+    "description" "Short name defining the cubic crystal type."
+  }
+  "species" {
+    "type"      "string"
+    "has-unit"  false
+    "extent"    [":"]
+    "required"  true
+    "description"  "The element symbols of the basis atoms.  The order in which the species are specified must correspond to the order of the atoms listed in 'basis-atom-coordinates'."
+  }
+  "a" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "Average equilibrium conventional lattice constant of the cubic crystal."
+  }
+  "basis-atom-coordinates" {
+    "type"         "float"
+    "has-unit"     false
+    "extent"       [":",3]
+    "required"     true
+    "description"  "Fractional coordinates of the basis atoms in the conventional unit cell.  If the unit cell vectors are denoted by <a>, <b>, and <c>, and the fractional coordinates of atom 'i' are [afrac_i, bfrac_i, cfrac_i], the value of 'basis-atom-coordinates' will be of the form [[afrac_1 bfrac_1 cfrac_1] [afrac_2 bfrac_2 cfrac_2] ... ].  All components of each basis atom should be between zero and one, inclusive of zero."
+  }
+  "space-group" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       []
+    "required"     false
+    "description"  "Hermann-Mauguin designation for the space group associated with the symmetry of the crystal (e.g. Immm, Fm-3m, P6_3/mmc)."
+  }
+  "wyckoff-species" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     false
+    "description"  "The element symbol of the atomic species of the unique Wyckoff sites used in the fully symmetry-reduced description of the crystal.  The order of the entries must correspond to the order of the entries in 'wyckoff-multiplicity-and-letter' and 'wyckoff-coordinates'."
+  }
+  "wyckoff-multiplicity-and-letter" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     false
+    "description"  "Multiplicity and standard letter of the unique Wyckoff sites used in the fully symmetry-reduced description of the crystal (e.g. 4a, 2b).  Note that the sum of the Wyckoff multiplicities should equal the total number of elements in 'basis-atom-coordinates'.  The order of elements in this array must correspond to the order of the entries listed in 'wyckoff-species' and 'wyckoff-coordinates'."
+  }
+  "wyckoff-coordinates" {
+    "type"         "float"
+    "has-unit"     false
+    "extent"       [":",3]
+    "required"     false
+    "description"  "Coordinates of the unique Wyckoff sites used in the fully symmetry-reduced description of the crystal, given as fractions of the lattice vectors.  The order of elements in this array must correspond to the order of the entries listed in 'wyckoff-species' and 'wyckoff-multiplicity-and-letter'."
+  }
+  "temperature" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "Temperature of the crystal."
+  }
+  "c11" {
+       "type"      "float"
+       "has-unit"  true
+       "extent"    []
+       "required"  true
+       "description"  "The 11 component of the isothermal elasticty matrix in Voigt notation, which corresponds to the 1111 component of the 4th order elasticity tensor.  The orthonormal basis used to express the tensor should be aligned with the cubic 4-fold axes of the crystal."
+  }
+  "c12" {
+       "type"      "float"
+       "has-unit"  true
+       "extent"    []
+       "required"  true
+       "description"  "The 12 component of the isothermal elasticty matrix in Voigt notation, which corresponds to the 1122 component of the 4th order elasticity tensor.  The orthonormal basis used to express the tensor should be aligned with the cubic 4-fold axes of the crystal."
+  }
+  "c44" {
+       "type"      "float"
+       "has-unit"  true
+       "extent"    []
+       "required"  true
+       "description"  "The 44 component of the isothermal elasticty matrix in Voigt notation, which corresponds to the 2323 component of the 4th order elasticity tensor.  The orthonormal basis used to express the tensor should be aligned with the cubic 4-fold axes of the crystal."
+  }
+  "d-1-1" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 1-1 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 111111 component of the 6th order first strain gradient elasticity tensor.  The orthonormal basis used to express the tensor should be aligned with the cubic 4-fold axes of the crystal."
+  }
+  "d-1-2" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 1-2 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 111221 component of the 6th order first strain gradient elasticity tensor.  The orthonormal basis used to express the tensor should be aligned with the cubic 4-fold axes of the crystal."
+  }
+  "d-1-3" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 1-3 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 111122 component of the 6th order first strain gradient elasticity tensor.  The orthonormal basis used to express the tensor should be aligned with the cubic 4-fold axes of the crystal."
+  }
+  "d-2-2" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 2-2 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 221221 component of the 6th order first strain gradient elasticity tensor.  The orthonormal basis used to express the tensor should be aligned with the cubic 4-fold axes of the crystal."
+  }
+  "d-2-3" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 2-3 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 221122 component of the 6th order first strain gradient elasticity tensor.  The orthonormal basis used to express the tensor should be aligned with the cubic 4-fold axes of the crystal."
+  }
+  "d-2-4" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 2-4 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 221331 component of the 6th order first strain gradient elasticity tensor.  The orthonormal basis used to express the tensor should be aligned with the cubic 4-fold axes of the crystal."
+  }
+  "d-2-5" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 2-5 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 221133 component of the 6th order first strain gradient elasticity tensor.  The orthonormal basis used to express the tensor should be aligned with the cubic 4-fold axes of the crystal."
+  }
+  "d-3-3" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 3-3 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 122122 component of the 6th order first strain gradient elasticity tensor.  The orthonormal basis used to express the tensor should be aligned with the cubic 4-fold axes of the crystal."
+  }
+  "d-3-5" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 3-4 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 122133 component of the 6th order first strain gradient elasticity tensor.  The orthonormal basis used to express the tensor should be aligned with the cubic 4-fold axes of the crystal."
+  }
+  "d-16-16" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 16-16 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 123123 component of the 6th order first strain gradient elasticity tensor.  The orthonormal basis used to express the tensor should be aligned with the cubic 4-fold axes of the crystal."
+  }
+  "d-16-17" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 16-17 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 123132 component of the 6th order first strain gradient elasticity tensor.  The orthonormal basis used to express the tensor should be aligned with the cubic 4-fold axes of the crystal."
+  }
+}

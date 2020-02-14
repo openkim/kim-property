@@ -1,0 +1,55 @@
+{
+   "property-id" "tag:staff@noreply.openkim.org,2015-05-26:property/gamma-surface-relaxed-fcc-crystal-npt"
+
+   "property-title" "The relaxed gamma surface created by rigid slip of a (111) plane on a grid of points defined by [112] and [-110] directions in a monoatomic fcc crystal at zero temperature and a given pressure"
+
+   "property-description" "The relaxed energy-per-area versus all possible slips lying in the (111) lattice plane defines the Gamma surface. Due to periodicity of the crystal lattice, it suffices to sample a grid of points that span  a*sqrt(6)/2 and a*sqrt(2)/2  along the [112] and [-110] directions, respectively. This is achieved through a sequence of rigid displacements applied to one part of an fcc crystal relative to another on the (111) plane on a grid defined by the [112] and [-110] directions at zero temperature and a specified pressure. Following each slip displacement, a relaxation of the atomic coordinates is performed in the direction perpendicular to the slip plane to arrive at the energy-per-area."
+
+   "a" {
+       "type"         "float"
+       "has-unit"     true
+       "extent"       []
+       "required"     true
+       "description"  "Zero-temperature, equilibrium conventional lattice constant of the fcc crystal consistent with the specified pressure."
+   }
+
+   "species" {
+       "type"         "string"
+       "has-unit"     false
+       "extent"       [":"]
+       "required"     true
+       "description"  "The element symbol of the fcc crystal material. This should contain only a single entry."
+   }
+
+   "cauchy-stress" {
+      "type"         "float"
+      "has-unit"     true
+      "extent"       [6]
+      "required"     true
+      "description"  "The [xx,yy,zz,yz,xz,xy] (i.e. [11,22,33,23,13,12]) components of the Cauchy stress acting on the crystal.  The orthonormal basis used to express the stress should be aligned with the cubic 4-fold axes of the ideal crystal and the expected form of the stress tensor should be [d d d 0 0 0], where d > 0 indicates tensile stress."
+   }
+
+   "fault-plane-shift-fraction-112" {
+       "type"         "float"
+       "has-unit"     false
+       "extent"       [":"]
+       "required"     true
+       "description"  "A list of relative displacements of the two crystal parts used to compute the gamma surface in the [112] direction. Each element corresponds to the relative displacement of the two crystal parts as a fraction of the the total displacement, a*sqrt(6)/2 in the [112] direction."
+   }
+
+   "fault-plane-shift-fraction-110" {
+       "type"         "float"
+       "has-unit"     false
+       "extent"       [":"]
+       "required"     true
+       "description"  "A list of relative displacements of the two crystal parts used to compute the gamma surface in the [-110] direction. Each element corresponds to the relative displacement of the two crystal parts as a fraction of the the total displacement, a*sqrt(2)/2 in the [-110] direction."
+   }
+
+   "gamma-surface" {
+       "type"         "float"
+       "has-unit"     true
+       "extent"       [":",":"]
+       "required"     true
+       "description"  "The relaxed excess energy-per-area of the fault plane for a given relative displacement of the two crystal parts.  All of the elements in a given sub-array contained within this array correspond to a single fractional displacement in the [-110] direction, but different fractional displacements in the [112] direction.  That is, if each sub-array contained in this array is taken to be a column in a matrix, the rows of this matrix would correspond to the elements in 'fault-plane-shift-fraction-112' and its columns would correspond to the elements of 'fault-plane-shift-fraction-110'."
+   }
+}

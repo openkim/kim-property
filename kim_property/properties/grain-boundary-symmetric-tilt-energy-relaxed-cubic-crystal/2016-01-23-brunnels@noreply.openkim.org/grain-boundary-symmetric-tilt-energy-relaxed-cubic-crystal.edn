@@ -1,0 +1,113 @@
+{
+  "property-id" "tag:brunnels@noreply.openkim.org,2016-01-23:property/grain-boundary-symmetric-tilt-energy-relaxed-cubic-crystal"
+
+  "property-title" "Relaxed symmetric tilt grain boundary energy for a cubic crystal"
+
+  "property-description" "The relaxed energy of a grain boundary for a cubic bi-crystal characterized by a symmetric tilt axis and angle for zero applied loads."
+
+  "short-name" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     false
+    "description"  "Short name defining the cubic crystal type."
+  }
+  "species" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     true
+    "description"  "The element symbols of the basis atoms.  The order in which the species are specified must correspond to the order of the atoms listed in 'basis-atom-coordinates'."
+  }
+  "a" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "Equilibrium conventional lattice constant of the cubic crystal."
+  }
+  "basis-atom-coordinates" {
+    "type"         "float"
+    "has-unit"     false
+    "extent"       [":",3]
+    "required"     true
+    "description"  "Fractional coordinates of the basis atoms in the conventional unit cell.  If the unit cell vectors are denoted by <a>, <b>, and <c>, and the fractional coordinates of atom 'i' are [afrac_i, bfrac_i, cfrac_i], the value of 'basis-atom-coordinates' will be of the form [[afrac_1 bfrac_1 cfrac_1] [afrac_2 bfrac_2 cfrac_2] ... ].  All components of each basis atom should be between zero and one, inclusive of zero."
+  }
+  "space-group" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       []
+    "required"     false
+    "description"  "Hermann-Mauguin designation for the space group associated with the symmetry of the crystal (e.g. Immm, Fm-3m, P6_3/mmc)."
+  }
+  "wyckoff-species" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     false
+    "description"  "The element symbol of the atomic species of the unique Wyckoff sites used in the fully symmetry-reduced description of the crystal.  The order of the entries must correspond to the order of the entries in 'wyckoff-multiplicity-and-letter' and 'wyckoff-coordinates'."
+  }
+  "wyckoff-multiplicity-and-letter" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     false
+    "description"  "Multiplicity and standard letter of the unique Wyckoff sites used in the fully symmetry-reduced description of the crystal (e.g. 4a, 2b).  Note that the sum of the Wyckoff multiplicities should equal the total number of elements in 'basis-atom-coordinates'.  The order of elements in this array must correspond to the order of the entries listed in 'wyckoff-species' and 'wyckoff-coordinates'."
+  }
+  "wyckoff-coordinates" {
+    "type"         "float"
+    "has-unit"     false
+    "extent"       [":",3]
+    "required"     false
+    "description"  "Coordinates of the unique Wyckoff sites used in the fully symmetry-reduced description of the crystal, given as fractions of the lattice vectors.  The order of elements in this array must correspond to the order of the entries listed in 'wyckoff-species' and 'wyckoff-multiplicity-and-letter'."
+  }
+  "tilt-axis" {
+    "type"      "int"
+    "has-unit"  false
+    "extent"    [3]
+    "required"  true
+    "description" "The crystallographic direction of the tilt axis.  Valid options are directions belonging to the following families: <001>, <110>, <111>, <112>."
+  }
+  "tilt-angle" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "Total misorientation angle between the two grains.  Must be strictly greater than zero and strictly less than 180 degrees."
+  }
+  "interface-offset" {
+    "type"      "string"
+    "has-unit"  false
+    "extent"    []
+    "required"  false
+    "description" "Details of the location of the grain boundary interface plane within the unit cells of the grains for crystals containing more than one basis atom.  Since there is no standard notation for this, it is specified as a free text field."
+  }
+  "minimum-atom-separation" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     false
+    "description"  "The minimal atomic separation in the initial unrelaxed bi-crystal. This parameter is necessary for characterizing the grain boundary, since when computing a grain boundary energy it is conventional to prevent situations where a pair of of atoms are too close together by removing one of them. (Note that in such cases all removed atoms must be taken from the same grain.) In situations where the minimum atom separation is unknown (e.g., experimental data), use the perfect crystal nearest neighbor distance."
+  }
+  "relaxed-grain-boundary-energy" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "Relaxed grain boundary excess energy density (energy per unit area), i.e. the difference between the energy of the bi-crystal containing the symmetric tilt grain boundary structure and the energy of an ideal crystal with the same number of atoms per unit area of the interface."
+  }
+  "relaxed-interface-positions" {
+    "type"         "file"
+    "has-unit"     false
+    "extent"       []
+    "required"     false
+    "description"  "A file containing the atomic configuration including information such as the species, x,y,z coordinates of each particle after relaxation, and super-cell periodicity data for the computed grain boundary."
+  }
+  "sigma" {
+    "type"         "int"
+    "has-unit"     false
+    "extent"       []
+    "required"     false
+    "description"  "Sigma is the ratio of volume of the coincident-site lattice unit cell to the lattice unit cell volume."
+  }
+}

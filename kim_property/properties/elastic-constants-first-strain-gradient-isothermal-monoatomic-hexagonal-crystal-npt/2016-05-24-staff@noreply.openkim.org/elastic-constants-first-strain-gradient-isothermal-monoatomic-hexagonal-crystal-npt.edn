@@ -1,0 +1,267 @@
+{
+  "property-id" "tag:staff@noreply.openkim.org,2016-05-24:property/elastic-constants-first-strain-gradient-isothermal-monoatomic-hexagonal-crystal-npt"
+
+  "property-title" "Isothermal first strain gradient elastic constants for a hexagonal crystal at its equilibrium lattice spacing"
+
+  "property-description" "The five independent isothermal classical elastic constants c11, c12, c13, c33, and c55, and twenty two independent isothermal strain gradient elastic constants d-1-1, d-6-6, d-6-7, d-6-8, d-6-9, d-6-10, d-7-7, d-8-9, d-8-10, d-9-9, d-9-10, d-10-10, d-11-11, d-11-12, d-11-13, d-12-12, d-12-13, d-13-13, d-16-16, d-16-17, d-17-17, and d-17-18, for a hexagonal simple lattice at 0 K and zero stress. The orientation of the lattice is such that the e_3 axis is perpendicular to the basal plane, and the e_2 axis passes through a vertex of the hexagon. (The classical and strain gradient elastic constants are the 2nd derivatives of the strain energy density with respect to the Lagrangian strain and the Lagrangian strain gradient respectively.)"
+
+  "short-name" {
+    "type"      "string"
+    "has-unit"  false
+    "extent"    [":"]
+    "required"     false
+    "description" "Short name defining the hexagonal crystal type."
+  }
+  "species" {
+    "type"      "string"
+    "has-unit"  false
+    "extent"    [":"]
+    "required"  true
+    "description"  "The element symbols of the basis atoms.  The order in which the species are specified must correspond to the order of the atoms listed in 'basis-atom-coordinates'."
+  }
+  "a" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "Average equilibrium conventional lattice constant of the hexagonal crystal."
+  }
+  "c" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "The average length of unit cell vector <c>.  The associated direction must correspond to the third component of the entries of 'basis-atom-coordinates'.  The triad (<a>,<b>,<c>) must form a right-handed system."
+  }
+  "basis-atom-coordinates" {
+    "type"         "float"
+    "has-unit"     false
+    "extent"       [":",3]
+    "required"     true
+    "description"  "Fractional coordinates of the basis atoms in the conventional unit cell.  If the unit cell vectors are denoted by <a>, <b>, and <c>, and the fractional coordinates of atom 'i' are [afrac_i, bfrac_i, cfrac_i], the value of 'basis-atom-coordinates' will be of the form [[afrac_1 bfrac_1 cfrac_1] [afrac_2 bfrac_2 cfrac_2] ... ].  All components of each basis atom should be between zero and one, inclusive of zero."
+  }
+  "space-group" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       []
+    "required"     false
+    "description"  "Hermann-Mauguin designation for the space group associated with the symmetry of the crystal (e.g. Immm, Fm-3m, P6_3/mmc)."
+  }
+  "wyckoff-species" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     false
+    "description"  "The element symbol of the atomic species of the unique Wyckoff sites used in the fully symmetry-reduced description of the crystal.  The order of the entries must correspond to the order of the entries in 'wyckoff-multiplicity-and-letter' and 'wyckoff-coordinates'."
+  }
+  "wyckoff-multiplicity-and-letter" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     false
+    "description"  "Multiplicity and standard letter of the unique Wyckoff sites used in the fully symmetry-reduced description of the crystal (e.g. 4a, 2b).  Note that the sum of the Wyckoff multiplicities should equal the total number of elements in 'basis-atom-coordinates'.  The order of elements in this array must correspond to the order of the entries listed in 'wyckoff-species' and 'wyckoff-coordinates'."
+  }
+  "wyckoff-coordinates" {
+    "type"         "float"
+    "has-unit"     false
+    "extent"       [":",3]
+    "required"     false
+    "description"  "Coordinates of the unique Wyckoff sites used in the fully symmetry-reduced description of the crystal, given as fractions of the lattice vectors.  The order of elements in this array must correspond to the order of the entries listed in 'wyckoff-species' and 'wyckoff-multiplicity-and-letter'."
+  }
+  "temperature" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "Temperature of the crystal."
+  }
+  "c11" {
+       "type"      "float"
+       "has-unit"  true
+       "extent"    []
+       "required"  true
+       "description"  "The 11 component of the isothermal elasticty matrix in Voigt notation, which corresponds to the 1111 component of the 4th order elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that the e_3 axis is perpendicular to the basal plane, and the e_2 axis passes through a vertex of the hexagon."
+  }
+  "c12" {
+       "type"      "float"
+       "has-unit"  true
+       "extent"    []
+       "required"  true
+       "description"  "The 12 component of the isothermal elasticty matrix in Voigt notation, which corresponds to the 1122 component of the 4th order elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that the e_3 axis is perpendicular to the basal plane, and the e_2 axis passes through a vertex of the hexagon."
+  }
+  "c13" {
+       "type"      "float"
+       "has-unit"  true
+       "extent"    []
+       "required"  true
+       "description"  "The 13 component of the isothermal elasticty matrix in Voigt notation, which corresponds to the 1133 component of the 4th order elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that the e_3 axis is perpendicular to the basal plane, and the e_2 axis passes through a vertex of the hexagon."
+  }
+  "c33" {
+       "type"      "float"
+       "has-unit"  true
+       "extent"    []
+       "required"  true
+       "description"  "The 33 component of the isothermal elasticty matrix in Voigt notation, which corresponds to the 3333 component of the 4th order elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that the e_3 axis is perpendicular to the basal plane, and the e_2 axis passes through a vertex of the hexagon."
+  }
+  "c55" {
+       "type"      "float"
+       "has-unit"  true
+       "extent"    []
+       "required"  true
+       "description"  "The 55 component of the isothermal elasticty matrix in Voigt notation, which corresponds to the 1313 component of the 4th order elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that the e_3 axis is perpendicular to the basal plane, and the e_2 axis passes through a vertex of the hexagon."
+  }
+  "d-1-1" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 1-1 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 111111 component of the 6th order first strain gradient elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that e_1 and e_2 axis lie on the hexagonal plane of the crystal."
+  }
+  "d-6-6" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 1-2 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 222222 component of the 6th order first strain gradient elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that e_1 and e_2 axis lie on the hexagonal plane of the crystal."
+  }
+  "d-6-7" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 1-3 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 222112 component of the 6th order first strain gradient elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that e_1 and e_2 axis lie on the hexagonal plane of the crystal."
+  }
+  "d-6-8" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 2-2 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 222121 component of the 6th order first strain gradient elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that e_1 and e_2 axis lie on the hexagonal plane of the crystal."
+  }
+  "d-6-9" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 2-3 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 222332 component of the 6th order first strain gradient elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that e_1 and e_2 axis lie on the hexagonal plane of the crystal."
+  }
+  "d-6-10" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 2-4 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 222233 component of the 6th order first strain gradient elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that e_1 and e_2 axis lie on the hexagonal plane of the crystal."
+  }
+  "d-7-7" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 2-5 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 112112 component of the 6th order first strain gradient elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that e_1 and e_2 axis lie on the hexagonal plane of the crystal."
+  }
+  "d-8-9" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 3-3 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 121332 component of the 6th order first strain gradient elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that e_1 and e_2 axis lie on the hexagonal plane of the crystal."
+  }
+  "d-8-10" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 3-4 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 121233 component of the 6th order first strain gradient elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that e_1 and e_2 axis lie on the hexagonal plane of the crystal."
+  }
+  "d-9-9" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 16-16 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 332332 component of the 6th order first strain gradient elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that e_1 and e_2 axis lie on the hexagonal plane of the crystal."
+  }
+  "d-9-10" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 16-17 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 332233 component of the 6th order first strain gradient elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that e_1 and e_2 axis lie on the hexagonal plane of the crystal."
+  }
+  "d-10-10" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 16-17 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 233233 component of the 6th order first strain gradient elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that e_1 and e_2 axis lie on the hexagonal plane of the crystal."
+  }
+  "d-11-11" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 16-17 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 333333 component of the 6th order first strain gradient elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that e_1 and e_2 axis lie on the hexagonal plane of the crystal."
+  }
+  "d-11-12" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 16-17 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 333113 component of the 6th order first strain gradient elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that e_1 and e_2 axis lie on the hexagonal plane of the crystal."
+  }
+  "d-11-13" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 16-17 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 333131 component of the 6th order first strain gradient elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that e_1 and e_2 axis lie on the hexagonal plane of the crystal."
+    }
+  "d-12-12" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 16-17 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 113113 component of the 6th order first strain gradient elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that e_1 and e_2 axis lie on the hexagonal plane of the crystal."
+    }
+  "d-12-13" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 16-17 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 113131 component of the 6th order first strain gradient elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that e_1 and e_2 axis lie on the hexagonal plane of the crystal."
+    }
+  "d-13-13" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 16-17 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 131131 component of the 6th order first strain gradient elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that e_1 and e_2 axis lie on the hexagonal plane of the crystal."
+    }
+  "d-16-16" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 16-17 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 123123 component of the 6th order first strain gradient elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that e_1 and e_2 axis lie on the hexagonal plane of the crystal."
+    }
+  "d-16-17" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 16-17 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 123132 component of the 6th order first strain gradient elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that e_1 and e_2 axis lie on the hexagonal plane of the crystal."
+    }
+  "d-17-17" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 16-17 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 132132 component of the 6th order first strain gradient elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that e_1 and e_2 axis lie on the hexagonal plane of the crystal."
+    }
+  "d-17-18" {
+    "type"      "float"
+    "has-unit"  true
+    "extent"    []
+    "required"  true
+    "description"  "The 16-17 component of the isothermal first strain gradient elasticty matrix in Voigt notation, which corresponds to the 132231 component of the 6th order first strain gradient elasticity tensor. The orthonormal basis used to express the tensor should be aligned such that e_1 and e_2 axis lie on the hexagonal plane of the crystal."
+    }
+}

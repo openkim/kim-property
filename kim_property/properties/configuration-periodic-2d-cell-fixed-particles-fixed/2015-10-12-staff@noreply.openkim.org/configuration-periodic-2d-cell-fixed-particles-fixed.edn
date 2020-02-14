@@ -1,0 +1,56 @@
+{"property-id" "tag:staff@noreply.openkim.org,2015-10-12:property/configuration-periodic-2d-cell-fixed-particles-fixed"
+
+  "property-title" "Static calculation of a two-dimensional periodic cell of particles (cell fixed, particles fixed)"
+
+  "property-description" "Energy (and, optionally, forces and stresses) of a two-dimensional periodic cell of particles at zero absolute temperature with the cell and particles held fixed."
+
+  "species" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     true
+    "description"  "The element symbol for each particle."
+  }
+  "unrelaxed-periodic-cell-vector-1" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [3]
+    "required"     true
+    "description"  "The [x,y,z] components of periodic cell vector 1 must be aligned along the x axis of the Cartesian coordinates (i.e. define it as [a, 0, 0]), where `a' is a positive constant."
+  }
+  "unrelaxed-periodic-cell-vector-2" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [3]
+    "required"     true
+    "description"  "The [x,y,z] components of periodic cell vector 2 must be defined as [b, c, 0], where `b' is a non-negative constant and `c' is a positive constant"
+  }
+  "unrelaxed-configuration-positions" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [":",3]
+    "required"     true
+    "description"  "The [x,y,z] coordinates of each particle.  The cross product of `unrelaxed-periodic-cell-vector-1' and `unrelaxed-periodic-cell-vector-2' determines the positive direction for the z coordinate (assuming the right-hand rule).  The x and y coordinates of all the particles should be located in the parallelogram defined by `unrelaxed-periodic-cell-vector-1' and `unrelaxed-periodic-cell-vector-2'."
+  }
+  "unrelaxed-potential-energy" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "The potential energy of the system."
+  }
+  "unrelaxed-configuration-forces" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [":",3]
+    "required"     false
+    "description"  "The [x,y,z] components of the force on each particle.  The cross product of `unrelaxed-periodic-cell-vector-1' and `unrelaxed-periodic-cell-vector-2' determines the positive direction for the z component (assuming the right-hand rule)."
+  }
+  "unrelaxed-2d-cauchy-stress" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [3]
+    "required"     false
+    "description"  "The [xx,yy,xy] (i.e. [11,22,12]) components of the 2D Cauchy stress conjugate to the shape of the periodic cell."
+  }
+}

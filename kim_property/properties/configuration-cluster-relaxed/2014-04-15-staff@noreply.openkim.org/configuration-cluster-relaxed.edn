@@ -1,0 +1,57 @@
+{
+  "property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/configuration-cluster-relaxed"
+  
+  "property-title" "Static minimization of an isolated cluster of particles"
+
+  "property-description" "Energy (and, optionally, forces) of an isolated cluster of particles at zero absolute temperature in an unrelaxed configuration and a corresponding relaxed configuration."
+
+  "species" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       [":"]
+    "required"     true
+    "description"  "The element symbol for each particle."
+  }
+  "unrelaxed-configuration-positions" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [":",3]
+    "required"     true
+    "description"  "The [x,y,z] coordinates of each particle in the unrelaxed configuration.  Corresponds to the initial guess used in the minimization."
+  }
+  "unrelaxed-configuration-forces" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [":",3]
+    "required"     false
+    "description"  "The [x,y,z] components of the force on each particle in the unrelaxed configuration."
+  }
+  "unrelaxed-potential-energy" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "The potential energy of the unrelaxed configuration.  Corresponds to the initial guess used in the minimization."
+  }
+  "relaxed-configuration-positions" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [":",3]
+    "required"     true
+    "description"  "The [x,y,z] coordinates of each particle in the relaxed configuration."
+  }
+  "relaxed-configuration-forces" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       [":",3]
+    "required"     false
+    "description"  "The [x,y,z] components of the force on each particle in a relaxed configuration.  These should be zero.  The deviation is an indication of the accuracy of the relaxation."
+  }
+  "relaxed-potential-energy" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "The potential energy of a relaxed configuration."
+  }
+}

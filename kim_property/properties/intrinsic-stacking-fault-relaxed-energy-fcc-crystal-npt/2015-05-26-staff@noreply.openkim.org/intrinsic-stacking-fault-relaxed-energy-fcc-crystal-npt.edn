@@ -1,0 +1,39 @@
+{
+   "property-id" "tag:staff@noreply.openkim.org,2015-05-26:property/intrinsic-stacking-fault-relaxed-energy-fcc-crystal-npt"
+
+   "property-title" "Relaxed intrinsic stacking fault energy for a monoatomic fcc crystal at zero temperature and a given pressure"
+
+   "property-description" "The intrinsic stacking fault (ISF) energy for a monoatomic fcc crystal at zero temperature and a specified pressure. The ISF corresponds to a fault of the form ABC|BCA. Relaxation of the atomic coordinates is performed in the direction perpendicular to the fault plane."
+
+   "a" {
+       "type"         "float"
+       "has-unit"     true
+       "extent"       []
+       "required"     true
+       "description"  "Zero-temperature, equilibrium conventional lattice constant of the fcc crystal consistent with the specified pressure."
+   }
+
+   "species" {
+       "type"         "string"
+       "has-unit"     false
+       "extent"       [":"]
+       "required"     true
+       "description"  "The element symbol of the fcc crystal material. This should contain only a single entry."
+   }
+
+   "cauchy-stress" {
+      "type"         "float"
+      "has-unit"     true
+      "extent"       [6]
+      "required"     true
+      "description"  "The [xx,yy,zz,yz,xz,xy] (i.e. [11,22,33,23,13,12]) components of the Cauchy stress acting on the crystal.  The orthonormal basis used to express the stress should be aligned with the cubic 4-fold axes of the ideal crystal and the expected form of the stress tensor should be [d d d 0 0 0], where d > 0 indicates tensile stress."
+   }
+
+   "intrinsic-stacking-fault-energy" {
+       "type"         "float"
+       "has-unit"     true
+       "extent"       []
+       "required"     true
+       "description"  "The relaxed intrinsic stacking fault energy in units of energy per area."
+   }
+}
