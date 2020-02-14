@@ -2,6 +2,11 @@ import os
 from os.path import join, isfile
 import re
 
+try:
+    import kim_edn
+except:
+    raise Exception('Failed to import `kim_edn` utility module')
+
 from tests.test_kim_property import PyTest
 
 EXTENT_LIST = [
@@ -112,15 +117,16 @@ class TestPropertyDefinition:
         self.kim_property.check_property_definition(edn_file)
 
     def test_property_from_string(self):
-        """Check the property definition from a KIM EDN string."""
+        """Check the property definition from a KIM-EDN string."""
         # Property definition edn file
         edn_file = join("tests", "fixtures", "properties", "atomic-mass",
-                        "2016-05-11-brunnels@noreply.openkim.org", "atomic-mass.edn")
+                        "2016-05-11-brunnels@noreply.openkim.org",
+                        "atomic-mass.edn")
         self.assertTrue(isfile(edn_file))
 
-        pd = self.kim_edn.load(edn_file)
+        pd = kim_edn(edn_file)
 
-        fp = self.kim_edn.dumps(pd)
+        fp = kim_edn(pd)
 
         # Complete check on the property definition
         self.kim_property.check_property_definition(fp)

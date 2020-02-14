@@ -3,7 +3,6 @@ from os.path import join, isfile, split
 
 from tests.test_kim_property import PyTest
 
-
 SOURCE_VALUE = [
     [0, 0, 0, 0, 0, 0, ],
     "P-1",
