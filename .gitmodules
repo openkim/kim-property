@@ -1,0 +1,3 @@
+[submodule "external/openkim-properties"]
+	path = external/openkim-properties
+	url = https://github.com/openkim/openkim-properties.git
