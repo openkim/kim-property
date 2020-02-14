@@ -1,82 +1,32 @@
 r"""KIM-PROPERTY utility module.
 
-The objective is to make it as easy as possible to convert a LAMMPS script
-that computes a property to a KIM Test.
+The objective is to make it as easy as possible to convert a script (for
+example a [LAMMPS](https://lammps.sandia.gov/) script) that computes a
+property to a KIM Test.
 
-- Input:
-    Read in model name, species and any other parameters. Either read this in
-    from the LAMMPS command line (if possible) or from a file using include
-    or input. If possible, the LAMMPS script should validate the input
-    (requested species are supported and other parameters are legal).
+This utility module has 5 modes:
 
-    Any dependencies must be read in using kim_queries
+1- Create
+    Take as input the property instance ID and property definition name and
+    create initial property instance data structure. It checks and indicates
+    whether the property definition exists in [OpenKIM](https://openkim.org/).
 
-- Processing:
-    Unit conversion must be employed in the script to ensure it works for any
-    potential
+2- Destroy
+    Delete a previously created property instance ID.
 
-- Output:
-    Create a kim_property command in LAMMPS with four modes:
-
-
-1- "create":
-    takes as input the property instance ID and property definition name
-    and creates initial property instance data structure.
-    There should be a a way to indicate whether the property definition
-    is on openkim.org or available locally.
-
-2- "destroy":
-    to delete a previously created property instance ID.
-
-3- "modify":
-    incrementally builds the property instance by receiving keys with
-    associated arguments.
-
-    An "append" keyword can be used to add to a key's existing array
+3- Modify
+    Incrementally build the property instance by receiving keys with
+    associated arguments. It can "append" and add to a key's existing array
     argument.
 
-    A "delete" keyword can be used to remove a key. Error checking should
-    be performed for each key/arguments received as much as possible
-    (e.g. if units is provided to a key that has not units, an error
-    should be gerenated.)
+4- Remove
+    Remove a key.
 
-4- "write":
-    takes as input a filename, validates the generated instance against
-    the property definition and either issues an error or writes the
+5- Dump
+    Take as input the generated instance and a filename, validate instance
+    against the property definition and either issues an error or writes the
     instance out to file in edn format. Final validation should make sure
     all keys/arguments are legal and all required keys are provided.
-
-For example:
-
->>> kim_property create 1 tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-potential-energy-cubic-crystal
-
->>> kim_property destroy 1
-
->>> kim_property modify 1 key "short-name" "source-value" "${short_name}" \
-                          key "species" "source-value" "['${species}' '${species}' '${species}' '${species}' ]" \
-                          key "a" "source-value" "[ ${alat} ]"  "source-unit" "angstrom" "digits" 5
-                          ...
-
->>> kim_property dump "results.edn"
-
-For cases where the key receives an array of values computed one at a
-time, the `kim_write_property` command can be called multiple times and
-append values to a given key.
-
-For example:
-
->>> kim_property modify 1 key "short-name"  "source-value" "${short_name}" \
-                          key "species"  "source-value" "['${species}' '${species}' '${species}' '${species}' ]"
-
->>> kim_property modify 1 key "a" "source-unit" "angstrom" "digits" 5 \
-    variable i loop ...
-    label loop
-    ...
->>> kim_property modify 1 key "a" "source-value" append "[${alat}]"
-    ...
-    next i
-    jump loop
->>> kim_property write "results.edn"
 
 Creating property instances::
 
@@ -157,6 +107,11 @@ Modifying (setting) property instances::
             }
         }
     ]
+
+For cases where there are multiple keys or a key receives an array of values
+computed one at a time, the `kim_property_modify` can be called multiple
+times and append values to a given key.
+
     >>> str = kim_property_modify(str, 1,
                 "key", "basis-atom-coordinates",
                 "source-value", "2", "1:2", "0.5", "0.5")
@@ -448,7 +403,6 @@ from .instance import \
     check_instnace_optional_key_map, \
     check_instance_optional_key_marked_required_are_present, \
     check_property_instances
-
 
 __version__ = '1.0.0'
 
@@ -773,6 +727,7 @@ property_id_to_property_name = {k: v for k, v in zip(
     kim_property_ids, kim_property_names)}
 """dict: KIM properties full ID to name dictionary."""
 
+
 def kim_property_create(instance_id, property_name, property_instances=None):
     """Create a new kim property instance.
 
@@ -918,11 +873,13 @@ STANDARD_KEYS_WITH_EXTENT = (
 )
 """tuple: KIM property standard keys which have the extent."""
 
+
 def kim_property_modify(property_instances, instance_id, *argv):
     """Build the property instance by receiving keys with associated arguments.
 
     Incrementally builds the property instance by receiving keys with
-    associated arguments.
+    associated arguments. It can be called multiple times and append values
+    to a given key.
 
     For example::
 
