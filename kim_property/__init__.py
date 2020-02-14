@@ -2728,3 +2728,7 @@ def kim_property_dump(property_instances, fp, *,
     else:
         kim_edn.dump(kim_property_instances, fp, cls=cls,
                      indent=indent, default=default, sort_keys=sort_keys)
+
+from ._version import get_versions
+__version__ = get_versions()['version']
+del get_versions

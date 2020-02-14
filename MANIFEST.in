@@ -1,0 +1,2 @@
+include versioneer.py
+include kim_property/_version.py
