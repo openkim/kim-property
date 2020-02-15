@@ -12,12 +12,17 @@ branches:
     - master
 
 install:
-  - cmd: git submodule update --init
-  - "%PYTHON%\\python.exe -m pip install --upgrade pip setuptools wheel"
+  - ps: Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' -Name 'LongPathsEnabled' -Value 1
+  - ps: Start-Sleep -s 10
+  - ps: Restart-Computer -Force
+  - ps: Start-Sleep -s 10
+  - "%PYTHON%\\python.exe -m pip install -U pip"
   - "%PYTHON%\\python.exe -m pip install ."
 
 build: off
 
 test_script:
+  - cmd: git config --system core.longpaths true
+  - cmd: git submodule update --init
   - "%PYTHON%\\python.exe --version"
   - "%PYTHON%\\python.exe -m tests"
