@@ -1,5 +1,10 @@
 # KIM-PROPERTY utility module
 
+[![Build Status](https://travis-ci.org/openkim/kim-property.svg?branch=master)](https://travis-ci.org/openkim/kim-property)
+[![Python package](https://github.com/yafshar/kim_edn/workflows/Python%20package/badge.svg)](https://github.com/yafshar/kim_edn/actions)
+[![Windows Build status](https://ci.appveyor.com/api/projects/status/iu5se53hqyaigiur?svg=true)](https://ci.appveyor.com/project/yafshar/kim-property)
+[![License](https://img.shields.io/badge/license-CDDL--1.0-blue)](LICENSE)
+
 The objective is to make it as easy as possible to convert a script (for
 example a [LAMMPS](https://lammps.sandia.gov/) script) that computes a
 property to a KIM Test.
