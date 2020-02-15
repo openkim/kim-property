@@ -99,7 +99,7 @@ class TestPropertyInstance:
             self.assertTrue(isfile(fi))
 
             self.kim_property.check_property_instances(
-                fi, fp_path=join("utils", "kim_property", "properties"))
+                fi, fp_path=join("kim_property", "properties"))
 
 
 class TestPyTestPropertyInstanceModuleComponents(TestPropertyInstanceModuleComponents, PyTest):

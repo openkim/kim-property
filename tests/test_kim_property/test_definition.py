@@ -124,9 +124,9 @@ class TestPropertyDefinition:
                         "atomic-mass.edn")
         self.assertTrue(isfile(edn_file))
 
-        pd = kim_edn(edn_file)
+        pd = kim_edn.load(edn_file)
 
-        fp = kim_edn(pd)
+        fp = kim_edn.dumps(pd)
 
         # Complete check on the property definition
         self.kim_property.check_property_definition(fp)
