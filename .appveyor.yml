@@ -12,7 +12,7 @@ branches:
     - master
 
 install:
-  - ps: git submodule update --init
+  - cmd: git submodule update --init
   - "%PYTHON%\\python.exe -m pip install --upgrade pip setuptools wheel"
   - "%PYTHON%\\python.exe -m pip install ."
 
