@@ -28,6 +28,7 @@ setup(
     ],
     install_requires=['kim_edn'],
     python_requires='>=3.6',
+    include_package_data=True,
     keywords='kim_property',
     packages=find_packages(),
     cmdclass=versioneer.get_cmdclass(),
