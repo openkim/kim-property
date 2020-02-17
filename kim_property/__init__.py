@@ -2712,7 +2712,7 @@ def kim_property_dump(property_instances, fp, *,
             property_instances == 'None' or \
             property_instances == '' or \
             property_instances == '[]':
-        msg = '\nERROR: There is no property instance to modify the content.'
+        msg = '\nERROR: There is no property instance to dump the content.'
         raise KIMPropertyError(msg)
 
     # Deserialize the KIM property instances.
