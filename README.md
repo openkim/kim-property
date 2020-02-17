@@ -61,6 +61,11 @@ Creating property instances::
     ]
 ````
 
+A property instance is stored in a subset of the KIM-EDN format as described in [KIM Property Instances](https://openkim.org/doc/schema/properties-framework).
+Each property instance must contain the `property-id` and `instance-id`.
+`kim_property` utility module can create a new property instance, using a KIM property ID (e.g. `tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal`) or only a KIM property name (e.g `cohesive-energy-relation-cubic-crystal`) where, it internally will use the correct KIM property ID.
+Both use cases are depicted above.
+
 ## Destroy
 
 Destroying property instances::
@@ -464,6 +469,16 @@ pip3 install kim_property
 ```sh
 python3 -m pip install kim_property
 ```
+
+### Using pip (GIT Support)
+
+`pip` currently supports cloning over `git`
+
+```sh
+pip install git+https://github.com/openkim/kim-property.git
+```
+
+* For more information and examples, see the [pip install](https://pip.pypa.io/en/stable/reference/pip_install/#id18) reference.
 
 ### Using conda
 
