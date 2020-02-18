@@ -992,11 +992,11 @@ def kim_property_modify(property_instances, instance_id, *argv):
                 property_def[new_keyword]['extent'])
             new_keyword_type = property_def[new_keyword]['type']
 
+            new_keyword_scalar = False
+
             if new_keyword in a_property_instance:
                 if new_keyword_ndims == 0:
-                    msg = '\nERROR: you can not append any extra value to '
-                    msg += 'the scalar variable.'
-                    raise KIMPropertyError(msg)
+                    new_keyword_scalar = True
 
                 new_keyword_map = a_property_instance[new_keyword]
             else:
@@ -1008,6 +1008,13 @@ def kim_property_modify(property_instances, instance_id, *argv):
 
         new_keyword_key = arg
         i += 1
+
+        if new_keyword_key in new_keyword_map:
+            if new_keyword_scalar:
+                # One can not append any extra value to
+                # the scalar variable which is already set
+                i += 1
+                continue
 
         if not new_keyword_key in standard_keys:
             msg = '\nERROR: Wrong key. \n The input '
