@@ -372,6 +372,78 @@ times and append values to a given key.
     ]
 ````
 
+### Note
+
+Variables which are introduced with a specified extent of either an empty vector `[]` or `[1]`, are scalars.
+Scalars can be set by calling the `kim_property_modify` for the first time.
+Any number of other call of `kim_property_modify` does not change the set scalar variables.
+
+For example:
+
+````py
+    >>> str = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
+    >>> str = kim_property_modify(str, 1,
+                "key", "space-group",
+                "source-value", "Immm")
+
+    >>> obj = kim_edn.loads(str)
+    >>> print(kim_edn.dumps(obj, indent=4))
+    [
+        {
+            "property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"
+            "instance-id" 1
+            "space-group" {
+                "source-value" "Immm"
+            }
+        }
+    ]
+````
+
+Calling the `kim_property_modify` again does not change the set scalar variable.
+
+````py
+    >>> str = kim_property_modify(str, 1,
+                "key", "space-group",
+                "source-value", "P6_3/mmc")
+
+    >>> obj = kim_edn.loads(str)
+    >>> print(kim_edn.dumps(obj, indent=4))
+    [
+        {
+            "property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"
+            "instance-id" 1
+            "space-group" {
+                "source-value" "Immm"
+            }
+        }
+    ]
+
+````
+
+To update these values with the newly computed or obtained value, one has to [remove](#Remove) the key and [modify or set](#Modify) the new value again.
+
+````py
+    >>> str = kim_property_remove(str, 1,
+                "key", "space-group")
+
+    >>> str = kim_property_modify(str, 1,
+                "key", "space-group",
+                "source-value", "P6_3/mmc")
+
+    >>> obj = kim_edn.loads(str)
+    >>> print(kim_edn.dumps(obj, indent=4))
+    [
+        {
+            "property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"
+            "instance-id" 1
+            "space-group" {
+                "source-value" "P6_3/mmc"
+            }
+        }
+    ]
+
+````
+
 ## Remove
 
 Removing (a) key(s) from a property instance::
