@@ -5,7 +5,7 @@
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/iu5se53hqyaigiur?svg=true)](https://ci.appveyor.com/project/yafshar/kim-property)
 [![Anaconda-Server Badge](https://img.shields.io/conda/vn/conda-forge/kim_property.svg)](https://anaconda.org/conda-forge/kim_property)
 [![PyPI](https://img.shields.io/pypi/v/kim-property.svg)](https://pypi.python.org/pypi/kim-property)
-[![License](https://img.shields.io/badge/license-CDDL--1.0-blue)](LICENSE)
+[![License](https://img.shields.io/badge/license-CDDL--1.0-blue)](LICENSE.CDDL)
 
 The objective is to make it as easy as possible to convert a script (for
 example a [LAMMPS](https://lammps.sandia.gov/) script) that computes a
