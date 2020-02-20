@@ -32,7 +32,9 @@ install:
 
 script:
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then python3 -m tests ; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then python -m tests ; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then if [ "$TRAVIS_PYTHON_VERSION" != "3.8" ]; then python -m tests ; fi ; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then if [ "$TRAVIS_PYTHON_VERSION" == "3.8" ]; then python -m coverage run -m tests ; fi ; fi
+
 
 after_success:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then if [ "$TRAVIS_PYTHON_VERSION" == "3.8" ]; then python -m codecov ; fi ; fi
