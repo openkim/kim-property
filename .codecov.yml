@@ -11,3 +11,5 @@ comment:
   behavior: default
   flags: null
   paths: null
+ignore:
+  - "kim_property/_version.py"
