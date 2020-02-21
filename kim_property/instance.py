@@ -239,7 +239,7 @@ def check_instance_optional_key_standard_pairs_format(im, pm):
         if not k in standard_keys:
             msg = '\nERROR: Wrong key. \n'
             msg += 'The input "{}"-key is not part of '.format(k)
-            msg += 'the standard key-value pairs definition.\n'
+            msg += 'the standard key-value pairs definition.\n '
             msg += 'See KIM standard key-value pairs at '
             msg += 'https://openkim.org/doc/schema/properties-framework/ '
             msg += 'in section 3 for more detailed information.'

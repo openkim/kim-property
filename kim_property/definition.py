@@ -136,7 +136,7 @@ def check_property_id_format(s, _m=PROPERTY_ID.match):
         if _m(s) is None:
             msg = '\nERROR: the "property-id" value :\n'
             msg += '{} \n'.format(s)
-            msg += 'doesn\'t meet the format specification.\n'
+            msg += 'doesn\'t meet the format specification.\n '
             msg += 'See KIM property-id, format specification at '
             msg += 'https://openkim.org/doc/schema/properties-framework/ '
             msg += 'in section 2.2 for more detailed information.'
@@ -393,7 +393,7 @@ def check_property_optional_key_standard_pairs_format(standard_pairs):
         if not k in standard_keys:
             msg = '\nERROR: Wrong key. \n'
             msg += 'The input "{}"-key is not '.format(k)
-            msg += 'part of the standard key-value pairs.\n'
+            msg += 'part of the standard key-value pairs.\n '
             msg += 'See KIM standard key-value pairs at '
             msg += 'https://openkim.org/doc/schema/properties-framework/ '
             msg += 'in section 2.2 for more detailed information.'
