@@ -98,7 +98,7 @@ def check_key_present(k, s):
 
     """
     if isinstance(k, str) and isinstance(s, str):
-        if (s.find(k) != -1):
+        if (s.find(k) == -1):
             msg = '\nERROR: the required key "{}" is not found.'.format(k)
             raise KIMPropertyError(msg)
         return
@@ -136,7 +136,10 @@ def check_property_id_format(s, _m=PROPERTY_ID.match):
         if _m(s) is None:
             msg = '\nERROR: the "property-id" value :\n'
             msg += '{} \n'.format(s)
-            msg += 'doesn\'t meet the format specification.'
+            msg += 'doesn\'t meet the format specification.\n'
+            msg += 'For further details on the format specification please '
+            msg += 'refer to the section 2.2, property-id at:\n'
+            msg += 'https://openkim.org/doc/schema/properties-framework/'
             raise KIMPropertyError(msg)
         return
     else:
@@ -193,7 +196,7 @@ def check_required_keys_present(s, rk=required_keys):
 # A key is a string. Key names can only include lower-case alphanumeric
 # characters and dashes. The names are arbitrary and set by the developer
 # to reflect the meaning of the key.
-KEY_FORMAT = re.compile(r'^[a-z0-9\-].*$', FLAGS)
+KEY_FORMAT = re.compile(r'^[a-z0-9\-]+$', FLAGS)
 
 
 def check_key_format(s, _m=KEY_FORMAT.match):
@@ -206,8 +209,7 @@ def check_key_format(s, _m=KEY_FORMAT.match):
     """
     if isinstance(s, str):
         if _m(s) is None:
-            msg = '\nERROR: invalid optional key :\n'
-            msg += '"{}" \n'.format(s)
+            msg = '\nERROR: "{}" is an invalid optional key. '.format(s)
             msg += 'A key is a string which only includes lower-case '
             msg += 'alphanumeric characters and dashes.'
             raise KIMPropertyError(msg)
