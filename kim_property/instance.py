@@ -240,9 +240,9 @@ def check_instance_optional_key_standard_pairs_format(im, pm):
             msg = '\nERROR: Wrong key. \n'
             msg += 'The input "{}"-key is not part of '.format(k)
             msg += 'the standard key-value pairs definition.\n'
-            msg += 'For further details on the standard key-value pairs '
-            msg += 'please refer to the section 3 at:\n'
-            msg += 'https://openkim.org/doc/schema/properties-framework/'
+            msg += 'See KIM standard key-value pairs at '
+            msg += 'https://openkim.org/doc/schema/properties-framework/ '
+            msg += 'in section 3 for more detailed information.'
             raise KIMPropertyError(msg)
 
     # Check the required fields in the instance property optional field key-value pairs
