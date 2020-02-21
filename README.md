@@ -10,7 +10,7 @@
 
 The objective is to make it as easy as possible to convert a script (for
 example a [LAMMPS](https://lammps.sandia.gov/) script) that computes a
-property to a KIM Test.
+[KIM property](https://openkim.org/properties) to a KIM Test.
 
 This utility module has 5 modes:
 
@@ -31,10 +31,11 @@ This utility module has 5 modes:
     Remove a key.
 
 5- **[Dump](#Dump)**\
-    Take as input the generated instance and a filename, validate instance
-    against the property definition and either issues an error or writes the
-    instance out to file in edn format. Final validation should make sure
-    all keys/arguments are legal and all required keys are provided.
+    Take as input the generated instance and a filename, validate each
+    instance against the property definition and either issues an error or
+    writes the instance out to file in edn format. Final validation should
+    make sure all keys/arguments are legal and all required keys are
+    provided.
 
 ## Create
 
