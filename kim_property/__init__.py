@@ -366,6 +366,7 @@ Removing (a) key(s) from a property instance::
     ]
 
 """
+from ._version import get_versions
 import os
 from os.path import abspath, join, isdir, pardir, dirname
 import re
@@ -793,7 +794,9 @@ def kim_property_create(instance_id, property_name, property_instances=None):
 
         for a_property_instance in kim_property_instances:
             if instance_id == a_property_instance["instance-id"]:
-                msg = '\nERROR: the "instance-id"’s cannot repeat.'
+                msg = '\nERROR: the "instance-id"’s cannot repeat. '
+                msg += 'In the case where there are multiple property '
+                msg += 'instances, the instance-id’s cannot repeat.'
                 raise KIMPropertyError(msg)
 
     new_property_instance = {}
@@ -803,15 +806,22 @@ def kim_property_create(instance_id, property_name, property_instances=None):
     elif property_name in kim_property_ids:
         new_property_instance["property-id"] = property_name
     else:
-        msg = '\nERROR: the input "property_name" :\n'
+        msg = '\nERROR: the requested "property_name" :\n'
         msg += '"{}" \n'.format(property_name)
-        msg += 'is not a valid KIM property name.'
+        msg += 'is not a valid KIM property name.\n'
+        msg += 'Please refer to the Property Definitions of the OpenKIM '
+        msg += 'project @ https://kim-items.openkim.org/properties'
         raise KIMPropertyError(msg)
 
     new_property_instance["instance-id"] = instance_id
 
     # Add the newly created property instance to the collection
     kim_property_instances.append(new_property_instance)
+
+    # If there are multiple keys sort them based on instance-id
+    if (len(kim_property_instances) > 1):
+        kim_property_instances = sorted(
+            kim_property_instances, key=lambda i: i["instance-id"])
 
     # Return the serialize KIM property instances
     return kim_edn.dumps(kim_property_instances)
@@ -2736,6 +2746,6 @@ def kim_property_dump(property_instances, fp, *,
         kim_edn.dump(kim_property_instances, fp, cls=cls,
                      indent=indent, default=default, sort_keys=sort_keys)
 
-from ._version import get_versions
+
 __version__ = get_versions()['version']
 del get_versions
