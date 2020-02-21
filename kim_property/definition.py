@@ -456,6 +456,7 @@ def check_property_definition(fp, _m=KEY_FORMAT.match):
     # property definition
     if isinstance(fp, dict):
         pd = fp
+    # Other format should be loaded by kim_edn
     else:
         pd = kim_edn.load(fp)
 
