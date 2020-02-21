@@ -945,7 +945,7 @@ def kim_property_modify(property_instances, instance_id, *argv):
 
     for p in kim_property_instances:
         if "instance-id" not in p:
-            msg = '\nERROR: wrong input. The required "instance_id"-key is '
+            msg = '\nERROR: wrong input. The required "instance-id"-key is '
             msg += 'missing.'
             raise KIMPropertyError(msg)
         if p["instance-id"] == instance_id:
@@ -956,6 +956,14 @@ def kim_property_modify(property_instances, instance_id, *argv):
         msg = '\nERROR: The requested instance id :\n'
         msg += '{} \n'.format(instance_id)
         msg += 'does not match any of the property instances ids.'
+        raise KIMPropertyError(msg)
+
+    if "property-id" not in a_property_instance:
+        msg = '\nERROR: wrong input. The required "property-id"-key is '
+        msg += 'missing.\n'
+        msg += 'For further details on KIM property instances, please '
+        msg += 'refer to the section 3 at '
+        msg += 'https://openkim.org/doc/schema/properties-framework/'
         raise KIMPropertyError(msg)
 
     # Get the property definition id
