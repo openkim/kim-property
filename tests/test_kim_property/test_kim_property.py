@@ -35,6 +35,17 @@ class TestPropertyModule:
         self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_create,
                           0, 'cohesive-energy-relation-cubic-crystal')
 
+        # Fails when property-name is not an string
+        self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_create,
+                          10, 1)
+
+        self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_create,
+                          10, ['cohesive-energy-relation-cubic-crystal'])
+
+        # Fails when property-name is not a valid KIM property name.
+        self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_create,
+                          10, 'new-name')
+
         str_obj2 = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1} {"property-id" "tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass" "instance-id" 2}]'
 
         # Create the property instance with the property name to the already created instance
@@ -46,6 +57,26 @@ class TestPropertyModule:
         # It will fail if the property instance already exists
         self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_create,
                           1, 'atomic-mass', str1)
+
+    def test_create_sorted(self):
+        """Test create functionality and sorting based on instance-id."""
+        str1 = self.kim_property.kim_property_create(
+            2, 'atomic-mass')
+
+        str1 = self.kim_property.kim_property_modify(str1, 2, "key", "species", "source-value", "Ar",
+                                                     "key", "mass", "source-value", 39.948, "source-unit", "grams/mole")
+
+        str1 = self.kim_property.kim_property_create(
+            5, "cohesive-energy-lattice-invariant-shear-unrelaxed-path-cubic-crystal", str1)
+
+        str1 = self.kim_property.kim_property_create(
+            1, 'cohesive-energy-relation-cubic-crystal', str1)
+
+        kim_obj = kim_edn.load(str1)
+
+        self.assertTrue(kim_obj[0]["instance-id"] == 1)
+        self.assertTrue(kim_obj[1]["instance-id"] == 2)
+        self.assertTrue(kim_obj[2]["instance-id"] == 5)
 
     def test_destroy(self):
         """Test the destroy functionality."""
