@@ -163,6 +163,10 @@ class TestNumericComponents:
         a2 = self.kim_property.create_full_array([3, 3, 2], True)
         self.assertTrue(a2 == FULL_ARRAY_2)
 
+        # if the input is not a list or tuple
+        self.assertRaises(self.KIMPropertyError, self.kim_property.create_full_array,
+                          {2, 3, 2})
+
     def test_extend_full_array(self):
         """Test the extend_full_array function."""
         a1 = self.kim_property.extend_full_array(FULL_ARRAY_1, [6, 3], 0)
@@ -178,6 +182,30 @@ class TestNumericComponents:
         a4 = self.kim_property.extend_full_array(
             FULL_ARRAY_2, [4, 4, 2], False)
         self.assertTrue(a4 == FULL_ARRAY_2_EXTENDED_2)
+
+        # if the input is not a list or tuple
+        self.assertRaises(self.KIMPropertyError, self.kim_property.extend_full_array,
+                          FULL_ARRAY_1, {6, 3}, 0)
+
+        # if the input is not uniform
+        a = [[1], [2, 1], [3], [4], [5, 2, 3]]
+        self.assertRaises(self.KIMPropertyError, self.kim_property.extend_full_array,
+                          a, {5, 3}, 0)
+
+        # dimensions do not match
+        a = self.kim_property.create_full_array([2, 3], 0)
+        self.assertRaises(self.KIMPropertyError, self.kim_property.extend_full_array,
+                          a, [2, 3, 2], 0)
+
+        # full array dimensions are bigger
+        a = self.kim_property.create_full_array([2, 3, 4], 0)
+        self.assertRaises(self.KIMPropertyError, self.kim_property.extend_full_array,
+                          a, [2, 3, 2], 0)
+
+        # input number of dimensions is greater than 6
+        a = self.kim_property.create_full_array([1, 1, 1, 1, 1, 1, 1, 1], 0)
+        self.assertRaises(self.KIMPropertyError, self.kim_property.extend_full_array,
+                          a, [1, 1, 1, 1, 1, 1, 1, 2], 0)
 
 
 class TestPyTestNumericComponents(TestNumericComponents, PyTest):
