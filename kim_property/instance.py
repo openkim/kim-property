@@ -239,7 +239,10 @@ def check_instance_optional_key_standard_pairs_format(im, pm):
         if not k in standard_keys:
             msg = '\nERROR: Wrong key. \n'
             msg += 'The input "{}"-key is not part of '.format(k)
-            msg += 'the standard key-value pairs definition.'
+            msg += 'the standard key-value pairs definition.\n'
+            msg += 'For further details on the standard key-value pairs '
+            msg += 'please refer to the section 3 at:\n'
+            msg += 'https://openkim.org/doc/schema/properties-framework/'
             raise KIMPropertyError(msg)
 
     # Check the required fields in the instance property optional field key-value pairs
@@ -411,8 +414,15 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
 
             fp = join(fp_path, _path)
 
-        # property definition
-        pd = kim_edn.load(fp)
+        if isinstance(fp, dict):
+            # It is already in the KIM-EDN format
+            pd = fp
+
+            # We have to check if required keys are there
+            check_required_keys_present(pd, rk=def_required_keys)
+        else:
+            # property definition
+            pd = kim_edn.load(fp)
 
         if pd["property-id"] != pi["property-id"]:
             msg = '\nERROR: wrong property definition is provided.\n'
@@ -453,8 +463,14 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
                 # Set fp back to None for the next in the loop
                 fp = None
             else:
-                # property definition
-                pd = kim_edn.load(fp)
+                if isinstance(fp, dict):
+                    # It is already in the KIM-EDN format
+                    pd = fp
+                    # We have to check if required keys are there
+                    check_required_keys_present(pd, rk=def_required_keys)
+                else:
+                    # property definition
+                    pd = kim_edn.load(fp)
 
             if pd["property-id"] != pi_["property-id"]:
                 msg = '\nERROR: wrong property definition is provided.\n'
