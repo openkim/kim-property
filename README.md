@@ -13,23 +13,23 @@ property to a KIM Test.
 
 This utility module has 5 modes:
 
-1- **Create**\
+1- **[Create](#Create)**\
     Take as input the property instance ID and property definition name and
     create initial property instance data structure. It checks and indicates
     whether the property definition exists in [OpenKIM](https://openkim.org/).
 
-2- **Destroy**\
+2- **[Destroy](#Destroy)**\
     Delete a previously created property instance ID.
 
-3- **Modify**\
+3- **[Modify](#Modify)**\
     Incrementally build the property instance by receiving keys with
     associated arguments. It can "append" and add to a key's existing array
     argument.
 
-4- **Remove**\
+4- **[Remove](#Remove)**\
     Remove a key.
 
-5- **Dump**\
+5- **[Dump](#Dump)**\
     Take as input the generated instance and a filename, validate instance
     against the property definition and either issues an error or writes the
     instance out to file in edn format. Final validation should make sure
@@ -506,6 +506,94 @@ Removing (a) key(s) from a property instance::
             }
         }
     ]
+````
+
+## Dump
+
+After validating the generated instance against the property definition,
+serializes it to a [KIM-EDN](https://github.com/openkim/kim-edn#kim-edn)
+formatted stream to `fp` (a `.write()`-supporting file-like object or a name
+string to open a file).
+
+The validation makes sure all keys/arguments are legal and all required keys
+are provided.
+
+````py
+    >>> str = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
+    >>> str = kim_property_modify(str, 1,
+                "key", "short-name",
+                "source-value", "1", "fcc",
+                "key", "species",
+                "source-value", "1:4", "Al", "Al", "Al", "Al",
+                "key", "a",
+                "source-value", "1:5", "3.9149", "4.0000", "4.032", "4.0817", "4.1602",
+                "source-unit", "angstrom", "digits", "5",
+                "key", "basis-atom-coordinates",
+                "source-value", "2", "1:2", "0.5", "0.5",
+                "key", "basis-atom-coordinates",
+                "source-value", "3", "1:3", "0.5", "0.0", "0.5",
+                "key", "basis-atom-coordinates",
+                "source-value", "4", "2:3", "0.5", "0.5",
+                "key", "cohesive-potential-energy",
+                "source-value", "1:5", "3.324", "3.3576", "3.3600", "3.3550", "3.3260",
+                "source-std-uncert-value", "1:5", "0.002", "0.0001", "0.00001", "0.0012", "0.00015",
+                "source-unit", "eV",
+                "digits", "5")
+    >>> kim_property_dump(str, "results.edn")
+````
+
+or
+
+````py
+    >>> str = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
+    >>> str = kim_property_modify(str, 1,
+                "key", "short-name",
+                "source-value", "1", "fcc",
+                "key", "species",
+                "source-value", "1:4", "Al", "Al", "Al", "Al",
+                "key", "a",
+                "source-value", "1:5", "3.9149", "4.0000", "4.032", "4.0817", "4.1602",
+                "source-unit", "angstrom", "digits", "5",
+                "key", "basis-atom-coordinates",
+                "source-value", "2", "1:2", "0.5", "0.5",
+                "key", "basis-atom-coordinates",
+                "source-value", "3", "1:3", "0.5", "0.0", "0.5",
+                "key", "basis-atom-coordinates",
+                "source-value", "4", "2:3", "0.5", "0.5",
+                "key", "cohesive-potential-energy",
+                "source-value", "1:5", "3.324", "3.3576", "3.3600", "3.3550", "3.3260",
+                "source-std-uncert-value", "1:5", "0.002", "0.0001", "0.00001", "0.0012", "0.00015",
+                "source-unit", "eV",
+                "digits", "5")
+    >>> obj = kim_edn.loads(str)
+    >>> kim_property_dump(obj, "results.edn")
+````
+
+or
+
+````py
+    >>> str = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
+    >>> str = kim_property_modify(str, 1,
+                "key", "short-name",
+                "source-value", "1", "fcc",
+                "key", "species",
+                "source-value", "1:4", "Al", "Al", "Al", "Al",
+                "key", "a",
+                "source-value", "1:5", "3.9149", "4.0000", "4.032", "4.0817", "4.1602",
+                "source-unit", "angstrom", "digits", "5",
+                "key", "basis-atom-coordinates",
+                "source-value", "2", "1:2", "0.5", "0.5",
+                "key", "basis-atom-coordinates",
+                "source-value", "3", "1:3", "0.5", "0.0", "0.5",
+                "key", "basis-atom-coordinates",
+                "source-value", "4", "2:3", "0.5", "0.5",
+                "key", "cohesive-potential-energy",
+                "source-value", "1:5", "3.324", "3.3576", "3.3600", "3.3550", "3.3260",
+                "source-std-uncert-value", "1:5", "0.002", "0.0001", "0.00001", "0.0012", "0.00015",
+                "source-unit", "eV",
+                "digits", "5")
+    >>> with open("results.edn", 'w') as fp:
+            kim_property_dump(str, fp)
 ````
 
 ## Installing kim_property
