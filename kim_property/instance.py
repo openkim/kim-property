@@ -168,6 +168,9 @@ def check_optional_key_source_value_scalar(l, s, _size=size):
     elif isinstance(l, float):
         return s == "float"
     elif isinstance(l, int):
+        # 0 and 1 are special cases
+        if l == 0 or l == 1:
+            return s == "int" or s == "float" or s == 'bool'
         return s == "int" or s == "float"
     elif isinstance(l, bool):
         return s == "bool"
