@@ -28,7 +28,7 @@ class TestPropertyModule:
 
         self.assertTrue(str2 == str_obj)
 
-        # Fails when theinstance id is not an integer equal to or greater than 1
+        # Fails when the instance id is not an integer equal to or greater than 1
         self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_create,
                           - 1, 'cohesive-energy-relation-cubic-crystal')
 
@@ -87,6 +87,10 @@ class TestPropertyModule:
 
         self.assertTrue(str1 == '[]')
 
+        # Fails when the instance id is not an integer
+        self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_destroy,
+                          str_obj, 1.0)
+
         str_obj2 = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1} {"property-id" "tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass" "instance-id" 2}]'
 
         # Destroy one of the property instance
@@ -102,9 +106,33 @@ class TestPropertyModule:
 
     def test_modify(self):
         """Test the modify functionality."""
+        # Fails when the input is none or not created
+        for str_obj in [None, '', 'None', '[]']:
+            self.assertRaises(self.KIMPropertyError,
+                              self.kim_property.kim_property_modify, str_obj, 1)
+
+        # Fails when there is a different instance id
+        str_obj = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1}]'
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify, str_obj, 2)
+
+        # Fails when not having the instance id
+        str_obj = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"}]'
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify, str_obj, 1)
+
+        # Fails when not having the property id
+        str_obj = '[{"instance-id" 1}]'
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify, str_obj, 1)
+
         # Create the property instance with the property name
         str_obj = self.kim_property.kim_property_create(
             1, 'cohesive-energy-relation-cubic-crystal')
+
+        # Fails when the instance id is not an integer
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify, str_obj, 1.0)
 
         str_obj = self.kim_property.kim_property_modify(
             str_obj, 1,
