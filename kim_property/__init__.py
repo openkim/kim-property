@@ -810,7 +810,7 @@ def kim_property_create(instance_id, property_name, property_instances=None):
         msg += '"{}" \n'.format(property_name)
         msg += 'is not a valid KIM property name.\n'
         msg += 'Please refer to the Property Definitions of the OpenKIM '
-        msg += 'project @ https://kim-items.openkim.org/properties'
+        msg += 'project at https://openkim.org/properties'
         raise KIMPropertyError(msg)
 
     new_property_instance["instance-id"] = instance_id
@@ -944,6 +944,10 @@ def kim_property_modify(property_instances, instance_id, *argv):
     a_property_instance = None
 
     for p in kim_property_instances:
+        if "instance-id" not in p:
+            msg = '\nERROR: wrong input. The required "instance_id"-key is '
+            msg += 'missing.'
+            raise KIMPropertyError(msg)
         if p["instance-id"] == instance_id:
             a_property_instance = p
             break
