@@ -393,7 +393,10 @@ def check_property_optional_key_standard_pairs_format(standard_pairs):
         if not k in standard_keys:
             msg = '\nERROR: Wrong key. \n'
             msg += 'The input "{}"-key is not '.format(k)
-            msg += 'part of the standard key-value pairs.'
+            msg += 'part of the standard key-value pairs.\n'
+            msg += 'For further details on the standard key-value pairs '
+            msg += 'please refer to the section 2.2 at:\n'
+            msg += 'https://openkim.org/doc/schema/properties-framework/'
             raise KIMPropertyError(msg)
 
     check_optional_key_type_format(standard_pairs["type"])
@@ -451,7 +454,7 @@ def check_property_definition(fp, _m=KEY_FORMAT.match):
 
     """
     # property definition
-    if isinstance(fp, list) or isinstance(fp, dict):
+    if isinstance(fp, dict):
         pd = fp
     else:
         pd = kim_edn.load(fp)
