@@ -167,6 +167,77 @@ class TestNumericComponents:
         self.assertRaises(self.KIMPropertyError, self.kim_property.create_full_array,
                           {2, 3, 2})
 
+    def test_create_full_array_1d(self):
+        """Test the create_full_array function for one-dimensional arrays."""
+        a1 = self.kim_property.create_full_array([1], 1)
+        self.assertTrue(a1 == [1])
+        a2 = self.kim_property.create_full_array([1], 1.0)
+        self.assertTrue(a2 == [1.0])
+        a3 = self.kim_property.create_full_array([2], True)
+        self.assertTrue(a3 == [True, True])
+        a4 = self.kim_property.create_full_array([10], "Al")
+        self.assertTrue(a4 == ["Al", "Al", "Al", "Al", "Al",
+                               "Al", "Al", "Al", "Al", "Al"])
+
+    def test_create_full_array_2d(self):
+        """Test the create_full_array function for two-dimensional arrays."""
+        a1 = self.kim_property.create_full_array([1, 1], 1)
+        self.assertTrue(a1 == [[1]])
+        a2 = self.kim_property.create_full_array([2, 1], 1.0)
+        self.assertTrue(a2 == [[1.0], [1.0]])
+        a3 = self.kim_property.create_full_array([1, 2], 1.0)
+        self.assertTrue(a3 == [[1.0, 1.0]])
+        a4 = self.kim_property.create_full_array([5, 2], 1)
+        self.assertTrue(a4 == [[1, 1], [1, 1], [1, 1], [1, 1], [1, 1]])
+
+    def test_create_full_array_3d(self):
+        """Test the create_full_array function for three-dimensional arrays."""
+        a1 = self.kim_property.create_full_array([1, 1, 1], 1)
+        self.assertTrue(a1 == [[[1]]])
+        a2 = self.kim_property.create_full_array([2, 1, 1], 1.0)
+        self.assertTrue(a2 == [[[1.0]], [[1.0]]])
+        a3 = self.kim_property.create_full_array([1, 2, 1], 1.0)
+        self.assertTrue(a3 == [[[1.0], [1.0]]])
+        a4 = self.kim_property.create_full_array([2, 2, 2], 1)
+        self.assertTrue(a4 == [[[1, 1], [1, 1]], [[1, 1], [1, 1]]])
+
+    def test_create_full_array_4d(self):
+        """Test the create_full_array function for four-dimensional arrays."""
+        a1 = self.kim_property.create_full_array([1, 1, 1, 1], 1)
+        self.assertTrue(a1 == [[[[1]]]])
+        a2 = self.kim_property.create_full_array([2, 1, 1, 1], 1.0)
+        self.assertTrue(a2 == [[[[1.0]]], [[[1.0]]]])
+        a3 = self.kim_property.create_full_array([1, 2, 1, 1], 1.0)
+        self.assertTrue(a3 == [[[[1.0]], [[1.0]]]])
+        a4 = self.kim_property.create_full_array([2, 2, 2, 2], 1)
+        self.assertTrue(a4 == [[[[1, 1], [1, 1]], [[1, 1], [1, 1]]], [
+                        [[1, 1], [1, 1]], [[1, 1], [1, 1]]]])
+
+    def test_create_full_array_5d(self):
+        """Test the create_full_array function for five-dimensional arrays."""
+        a1 = self.kim_property.create_full_array([1, 1, 1, 1, 1], 1)
+        self.assertTrue(a1 == [[[[[1]]]]])
+        a2 = self.kim_property.create_full_array([2, 1, 1, 1, 1], 1.0)
+        self.assertTrue(a2 == [[[[[1.0]]]], [[[[1.0]]]]])
+        a3 = self.kim_property.create_full_array([1, 2, 1, 1, 1], 1.0)
+        self.assertTrue(a3 == [[[[[1.0]]], [[[1.0]]]]])
+        a4 = self.kim_property.create_full_array([2, 2, 2, 2, 2], 1)
+        self.assertTrue(a4 == [[[[[1, 1], [1, 1]], [[1, 1], [1, 1]]], [[[1, 1], [1, 1]], [[1, 1], [1, 1]]]], [
+                        [[[1, 1], [1, 1]], [[1, 1], [1, 1]]], [[[1, 1], [1, 1]], [[1, 1], [1, 1]]]]])
+
+    def test_create_full_array_6d(self):
+        """Test the create_full_array function for six-dimensional arrays."""
+        a1 = self.kim_property.create_full_array([1, 1, 1, 1, 1, 1], 1)
+        self.assertTrue(a1 == [[[[[[1]]]]]])
+        a2 = self.kim_property.create_full_array([2, 1, 1, 1, 1, 1], 1.0)
+        self.assertTrue(a2 == [[[[[[1.0]]]]], [[[[[1.0]]]]]])
+        a3 = self.kim_property.create_full_array([1, 2, 1, 1, 1, 1], 1.0)
+        self.assertTrue(a3 == [[[[[[1.0]]]], [[[[1.0]]]]]])
+        a4 = self.kim_property.create_full_array([2, 2, 2, 2, 2, 2], 1)
+        print(a4)
+        self.assertTrue(a4 == [[[[[[1, 1], [1, 1]], [[1, 1], [1, 1]]], [[[1, 1], [1, 1]], [[1, 1], [1, 1]]]], [[[[1, 1], [1, 1]], [[1, 1], [1, 1]]], [[[1, 1], [1, 1]], [[1, 1], [1, 1]]]]], [
+                        [[[[1, 1], [1, 1]], [[1, 1], [1, 1]]], [[[1, 1], [1, 1]], [[1, 1], [1, 1]]]], [[[[1, 1], [1, 1]], [[1, 1], [1, 1]]], [[[1, 1], [1, 1]], [[1, 1], [1, 1]]]]]])
+
     def test_extend_full_array(self):
         """Test the extend_full_array function."""
         a1 = self.kim_property.extend_full_array(FULL_ARRAY_1, [6, 3], 0)
