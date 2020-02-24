@@ -808,9 +808,9 @@ def kim_property_create(instance_id, property_name, property_instances=None):
     else:
         msg = '\nERROR: the requested "property_name" :\n'
         msg += '"{}" \n'.format(property_name)
-        msg += 'is not a valid KIM property name.\n'
-        msg += 'Please refer to the Property Definitions of the OpenKIM '
-        msg += 'project at https://openkim.org/properties'
+        msg += 'is not a valid KIM property name.\n '
+        msg += 'See the KIM Property Definitions at '
+        msg += 'https://openkim.org/properties for more detailed information.'
         raise KIMPropertyError(msg)
 
     new_property_instance["instance-id"] = instance_id
@@ -954,16 +954,16 @@ def kim_property_modify(property_instances, instance_id, *argv):
 
     if a_property_instance is None:
         msg = '\nERROR: The requested instance id :\n'
-        msg += '{} \n'.format(instance_id)
+        msg += '{}\n '.format(instance_id)
         msg += 'does not match any of the property instances ids.'
         raise KIMPropertyError(msg)
 
     if "property-id" not in a_property_instance:
         msg = '\nERROR: wrong input. The required "property-id"-key is '
-        msg += 'missing.\n'
-        msg += 'For further details on KIM property instances, please '
-        msg += 'refer to the section 3 at '
-        msg += 'https://openkim.org/doc/schema/properties-framework/'
+        msg += 'missing.\n '
+        msg += 'See KIM property instances at '
+        msg += 'https://openkim.org/doc/schema/properties-framework/ '
+        msg += 'in section 3 for more detailed information.'
         raise KIMPropertyError(msg)
 
     # Get the property definition id
@@ -1001,10 +1001,13 @@ def kim_property_modify(property_instances, instance_id, *argv):
             new_keyword = arg
 
             if new_keyword not in property_def:
-                msg = '\nERROR: wrong keyword. \n The input '
+                msg = '\nERROR: wrong keyword. The input '
                 msg += '"{}"-key is not defined in '.format(new_keyword)
                 msg += 'the property definition \n'
-                msg += '({})'.format(property_def['property-id'])
+                msg += '({})\n '.format(property_def['property-id'])
+                msg += 'See the KIM Property Definitions at '
+                msg += 'https://openkim.org/properties for more detailed '
+                msg += 'information.'
                 raise KIMPropertyError(msg)
 
             # Get the number of dimensions, shape and type of the key
@@ -1039,37 +1042,26 @@ def kim_property_modify(property_instances, instance_id, *argv):
                 continue
 
         if not new_keyword_key in standard_keys:
-            msg = '\nERROR: Wrong key. \n The input '
+            msg = '\nERROR: wrong key. The input '
             msg += '"{}"-key is not part of '.format(new_keyword_key)
-            msg += 'the standard key-value pairs definition.'
+            msg += 'the standard key-value pairs definition.\n '
+            msg += 'See KIM standard key-value pairs at '
+            msg += 'https://openkim.org/doc/schema/properties-framework/ '
+            msg += 'in section 3 for more detailed information.'
             raise KIMPropertyError(msg)
 
         if new_keyword_key == 'source-unit':
             if not property_def[new_keyword]['has-unit']:
-                msg = '\nERROR: Wrong key.\nThe unit is wrongly provided '
-                msg += 'to a key that does not have a unit.\n'
+                msg = '\nERROR: wrong key. The unit is wrongly provided '
+                msg += 'to a key that does not have a unit. '
                 msg += 'The corresponding "has-unit" key in the property '
-                msg += 'definition has `False` value.'
+                msg += 'definition has a `False` value.\n '
+                msg += 'See the KIM Property Definitions at '
+                msg += 'https://openkim.org/properties for more detailed '
+                msg += 'information.'
                 raise KIMPropertyError(msg)
 
         if new_keyword_key in STANDARD_KEYS_WITH_EXTENT:
-            if new_keyword_ndims > 0:
-                if i + new_keyword_ndims - 1 > n_arguments:
-                    msg = '\nERROR: there is not enough input arguments to '
-                    msg += 'use. The input number of arguments = '
-                    msg += '{} are less than the '.format(n_arguments)
-                    msg += 'required number of arguments = '
-                    msg += '{}.'.format(i + new_keyword_ndims - 1)
-                    raise KIMPropertyError(msg)
-            else:
-                if i > n_arguments:
-                    msg = '\nERROR: there is not enough input arguments to '
-                    msg += 'use. The input number of arguments = '
-                    msg += '{} are less than the '.format(n_arguments)
-                    msg += 'required number of arguments = '
-                    msg += '{}.'.format(i)
-                    raise KIMPropertyError(msg)
-
             # Append
             if new_keyword_key in new_keyword_map:
                 new_keyword_value = new_keyword_map[new_keyword_key]
@@ -1079,6 +1071,24 @@ def kim_property_modify(property_instances, instance_id, *argv):
                 _l = 0
                 _u = 0
                 for n in range(new_keyword_ndims):
+                    if i >= n_arguments:
+                        msg = '\nERROR: there is not enough input arguments '
+                        msg += 'to use.\n Processing the {"'
+                        msg += '{}'.format(new_keyword)
+                        msg += '"}:{"'
+                        msg += '{}'.format(new_keyword_key)
+                        msg += '"} input arguments failed.\n The '
+                        if n == 0:
+                            msg += 'first '
+                        elif n == 1:
+                            msg += 'second '
+                        elif n == 2:
+                            msg += 'third '
+                        else:
+                            msg += '{}th '.format(n+1)
+                        msg += 'index is missing from the input arguments.'
+                        raise KIMPropertyError(msg)
+
                     arg = str(argv[i])
                     if re.match(r'^[1-9][0-9]*$', arg) is None:
                         if re.match(r'^[1-9][:0-9]*$', arg) is None:
@@ -1119,7 +1129,20 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                 msg += 'length = '
                                 msg += '{}, '.format(new_keyword_shape[n])
                                 msg += 'while, wrong index = {} '.format(_u)
-                                msg += 'is requested.'
+                                msg += 'is requested.\n Processing the {"'
+                                msg += '{}'.format(new_keyword)
+                                msg += '"}:{"'
+                                msg += '{}'.format(new_keyword_key)
+                                msg += '"} input arguments, wrong index at '
+                                if n == 0:
+                                    msg += 'the first '
+                                elif n == 1:
+                                    msg += 'the second '
+                                elif n == 2:
+                                    msg += 'the third '
+                                else:
+                                    msg += 'the {}th '.format(n+1)
+                                msg += 'dimension is requested.'
                                 raise KIMPropertyError(msg)
                             if new_keyword_shape[n] == 1 and _u > 1:
                                 if property_def[new_keyword]["extent"][n] == ':':
@@ -1134,7 +1157,20 @@ def kim_property_modify(property_instances, instance_id, *argv):
                             msg = '\nERROR: this dimension has a fixed '
                             msg += 'length = {}'.format(new_keyword_shape[n])
                             msg += ', while, wrong index = {} '.format(arg)
-                            msg += 'is requested.'
+                            msg += 'is requested.\n Processing the {"'
+                            msg += '{}'.format(new_keyword)
+                            msg += '"}:{"'
+                            msg += '{}'.format(new_keyword_key)
+                            msg += '"} input arguments, wrong index at the '
+                            if n == 0:
+                                msg += 'first '
+                            elif n == 1:
+                                msg += 'second '
+                            elif n == 2:
+                                msg += 'third '
+                            else:
+                                msg += '{}th '.format(n+1)
+                            msg += 'dimension is requested.'
                             raise KIMPropertyError(msg)
                         if new_keyword_shape[n] == 1 and int(arg) > 1:
                             if property_def[new_keyword]["extent"][n] == ':':
@@ -1144,7 +1180,21 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                 msg = '\nERROR: this dimension has a fixed '
                                 msg += 'length = 1, while, wrong index = '
                                 msg += '{} '.format(arg)
-                                msg += 'is requested.'
+                                msg += 'is requested.\n Processing the {"'
+                                msg += '{}'.format(new_keyword)
+                                msg += '"}:{"'
+                                msg += '{}'.format(new_keyword_key)
+                                msg += '"} input arguments, wrong index at '
+                                if n == 0:
+                                    msg += 'the first '
+                                elif n == 1:
+                                    msg += 'the second '
+                                elif n == 2:
+                                    msg += 'the third '
+                                else:
+                                    msg += 'the {}th '.format(n+1)
+                                msg += 'dimension is requested.'
+
                                 raise KIMPropertyError(msg)
                         new_keyword_index.append(int(arg) - 1)
                     i += 1
@@ -1168,12 +1218,17 @@ def kim_property_modify(property_instances, instance_id, *argv):
                 del(new_keyword_shape_new)
 
                 if _n > -1:
-                    if i + _u - _l - 1 > n_arguments:
-                        msg = '\nERROR: there is not enough input arguments '
-                        msg += 'to use. The input number of arguments = '
-                        msg += '{} are less than the '.format(n_arguments)
-                        msg += 'required number of arguments = '
-                        msg += '{}.'.format(i + _u - _l - 1)
+                    if i - 1 + _u - _l >= n_arguments:
+                        msg = '\nERROR: there is not enough input '
+                        msg += 'arguments to use.\n Processing the {"'
+                        msg += '{}'.format(new_keyword)
+                        msg += '"}:{"'
+                        msg += '{}'.format(new_keyword_key)
+                        msg += '"} input arguments failed.\n '
+                        msg += 'We have {} '.format(n_arguments - i + 1)
+                        msg += 'more input arguments while '
+                        msg += 'at least {} arguments '.format(_u - _l)
+                        msg += 'are required.'
                         raise KIMPropertyError(msg)
 
                     if new_keyword_ndims == 1:
@@ -1706,12 +1761,14 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                     new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                     i += 1
                 else:
-                    if i > n_arguments:
+                    if i >= n_arguments:
                         msg = '\nERROR: there is not enough input arguments '
-                        msg += 'to use. The input number of arguments = '
-                        msg += '{} are less than the '.format(n_arguments)
-                        msg += 'required number of arguments = '
-                        msg += '{}.'.format(i)
+                        msg += 'to use.\n Processing the {"'
+                        msg += '{}'.format(new_keyword)
+                        msg += '"}:{"'
+                        msg += '{}'.format(new_keyword_key)
+                        msg += '"} input arguments failed.\n '
+                        msg += 'At least we need one further input.'
                         raise KIMPropertyError(msg)
 
                     if new_keyword_ndims == 1:
@@ -1814,6 +1871,24 @@ def kim_property_modify(property_instances, instance_id, *argv):
                     _l = 0
                     _u = 0
                     for n in range(new_keyword_ndims):
+                        if i >= n_arguments:
+                            msg = '\nERROR: there is not enough input '
+                            msg += 'arguments to use.\n Processing the {"'
+                            msg += '{}'.format(new_keyword)
+                            msg += '"}:{"'
+                            msg += '{}'.format(new_keyword_key)
+                            msg += '"} input arguments failed.\n The '
+                            if n == 0:
+                                msg += 'first '
+                            elif n == 1:
+                                msg += 'second '
+                            elif n == 2:
+                                msg += 'third '
+                            else:
+                                msg += '{}th '.format(n+1)
+                            msg += 'index is missing from the input arguments.'
+                            raise KIMPropertyError(msg)
+
                         arg = str(argv[i])
                         if re.match(r'^[1-9][0-9]*$', arg) is None:
                             if re.match(r'^[1-9][:0-9]*$', arg) is None:
@@ -1854,7 +1929,21 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                     msg += 'fixed length = '
                                     msg += '{}'.format(new_keyword_shape[n])
                                     msg += ', while, wrong index = '
-                                    msg += '{} is requested.'.format(_u)
+                                    msg += '{} is requested.\n '.format(_u)
+                                    msg += 'Processing the {"'
+                                    msg += '{}'.format(new_keyword)
+                                    msg += '"}:{"'
+                                    msg += '{}'.format(new_keyword_key)
+                                    msg += '"} input arguments, wrong index '
+                                    if n == 0:
+                                        msg += 'at the first '
+                                    elif n == 1:
+                                        msg += 'at the second '
+                                    elif n == 2:
+                                        msg += 'at the third '
+                                    else:
+                                        msg += 'at the {}th '.format(n+1)
+                                    msg += 'dimension is requested.'
                                     raise KIMPropertyError(msg)
                                 if new_keyword_shape[n] == 1 and _u > 1:
                                     if property_def[new_keyword]["extent"][n] == ':':
@@ -1869,7 +1958,21 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                 msg += 'length = '
                                 msg += '{}, '.format(new_keyword_shape[n])
                                 msg += 'while, wrong index = '
-                                msg += '{} is requested.'.format(arg)
+                                msg += '{} is requested.\n '.format(arg)
+                                msg += 'Processing the {"'
+                                msg += '{}'.format(new_keyword)
+                                msg += '"}:{"'
+                                msg += '{}'.format(new_keyword_key)
+                                msg += '"} input arguments, wrong index at '
+                                if n == 0:
+                                    msg += 'the first '
+                                elif n == 1:
+                                    msg += 'the second '
+                                elif n == 2:
+                                    msg += 'the third '
+                                else:
+                                    msg += 'the {}th '.format(n+1)
+                                msg += 'dimension is requested.'
                                 raise KIMPropertyError(msg)
                             if new_keyword_shape[n] == 1 and int(arg) > 1:
                                 if property_def[new_keyword]["extent"][n] == ':':
@@ -1878,7 +1981,21 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                     msg = '\nERROR: this dimension has a '
                                     msg += 'fixed length = 1, while, wrong '
                                     msg += 'index = {} '.format(arg)
-                                    msg += 'is requested.'
+                                    msg += 'is requested.\n '
+                                    msg += 'Processing the {"'
+                                    msg += '{}'.format(new_keyword)
+                                    msg += '"}:{"'
+                                    msg += '{}'.format(new_keyword_key)
+                                    msg += '"} input arguments, wrong index '
+                                    if n == 0:
+                                        msg += 'at the first '
+                                    elif n == 1:
+                                     msg += 'at the second '
+                                    elif n == 2:
+                                        msg += 'at the third '
+                                    else:
+                                        msg += 'at the {}th '.format(n+1)
+                                    msg += 'dimension is requested.'
                                     raise KIMPropertyError(msg)
                             new_keyword_index.append(int(arg) - 1)
                         i += 1
@@ -1902,12 +2019,17 @@ def kim_property_modify(property_instances, instance_id, *argv):
                     del(new_keyword_shape_new)
 
                     if _n > -1:
-                        if i + _u - _l - 1 > n_arguments:
+                        if i - 1 + _u - _l >= n_arguments:
                             msg = '\nERROR: there is not enough input '
-                            msg += 'arguments to use. The input number of '
-                            msg += 'arguments = {} are '.format(n_arguments)
-                            msg += 'less than the required number of '
-                            msg += 'arguments = {}.'.format(i + _u - _l - 1)
+                            msg += 'arguments to use.\n Processing the {"'
+                            msg += '{}'.format(new_keyword)
+                            msg += '"}:{"'
+                            msg += '{}'.format(new_keyword_key)
+                            msg += '"} input arguments failed.\n '
+                            msg += 'We have {} '.format(n_arguments - i + 1)
+                            msg += 'more input arguments while '
+                            msg += 'at least {} arguments '.format(_u - _l)
+                            msg += 'are required.'
                             raise KIMPropertyError(msg)
 
                         if new_keyword_ndims == 1:
@@ -2444,12 +2566,14 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                         new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
                     else:
-                        if i > n_arguments:
+                        if i >= n_arguments:
                             msg = '\nERROR: there is not enough input '
-                            msg += 'arguments to use. The input number of '
-                            msg += 'arguments = {} are '.format(n_arguments)
-                            msg += 'less than the required number of '
-                            msg += 'arguments = {}.'.format(i)
+                            msg += 'arguments to use.\n Processing the {'
+                            msg += '{}'.format(new_keyword)
+                            msg += '}:{'
+                            msg += '{}'.format(new_keyword_key)
+                            msg += '} input arguments failed.\n '
+                            msg += 'At least we need one further input.'
                             raise KIMPropertyError(msg)
 
                         if new_keyword_ndims == 1:
@@ -2566,12 +2690,14 @@ def kim_property_modify(property_instances, instance_id, *argv):
                 msg += 'not append new data to keys with no extent.'
                 raise KIMPropertyError(msg)
 
-            if i > n_arguments:
-                msg = '\nERROR: there is not enough input arguments to '
-                msg += 'use. The input number of arguments = '
-                msg += '{} are less than the '.format(n_arguments)
-                msg += 'required number of arguments = '
-                msg += '{}.'.format(i)
+            if i >= n_arguments:
+                msg = '\nERROR: there is not enough input arguments '
+                msg += 'to use.\n Processing the {"'
+                msg += '{}'.format(new_keyword)
+                msg += '"}:{"'
+                msg += '{}'.format(new_keyword_key)
+                msg += '"} input arguments failed.\n '
+                msg += 'At least we need one further input.'
                 raise KIMPropertyError(msg)
 
             if new_keyword_key == 'source-unit':
