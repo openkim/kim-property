@@ -223,6 +223,64 @@ class TestPropertyModule:
 
         self.assertTrue(kim_obj["space-group"]["source-value"] == "Immm")
 
+        # Fails when new keyword is not in the property definition
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify,
+                          str_obj, 1,
+                          "key", "a", "source-value", 2.5)
+
+        # Fails when not in the standard key-value pairs
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify,
+                          str_obj, 1,
+                          "key", "basis-atom-coordinates", "source-unknown", 2.5)
+
+        # Fails when not enough input
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify,
+                          str_obj, 1,
+                          "key", "basis-atom-coordinates", "source-value", 3)
+
+        msg = '\nERROR: there is not enough input arguments '
+        msg += 'to use.\n Processing the {"basis-atom-coordinates"}:'
+        msg += '{"source-value"} input arguments failed.\n The second '
+        msg += 'index is missing from the input arguments.'
+
+        self.assertRaisesRegex(self.KIMPropertyError, msg,
+                               self.kim_property.kim_property_modify,
+                               str_obj, 1,
+                               "key", "basis-atom-coordinates", "source-value", 3)
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify,
+                          str_obj, 1,
+                          "key", "basis-atom-coordinates", "source-value", 3, 3)
+
+        msg = '\nERROR: there is not enough input arguments '
+        msg += 'to use.\n Processing the {"basis-atom-coordinates"}:'
+        msg += '{"source-value"} input arguments failed.\n '
+        msg += 'At least we need one further input.'
+
+        self.assertRaisesRegex(self.KIMPropertyError, msg,
+                               self.kim_property.kim_property_modify,
+                               str_obj, 1,
+                               "key", "basis-atom-coordinates", "source-value", 3, 3)
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify,
+                          str_obj, 1,
+                          "key", "basis-atom-coordinates", "source-value", 3, 4)
+
+        msg = '\nERROR: this dimension has a fixed length = 3, while, '
+        msg += 'wrong index = 4 is requested.\n Processing the '
+        msg += '{"basis-atom-coordinates"}:{"source-value"} input arguments,'
+        msg += ' wrong index at the second dimension is requested.'
+
+        self.assertRaisesRegex(self.KIMPropertyError, msg,
+                               self.kim_property.kim_property_modify,
+                               str_obj, 1,
+                               "key", "basis-atom-coordinates", "source-value", 3, 4)
+
     def test_remove(self):
         """Test the remove functionality."""
         # Create the property instance with the property name
