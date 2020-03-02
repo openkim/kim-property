@@ -1,7 +1,8 @@
 import os
-from os.path import join, isfile, split
+from os.path import join, isfile
 
 from tests.test_kim_property import PyTest
+from kim_property.create import property_id_to_property_name
 
 SOURCE_VALUE = [
     [0, 0, 0, 0, 0, 0, ],
@@ -57,18 +58,13 @@ class TestPropertyInstanceModuleComponents:
 
     def test_get_property_id_path(self):
         """Test the source-value checking scalar component."""
-        for k, v in self.kim_property.kim_properties.items():
-            _path, _, _, _property_name = self.kim_property.get_property_id_path(
+        kim_properties = self.kim_property.get_properties()
+        for k, v in kim_properties.items():
+            _, _, _, _property_name = self.kim_property.get_property_id_path(
                 k)
 
-            property_name = self.kim_property.property_id_to_property_name[k]
+            property_name = property_id_to_property_name[k]
             self.assertTrue(_property_name == property_name)
-
-            # Property definition edn file
-            path = join("properties", _path)
-            v_path = join("properties", split(split(split(v)[0])[
-                          0])[-1], split(split(v)[0])[-1], split(v)[-1])
-            self.assertTrue(path == v_path)
 
     def test_check_instance_id_format(self):
         """Test if the instance id format is correct."""
@@ -83,6 +79,10 @@ class TestPropertyInstanceModuleComponents:
         # instance-id is zero
         self.assertRaises(self.KIMPropertyError, self.kim_property.check_instance_id_format,
                           0)
+
+        # instance-id is bool zero
+        self.assertRaises(self.KIMPropertyError, self.kim_property.check_instance_id_format,
+                          False)
 
     def test_check_optional_key_source_value_scalar(self):
         """Test the source-value checking scalar component."""
@@ -169,7 +169,43 @@ class TestPropertyInstanceModuleComponents:
                           (1,))
 
         self.assertRaises(self.KIMPropertyError, self.kim_property.get_optional_key_source_value_ndimensions,
+                          (1, 2))
+
+        self.assertRaises(self.KIMPropertyError, self.kim_property.get_optional_key_source_value_ndimensions,
                           {1, })
+
+        self.assertRaises(self.KIMPropertyError, self.kim_property.get_optional_key_source_value_ndimensions,
+                          {1: 100, 2: 200})
+
+        self.assertTrue(
+            2 == self.kim_property.get_optional_key_source_value_ndimensions([[1]]))
+        self.assertTrue(
+            3 == self.kim_property.get_optional_key_source_value_ndimensions([[[1]]]))
+        self.assertTrue(
+            4 == self.kim_property.get_optional_key_source_value_ndimensions([[[[1]]]]))
+        self.assertTrue(
+            5 == self.kim_property.get_optional_key_source_value_ndimensions([[[[[1]]]]]))
+        self.assertTrue(
+            6 == self.kim_property.get_optional_key_source_value_ndimensions([[[[[[1]]]]]]))
+
+        self.assertTrue(
+            2 == self.kim_property.get_optional_key_source_value_ndimensions([[1, 2]]))
+        self.assertTrue(
+            3 == self.kim_property.get_optional_key_source_value_ndimensions([[[1, 2]]]))
+        self.assertTrue(
+            4 == self.kim_property.get_optional_key_source_value_ndimensions([[[[1, 2]]]]))
+        self.assertTrue(
+            5 == self.kim_property.get_optional_key_source_value_ndimensions([[[[[1, 2]]]]]))
+        self.assertTrue(
+            6 == self.kim_property.get_optional_key_source_value_ndimensions([[[[[[1, 2]]]]]]))
+
+        self.assertTrue(
+            2 == self.kim_property.get_optional_key_source_value_ndimensions([[0.0, 0.0], [1.0, 2.0]]))
+        self.assertTrue(
+            2 == self.kim_property.get_optional_key_source_value_ndimensions([[0., 0., 0.],
+                                                                              [5., 5., 0.],
+                                                                              [5., 0., 5.],
+                                                                              [0., 5., 0.]]))
 
     def test_check_instance_optional_key_standard_pairs_format(self):
         """Test the standard key-map pairs correctness."""
@@ -226,13 +262,15 @@ class TestPropertyInstance:
 
     def test_property(self):
         """Check the property instance."""
+        kim_properties = self.kim_property.get_properties()
+
         for pi in property_instance_names:
             fi = join("tests", "fixtures", pi)
 
             self.assertTrue(isfile(fi))
 
             self.kim_property.check_property_instances(
-                fi, fp_path=join("kim_property", "properties"))
+                fi, fp_path=kim_properties)
 
 
 class TestPyTestPropertyInstanceModuleComponents(TestPropertyInstanceModuleComponents, PyTest):
