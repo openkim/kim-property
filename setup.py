@@ -7,9 +7,9 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-    name='kim_property',
+    name='kim-property',
     version=versioneer.get_version(),
-    description='kim_property - KIM-PROPERTY utility module.',
+    description='kim-property - KIM-PROPERTY utility module.',
     long_description=long_description,
     long_description_content_type="text/markdown",
     url='https://github.com/openkim/kim-property',
@@ -26,10 +26,10 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8'
     ],
-    install_requires=['kim_edn'],
+    install_requires=['kim-edn'],
     python_requires='>=3.6',
     include_package_data=True,
-    keywords='kim_property',
+    keywords='kim-property',
     packages=find_packages(),
     cmdclass=versioneer.get_cmdclass(),
 )
