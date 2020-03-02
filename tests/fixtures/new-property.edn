@@ -1,0 +1,19 @@
+{
+  "property-id"           "tag:yafshar@noreply.openkim.org,2020-03-02:property/atomic-mass-test"
+  "property-title"        "Atomic mass for test"
+  "property-description"  "The atomic mass of the element as for testing a new property file"
+  "species" {
+    "type"         "string"
+    "has-unit"     false
+    "extent"       []
+    "required"     true
+    "description"  "Element symbol of the species"
+  }
+  "mass" {
+    "type"         "float"
+    "has-unit"     true
+    "extent"       []
+    "required"     true
+    "description"  "Mass of a single atom of the species"
+  }
+}
