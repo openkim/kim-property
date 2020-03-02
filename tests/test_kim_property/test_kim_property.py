@@ -60,8 +60,7 @@ class TestPropertyModule:
 
     def test_create_sorted(self):
         """Test create functionality and sorting based on instance-id."""
-        str1 = self.kim_property.kim_property_create(
-            2, 'atomic-mass')
+        str1 = self.kim_property.kim_property_create(2, 'atomic-mass')
 
         str1 = self.kim_property.kim_property_modify(str1, 2, "key", "species", "source-value", "Ar",
                                                      "key", "mass", "source-value", 39.948, "source-unit", "grams/mole")
