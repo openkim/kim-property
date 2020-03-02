@@ -2,6 +2,8 @@ import os
 from os.path import join, isfile
 import re
 
+from kim_property.create import property_id_to_property_name
+
 try:
     import kim_edn
 except:
@@ -314,9 +316,7 @@ class TestPropertyDefinition:
     def test_property_from_string(self):
         """Check the property definition from a KIM-EDN string."""
         # Property definition edn file
-        edn_file = join("tests", "fixtures", "properties", "atomic-mass",
-                        "2016-05-11-brunnels@noreply.openkim.org",
-                        "atomic-mass.edn")
+        edn_file = join("tests", "fixtures", "atomic-mass.edn")
         self.assertTrue(isfile(edn_file))
 
         pd = kim_edn.load(edn_file)
@@ -328,16 +328,15 @@ class TestPropertyDefinition:
 
     def test_property(self):
         """Check the property definition."""
-        for k, edn_file in self.kim_property.kim_properties.items():
-            self.assertTrue(isfile(edn_file))
-
-            if self.kim_property.property_id_to_property_name[k] in EXCEPTIONS:
+        kim_properties = self.kim_property.get_properties()
+        for k, pd in kim_properties.items():
+            if property_id_to_property_name[k] in EXCEPTIONS:
                 # Complete check on the property definition
                 self.kim_property.check_property_definition(
-                    edn_file, _m=KEY_FORMAT.match)
+                    pd, _m=KEY_FORMAT.match)
             else:
                 # Complete check on the property definition
-                self.kim_property.check_property_definition(edn_file)
+                self.kim_property.check_property_definition(pd)
 
 
 class TestPyTestPropertyDefinitionModuleComponents(TestPropertyDefinitionModuleComponents, PyTest):
