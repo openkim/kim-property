@@ -207,11 +207,15 @@ class TestPropertyModule:
 
         self.assertTrue(Property_Instance == kim_edn.dumps(kim_obj))
 
-        # Test for scalar values after set can not be modified
+        # Test for scalar values
         str_obj = self.kim_property.kim_property_modify(
             str_obj, 1,
             "key", "space-group",
             "source-value", "Immm")
+
+        kim_obj = kim_edn.load(str_obj)[0]
+
+        self.assertTrue(kim_obj["space-group"]["source-value"] == "Immm")
 
         str_obj = self.kim_property.kim_property_modify(
             str_obj, 1,
@@ -220,7 +224,7 @@ class TestPropertyModule:
 
         kim_obj = kim_edn.load(str_obj)[0]
 
-        self.assertTrue(kim_obj["space-group"]["source-value"] == "Immm")
+        self.assertTrue(kim_obj["space-group"]["source-value"] == "Fm-3m")
 
         # Fails when new keyword is not in the property definition
         self.assertRaises(self.KIMPropertyError,
@@ -354,6 +358,7 @@ class TestPropertyModule:
             str_obj3, 1,
             "key", "space-group",
             "source-value", "Immm")
+
         str_obj4 = self.kim_property.kim_property_modify(
             str_obj4, 1,
             "key", "space-group",
@@ -361,7 +366,7 @@ class TestPropertyModule:
 
         kim_obj4 = kim_edn.load(str_obj4)[0]
 
-        self.assertTrue(kim_obj4["space-group"]["source-value"] == "Immm")
+        self.assertTrue(kim_obj4["space-group"]["source-value"] == "Fm-3m")
 
         str_obj4 = self.kim_property.kim_property_remove(
             str_obj4, 1, "key", "space-group", "source-value")
