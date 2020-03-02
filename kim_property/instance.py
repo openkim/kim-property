@@ -2,7 +2,7 @@
 """Instance validator."""
 
 import os
-from os.path import abspath, isabs, join, isdir
+from os.path import abspath, isabs, join, isdir, isfile
 import re
 
 from .definition import required_keys as def_required_keys
@@ -370,7 +370,9 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
             (default: None)
 
         fp_path should be an absolute path (or a valid relative path)
-        to the KIM property definition folder. (default: None)
+            to the KIM property definition folder. (default: None)
+            or
+            a KIM properties object containing all the available properties
 
     """
     # Check whether the property definition is provided?
@@ -381,14 +383,19 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
             msg += 'or a KIM property definition should be provided.'
             raise KIMPropertyError(msg)
         else:
-            # Check whether the provided path is an absolute path?
-            if not isabs(fp_path):
-                # Loosen the check for the relative path which exists
-                if isdir(fp_path):
-                    fp_path = abspath(fp_path)
-                else:
-                    msg = '\nERROR: the path KIM properties should be an '
-                    msg += 'absolute path name.'
+            if isinstance(fp_path, str):
+                # Check whether the provided path is an absolute path?
+                if not isabs(fp_path):
+                    # Loosen the check for the relative path which exists
+                    if isdir(fp_path):
+                        fp_path = abspath(fp_path)
+                    else:
+                        msg = '\nERROR: the path KIM properties should be an '
+                        msg += 'absolute path name.'
+                        raise KIMPropertyError(msg)
+            else:
+                if not isinstance(fp_path, dict):
+                    msg = '\nERROR: wrong KIM properties object.'
                     raise KIMPropertyError(msg)
     # Property definition file is provided
     else:
@@ -409,10 +416,32 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
         check_property_id_format(pi["property-id"])
 
         if fp is None:
-            _path, _email, _date, _property_name = get_property_id_path(
-                pi["property-id"])
+            if isinstance(fp_path, dict):
+                if pi["property-id"] in fp_path:
+                    fp = fp_path[pi["property-id"]]
+                else:
+                    msg = '\nERROR: the requested property ID = \n"'
+                    msg += pi["property-id"]
+                    msg += '"\n does not exist in the input KIM properties.'
+                    raise KIMPropertyError(msg)
+            else:
+                _path, _, _, _property_name = get_property_id_path(
+                    pi["property-id"])
 
-            fp = join(fp_path, _path)
+                if isfile(join(fp_path, _path)):
+                    fp = join(fp_path, _path)
+                elif isfile(join(fp_path, _property_name + ".edn")):
+                    fp = join(fp_path, _property_name + ".edn")
+                else:
+                    msg = '\nERROR: unable to find a KIM property '
+                    msg += 'definition at {\n"'
+                    msg += join(fp_path, _path)
+                    msg += '",\n nor at\n"'
+                    msg += join(fp_path, _property_name + ".edn")
+                    msg += '" }'
+                    raise KIMPropertyError(msg)
+                del(_path)
+                del(_property_name)
 
         if isinstance(fp, dict):
             # It is already in the KIM-EDN format
@@ -452,15 +481,36 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
             check_property_id_format(pi_["property-id"])
 
             if fp is None:
-                _path, _email, _date, _property_name = get_property_id_path(
-                    pi_["property-id"])
+                if isinstance(fp_path, dict):
+                    if pi_["property-id"] in fp_path:
+                        pd = fp_path[pi_["property-id"]]
+                    else:
+                        msg = '\nERROR: the requested property ID = \n"'
+                        msg += pi_["property-id"]
+                        msg += '"\n does not exist in the input KIM '
+                        msg += 'properties.'
+                        raise KIMPropertyError(msg)
+                else:
+                    _path, _, _, _property_name = get_property_id_path(
+                        pi_["property-id"])
 
-                fp = join(fp_path, _path)
+                    if isfile(join(fp_path, _path)):
+                        fp = join(fp_path, _path)
+                    elif isfile(join(fp_path, _property_name + ".edn")):
+                        fp = join(fp_path, _property_name + ".edn")
+                    else:
+                        msg = '\nERROR: unable to find a KIM property '
+                        msg += 'definition at {\n"'
+                        msg += join(fp_path, _path)
+                        msg += '",\n nor at\n"'
+                        msg += join(fp_path, _property_name + ".edn")
+                        msg += '" }'
+                        raise KIMPropertyError(msg)
 
-                # property definition
-                pd = kim_edn.load(fp)
+                    # property definition
+                    pd = kim_edn.load(fp)
 
-                # Set fp back to None for the next in the loop
+                # Set fp back to None for the next property in the loop
                 fp = None
             else:
                 if isinstance(fp, dict):
