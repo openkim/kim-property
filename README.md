@@ -4,7 +4,7 @@
 [![Python package](https://github.com/openkim/kim-property/workflows/Python%20package/badge.svg)](https://github.com/openkim/kim-property/actions)
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/iu5se53hqyaigiur?svg=true)](https://ci.appveyor.com/project/yafshar/kim-property)
 [![codecov](https://codecov.io/gh/openkim/kim-property/branch/master/graph/badge.svg)](https://codecov.io/gh/openkim/kim-property)
-[![Anaconda-Server Badge](https://img.shields.io/conda/vn/conda-forge/kim_property.svg)](https://anaconda.org/conda-forge/kim_property)
+[![Anaconda-Server Badge](https://img.shields.io/conda/vn/conda-forge/kim-property.svg)](https://anaconda.org/conda-forge/kim-property)
 [![PyPI](https://img.shields.io/pypi/v/kim-property.svg)](https://pypi.python.org/pypi/kim-property)
 [![License](https://img.shields.io/badge/license-CDDL--1.0-blue)](LICENSE.CDDL)
 
@@ -65,10 +65,15 @@ Creating property instances::
     ]
 ````
 
-A property instance is stored in a subset of the KIM-EDN format as described in [KIM Property Instances](https://openkim.org/doc/schema/properties-framework).
+A property instance is stored in a subset of the KIM-EDN format as described
+in [KIM Property Instances](https://openkim.org/doc/schema/properties-framework).
 Each property instance must contain the `property-id` and `instance-id`.
-`kim_property` utility module can create a new property instance, using a KIM property ID (e.g. `tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal`) or only a KIM property name (e.g `cohesive-energy-relation-cubic-crystal`) where, it internally will use the correct KIM property ID.
-Both use cases are depicted above.
+`kim-property` utility module can create a new property instance, using a KIM
+property ID (e.g.
+`tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal`)
+or only a KIM property name (e.g `cohesive-energy-relation-cubic-crystal`)
+where, it internally will use the correct KIM property ID. Both use cases are
+depicted above.
 
 ## Destroy
 
@@ -376,11 +381,13 @@ times and append values to a given key.
     ]
 ````
 
-### Note
+**Note:**
 
-Variables which are introduced with a specified extent of either an empty vector `[]` or `[1]`, are scalars.
-Scalars can be set by calling the `kim_property_modify` for the first time.
-Any number of other call of `kim_property_modify` does not change the set scalar variables.
+Variables which are introduced with a specified extent of either an empty
+vector `[]` or `[1]`, are scalars.
+
+Calling a `kim_property_modify` will update the scalars and vector values
+which are already set.
 
 For example:
 
@@ -403,33 +410,9 @@ For example:
     ]
 ````
 
-Calling the `kim_property_modify` again does not change the set scalar variable.
+Calling the `kim_property_modify` again set the scalar variable with a new value.
 
 ````py
-    >>> str = kim_property_modify(str, 1,
-                "key", "space-group",
-                "source-value", "P6_3/mmc")
-
-    >>> obj = kim_edn.loads(str)
-    >>> print(kim_edn.dumps(obj, indent=4))
-    [
-        {
-            "property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"
-            "instance-id" 1
-            "space-group" {
-                "source-value" "Immm"
-            }
-        }
-    ]
-
-````
-
-To update these values with the newly computed or obtained value, one has to [remove](#Remove) the key and [modify or set](#Modify) the new value again.
-
-````py
-    >>> str = kim_property_remove(str, 1,
-                "key", "space-group")
-
     >>> str = kim_property_modify(str, 1,
                 "key", "space-group",
                 "source-value", "P6_3/mmc")
@@ -512,10 +495,10 @@ Removing (a) key(s) from a property instance::
 
 ## Dump
 
-After validating the generated instance against the property definition,
-serializes it to a [KIM-EDN](https://github.com/openkim/kim-edn#kim-edn)
-formatted stream to `fp` (a `.write()`-supporting file-like object or a name
-string to open a file).
+First, it validates the generated instances against the property definition.
+Then serializes it to a [KIM-EDN](https://github.com/openkim/kim-edn#kim-edn)
+formatted stream and dumps it to a `fp` (a `.write()`-supporting file-like
+object or a name string to open a file).
 
 The validation makes sure all keys/arguments are legal and all required keys
 are provided.
@@ -598,12 +581,12 @@ or
             kim_property_dump(str, fp)
 ````
 
-## Installing kim_property
+## Installing kim-property
 
 ### Requirements
 
-You need Python 3.6 or later to run `kim_property`. You can have multiple Python
-versions (2.x and 3.x) installed on the same system without problems.
+You need Python 3.6 or later to run `kim-property`. You can have multiple
+Python versions (2.x and 3.x) installed on the same system without problems.
 
 To install Python 3 for different Linux flavors, macOS and Windows, packages
 are available at\
@@ -614,24 +597,25 @@ are available at\
 **pip** is the most popular tool for installing Python packages, and the one
 included with modern versions of Python.
 
-`kim_property` can be installed with `pip`:
+`kim-property` can be installed with `pip`:
 
 ```sh
-pip install kim_property
+pip install kim-property
 ```
 
-#### Note
+**Note:**
 
-* Depending on your Python installation, you may need to use `pip3` instead of `pip`.
+Depending on your Python installation, you may need to use `pip3` instead of
+`pip`.
 
 ```sh
-pip3 install kim_property
+pip3 install kim-property
 ```
 
-* Depending on your configuration, you may have to run `pip` like this:
+Depending on your configuration, you may have to run `pip` like this:
 
 ```sh
-python3 -m pip install kim_property
+python3 -m pip install kim-property
 ```
 
 ### Using pip (GIT Support)
@@ -642,31 +626,31 @@ python3 -m pip install kim_property
 pip install git+https://github.com/openkim/kim-property.git
 ```
 
-* For more information and examples, see the [pip install](https://pip.pypa.io/en/stable/reference/pip_install/#id18) reference.
+For more information and examples, see the [pip install](https://pip.pypa.io/en/stable/reference/pip_install/#id18) reference.
 
 ### Using conda
 
 **conda** is the package management tool for Anaconda Python installations.
 
-Installing `kim_property` from the `conda-forge` channel can be achieved by adding
-`conda-forge` to your channels with:
+Installing `kim-property` from the `conda-forge` channel can be achieved by
+adding `conda-forge` to your channels with:
 
 ```sh
 conda config --add channels conda-forge
 ```
 
-Once the `conda-forge` channel has been enabled, `kim_property` can be installed
-with:
+Once the `conda-forge` channel has been enabled, `kim-property` can be
+installed with:
 
 ```sh
-conda install kim_property
+conda install kim-property
 ```
 
-It is possible to list all of the versions of `kim_property` available on your
-platform with:
+It is possible to list all of the versions of `kim-property` available on
+your platform with:
 
 ```sh
-conda search kim_property --channel conda-forge
+conda search kim-property --channel conda-forge
 ```
 
 ## Copyright
