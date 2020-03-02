@@ -19,7 +19,6 @@ install:
   - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - git config --system core.longpaths true
-  - git submodule update --init --recursive
   - "%PYTHON%\\python.exe -m pip install -U pip"
   - "%PYTHON%\\python.exe -m pip install ."
 
