@@ -2,16 +2,10 @@
 
 import re
 
-from .numeric import \
-    shape, \
-    create_full_array, \
-    extend_full_array
-
-from .definition import \
-    KIMPropertyError, \
+from .numeric import shape, create_full_array, extend_full_array
+from .definition import KIMPropertyError, \
     get_optional_key_extent_ndimensions, \
     get_optional_key_extent_shape
-
 from .instance import standard_keys
 
 from .create import get_properties
@@ -303,7 +297,8 @@ def kim_property_modify(property_instances, instance_id, *argv):
                             if new_keyword_shape[n] > 1 and \
                                     new_keyword_shape[n] < int(arg):
                                 msg = '\nERROR: this dimension has a fixed '
-                                msg += 'length = {}'.format(new_keyword_shape[n])
+                                msg += 'length = {}'.format(
+                                    new_keyword_shape[n])
                                 msg += ', while, wrong index = {} '.format(arg)
                                 msg += 'is requested.\n Processing the {"'
                                 msg += '{}'.format(new_keyword)
@@ -408,11 +403,13 @@ def kim_property_modify(property_instances, instance_id, *argv):
                             if _n == 0:
                                 if new_keyword_type == 'int':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1] = int(argv[i])
+                                        new_keyword_value[d0][d1] = int(
+                                            argv[i])
                                         i += 1
                                 elif new_keyword_type == 'float':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1] = float(argv[i])
+                                        new_keyword_value[d0][d1] = float(
+                                            argv[i])
                                         i += 1
                                 elif new_keyword_type == 'bool':
                                     for d0 in range(_l, _u):
@@ -431,11 +428,13 @@ def kim_property_modify(property_instances, instance_id, *argv):
                             else:
                                 if new_keyword_type == 'int':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1] = int(argv[i])
+                                        new_keyword_value[d0][d1] = int(
+                                            argv[i])
                                         i += 1
                                 elif new_keyword_type == 'float':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1] = float(argv[i])
+                                        new_keyword_value[d0][d1] = float(
+                                            argv[i])
                                         i += 1
                                 elif new_keyword_type == 'bool':
                                     for d1 in range(_l, _u):
@@ -965,9 +964,11 @@ def kim_property_modify(property_instances, instance_id, *argv):
                         elif new_keyword_ndims == 4:
                             d0, d1, d2, d3 = new_keyword_index
                             if new_keyword_type == 'int':
-                                new_keyword_value[d0][d1][d2][d3] = int(argv[i])
+                                new_keyword_value[d0][d1][d2][d3] = int(
+                                    argv[i])
                             elif new_keyword_type == 'float':
-                                new_keyword_value[d0][d1][d2][d3] = float(argv[i])
+                                new_keyword_value[d0][d1][d2][d3] = float(
+                                    argv[i])
                             elif new_keyword_type == 'bool':
                                 if argv[i] == 'true' or \
                                         argv[i] == 'True' or argv[i]:
