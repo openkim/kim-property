@@ -42,7 +42,6 @@ def get_properties():
     Returns:
         dict -- kim_properties.
     """
-    global kim_properties
     return kim_properties
 
 
@@ -59,6 +58,8 @@ def unset_property_id(property_id):
 
     """
     global new_property_ids
+    global property_name_to_property_id
+    global property_id_to_property_name
     if new_property_ids is not None:
         if property_id in new_property_ids:
             del kim_properties[property_id]
