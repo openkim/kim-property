@@ -1,9 +1,9 @@
 """KIM properties object serialization."""
 
 import os
-from os.path import abspath, isabs, join, isdir, pardir, isfile
-import pickle
+from os.path import abspath, join, isdir, pardir, isfile, dirname
 from io import BytesIO
+import pickle
 
 from .definition import KIMPropertyError
 from .instance import get_property_id_path
@@ -20,25 +20,8 @@ __all__ = [
 ]
 
 
-kim_properties_path = join("kim_property", "properties")
-"""str: KIM properties path.
-
-An absolute path (or a valid relative path) to the KIM properties folder.
-"""
-
-if isdir(abspath(kim_properties_path)):
-    kim_properties_path = abspath(kim_properties_path)
-elif isdir(abspath(join(pardir, kim_properties_path))):
-    kim_properties_path = abspath(join(pardir, kim_properties_path))
-elif isdir(abspath(join(pardir, pardir, kim_properties_path))):
-    kim_properties_path = abspath(
-        join(pardir, pardir, kim_properties_path))
-elif isdir(abspath(join(pardir, pardir, pardir, kim_properties_path))):
-    kim_properties_path = abspath(
-        join(pardir, pardir, pardir, kim_properties_path))
-else:
-    msg = '\nERROR: the "properties" folder can not be found!'
-    raise KIMPropertyError(msg)
+kim_properties_path = join(dirname(abspath(__file__)), "properties")
+"""str: Absolute path to the KIM properties folder."""
 
 
 def pickle_kim_properties(properties=None,
@@ -66,20 +49,14 @@ def pickle_kim_properties(properties=None,
 
         # KIM property files path
         # An absolute path (or a valid relative path) to the KIM property files folder.
-        kim_property_files_path = join(
-            "external", "openkim-properties", "properties")
+        kim_property_files_path = join(dirname(abspath(__file__)),
+                                       pardir,
+                                       "external",
+                                       "openkim-properties",
+                                       "properties")
 
         if isdir(abspath(kim_property_files_path)):
             kim_property_files_path = abspath(kim_property_files_path)
-        elif isdir(abspath(join(pardir, kim_property_files_path))):
-            kim_property_files_path = abspath(
-                join(pardir, kim_property_files_path))
-        elif isdir(abspath(join(pardir, pardir, kim_property_files_path))):
-            kim_property_files_path = abspath(
-                join(pardir, pardir, kim_property_files_path))
-        elif isdir(abspath(join(pardir, pardir, pardir, kim_property_files_path))):
-            kim_property_files_path = abspath(
-                join(pardir, pardir, pardir, kim_property_files_path))
         else:
             msg = '\nERROR: property files can not be found!'
             raise KIMPropertyError(msg)
