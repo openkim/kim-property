@@ -1,7 +1,6 @@
 """Remove module."""
 
-from .definition import \
-    KIMPropertyError
+from .definition import KIMPropertyError
 
 try:
     import kim_edn
