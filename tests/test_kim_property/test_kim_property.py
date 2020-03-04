@@ -417,6 +417,10 @@ class TestPropertyModule:
 
         self.assertTrue(sio.getvalue() == out_str)
 
+        # Fail to create a file to dump the property
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify,
+                          str_obj, "output/results.edn")
 
 class TestPyTestPropertyModule(TestPropertyModule, PyTest):
     pass
