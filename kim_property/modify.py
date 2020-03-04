@@ -125,11 +125,11 @@ def kim_property_modify(property_instances, instance_id, *argv):
     n_arguments = len(argv)
 
     # key keyword
-    k_keyword = False
+    key = False
 
     # new keyword
-    new_keyword = None
-    new_keyword_map = {}
+    key_name = None
+    key_name_map = {}
 
     i = 0
     while i < n_arguments:
@@ -139,19 +139,19 @@ def kim_property_modify(property_instances, instance_id, *argv):
             break
 
         if arg == 'key':
-            k_keyword = True
+            key = True
             i += 1
             continue
 
-        if k_keyword:
-            k_keyword = False
+        if key:
+            key = False
 
             # new keyword
-            new_keyword = arg
+            key_name = arg
 
-            if new_keyword not in property_def:
+            if key_name not in property_def:
                 msg = '\nERROR: wrong keyword. The input '
-                msg += '"{}"-key is not defined in '.format(new_keyword)
+                msg += '"{}"-key is not defined in '.format(key_name)
                 msg += 'the property definition \n'
                 msg += '({})\n '.format(property_def['property-id'])
                 msg += 'See the KIM Property Definitions at '
@@ -160,35 +160,35 @@ def kim_property_modify(property_instances, instance_id, *argv):
                 raise KIMPropertyError(msg)
 
             # Get the number of dimensions, shape and type of the key
-            new_keyword_ndims = get_optional_key_extent_ndimensions(
-                property_def[new_keyword]['extent'])
-            new_keyword_shape = get_optional_key_extent_shape(
-                property_def[new_keyword]['extent'])
-            new_keyword_type = property_def[new_keyword]['type']
+            key_name_ndims = get_optional_key_extent_ndimensions(
+                property_def[key_name]['extent'])
+            key_name_shape = get_optional_key_extent_shape(
+                property_def[key_name]['extent'])
+            key_name_type = property_def[key_name]['type']
 
-            if new_keyword in a_property_instance:
-                new_keyword_map = a_property_instance[new_keyword]
+            if key_name in a_property_instance:
+                key_name_map = a_property_instance[key_name]
             else:
-                new_keyword_map = {}
-                a_property_instance[new_keyword] = new_keyword_map
+                key_name_map = {}
+                a_property_instance[key_name] = key_name_map
 
             i += 1
             continue
 
-        new_keyword_key = arg
+        key_name_key = arg
         i += 1
 
-        if not new_keyword_key in standard_keys:
+        if not key_name_key in standard_keys:
             msg = '\nERROR: wrong key. The input '
-            msg += '"{}"-key is not part of '.format(new_keyword_key)
+            msg += '"{}"-key is not part of '.format(key_name_key)
             msg += 'the standard key-value pairs definition.\n '
             msg += 'See KIM standard key-value pairs at '
             msg += 'https://openkim.org/doc/schema/properties-framework/ '
             msg += 'in section 3 for more detailed information.'
             raise KIMPropertyError(msg)
 
-        if new_keyword_key == 'source-unit':
-            if not property_def[new_keyword]['has-unit']:
+        if key_name_key == 'source-unit':
+            if not property_def[key_name]['has-unit']:
                 msg = '\nERROR: wrong key. The unit is wrongly provided '
                 msg += 'to a key that does not have a unit. '
                 msg += 'The corresponding "has-unit" key in the property '
@@ -198,23 +198,23 @@ def kim_property_modify(property_instances, instance_id, *argv):
                 msg += 'information.'
                 raise KIMPropertyError(msg)
 
-        if new_keyword_key in STANDARD_KEYS_WITH_EXTENT:
+        if key_name_key in STANDARD_KEYS_WITH_EXTENT:
             # Append
-            if new_keyword_key in new_keyword_map:
-                if new_keyword_ndims > 0:
-                    new_keyword_value = new_keyword_map[new_keyword_key]
-                    new_keyword_shape_new = shape(new_keyword_value)
-                    new_keyword_index = []
+            if key_name_key in key_name_map:
+                if key_name_ndims > 0:
+                    key_name_value = key_name_map[key_name_key]
+                    key_name_shape_new = shape(key_name_value)
+                    key_name_index = []
                     _n = -1
                     _l = 0
                     _u = 0
-                    for n in range(new_keyword_ndims):
+                    for n in range(key_name_ndims):
                         if i >= n_arguments:
                             msg = '\nERROR: there is not enough input '
                             msg += 'arguments to use.\n Processing the {"'
-                            msg += '{}'.format(new_keyword)
+                            msg += '{}'.format(key_name)
                             msg += '"}:{"'
-                            msg += '{}'.format(new_keyword_key)
+                            msg += '{}'.format(key_name_key)
                             msg += '"} input arguments failed.\n The '
                             if n == 0:
                                 msg += 'first '
@@ -234,14 +234,16 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                 msg = '\nERROR: requested index '
                                 msg += '"{}" '.format(arg)
                                 msg += 'doesn\'t meet the format '
-                                msg += 'specification (an integer equal to '
+                                msg += 'specification. An integer equal to '
                                 msg += 'or greater than 1 or integer '
-                                msg += 'indices range of "start:stop").'
+                                msg += 'indices range of "start:stop".'
                                 raise KIMPropertyError(msg)
                             else:
                                 if _n > -1:
-                                    msg = '\nERROR: use of indices range is '
-                                    msg += 'only accepted in one direction.'
+                                    msg = '\nERROR: for multidimensional '
+                                    msg += 'arrays, only one '
+                                    msg += 'colon-separated range is '
+                                    msg += 'allowed in the index listing.'
                                     raise KIMPropertyError(msg)
                                 _n = n
                                 if arg.count(':') > 1:
@@ -263,18 +265,18 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                     msg += 'where start is less or equal '
                                     msg += 'than stop.'
                                     raise KIMPropertyError(msg)
-                                if new_keyword_shape[n] > 1 and \
-                                        new_keyword_shape[n] < _u:
+                                if key_name_shape[n] > 1 and \
+                                        key_name_shape[n] < _u:
                                     msg = '\nERROR: this dimension has a '
                                     msg += 'fixed length = '
-                                    msg += '{}'.format(new_keyword_shape[n])
+                                    msg += '{}'.format(key_name_shape[n])
                                     msg += ', while, wrong index = '
                                     msg += '{} '.format(_u)
                                     msg += 'is requested.\n Processing the '
                                     msg += '{"'
-                                    msg += '{}'.format(new_keyword)
+                                    msg += '{}'.format(key_name)
                                     msg += '"}:{"'
-                                    msg += '{}'.format(new_keyword_key)
+                                    msg += '{}'.format(key_name_key)
                                     msg += '"} input arguments, wrong index '
                                     if n == 0:
                                         msg += 'at the first '
@@ -286,24 +288,25 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                         msg += 'at the {}th '.format(n + 1)
                                     msg += 'dimension is requested.'
                                     raise KIMPropertyError(msg)
-                                if new_keyword_shape[n] == 1 and _u > 1:
-                                    if property_def[new_keyword]["extent"][n] == ':':
-                                        if new_keyword_shape_new[n] < _u:
-                                            new_keyword_shape_new[n] = _u
+                                if key_name_shape[n] == 1 and _u > 1:
+                                    if property_def[key_name]["extent"][n] == ':':
+                                        if key_name_shape_new[n] < _u:
+                                            key_name_shape_new[n] = _u
 
                                 _l -= 1
-                                new_keyword_index.append(-1)
+                                key_name_index.append(-1)
                         else:
-                            if new_keyword_shape[n] > 1 and \
-                                    new_keyword_shape[n] < int(arg):
+                            if key_name_shape[n] > 1 and \
+                                    key_name_shape[n] < int(arg):
                                 msg = '\nERROR: this dimension has a fixed '
                                 msg += 'length = {}'.format(
-                                    new_keyword_shape[n])
-                                msg += ', while, wrong index = {} '.format(arg)
+                                    key_name_shape[n])
+                                msg += ', while, wrong index = {} '.format(
+                                    arg)
                                 msg += 'is requested.\n Processing the {"'
-                                msg += '{}'.format(new_keyword)
+                                msg += '{}'.format(key_name)
                                 msg += '"}:{"'
-                                msg += '{}'.format(new_keyword_key)
+                                msg += '{}'.format(key_name_key)
                                 msg += '"} input arguments, wrong index '
                                 if n == 0:
                                     msg += 'at the first '
@@ -315,19 +318,19 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                     msg += 'at the {}th '.format(n + 1)
                                 msg += 'dimension is requested.'
                                 raise KIMPropertyError(msg)
-                            if new_keyword_shape[n] == 1 and int(arg) > 1:
-                                if property_def[new_keyword]["extent"][n] == ':':
-                                    if new_keyword_shape_new[n] < int(arg):
-                                        new_keyword_shape_new[n] = int(arg)
+                            if key_name_shape[n] == 1 and int(arg) > 1:
+                                if property_def[key_name]["extent"][n] == ':':
+                                    if key_name_shape_new[n] < int(arg):
+                                        key_name_shape_new[n] = int(arg)
                                 else:
                                     msg = '\nERROR: this dimension has a '
                                     msg += 'fixed length = 1, while, wrong '
                                     msg += 'index = {} '.format(arg)
                                     msg += 'is requested.\n Processing the '
                                     msg += '{"'
-                                    msg += '{}'.format(new_keyword)
+                                    msg += '{}'.format(key_name)
                                     msg += '"}:{"'
-                                    msg += '{}'.format(new_keyword_key)
+                                    msg += '{}'.format(key_name_key)
                                     msg += '"} input arguments, wrong index '
                                     if n == 0:
                                         msg += 'at the first '
@@ -340,34 +343,34 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                     msg += 'dimension is requested.'
 
                                     raise KIMPropertyError(msg)
-                            new_keyword_index.append(int(arg) - 1)
+                            key_name_index.append(int(arg) - 1)
                         i += 1
 
-                    if new_keyword_type == 'int':
-                        new_keyword_value = extend_full_array(
-                            new_keyword_value, new_keyword_shape_new, 0)
-                    elif new_keyword_type == 'float':
-                        new_keyword_value = extend_full_array(
-                            new_keyword_value, new_keyword_shape_new, 0.0)
-                    elif new_keyword_type == 'bool':
-                        new_keyword_value = extend_full_array(
-                            new_keyword_value, new_keyword_shape_new, False)
-                    elif new_keyword_type == 'string':
-                        new_keyword_value = extend_full_array(
-                            new_keyword_value, new_keyword_shape_new, '')
-                    elif new_keyword_type == 'file':
-                        new_keyword_value = extend_full_array(
-                            new_keyword_value, new_keyword_shape_new, '')
+                    if key_name_type == 'int':
+                        key_name_value = extend_full_array(
+                            key_name_value, key_name_shape_new, 0)
+                    elif key_name_type == 'float':
+                        key_name_value = extend_full_array(
+                            key_name_value, key_name_shape_new, 0.0)
+                    elif key_name_type == 'bool':
+                        key_name_value = extend_full_array(
+                            key_name_value, key_name_shape_new, False)
+                    elif key_name_type == 'string':
+                        key_name_value = extend_full_array(
+                            key_name_value, key_name_shape_new, '')
+                    elif key_name_type == 'file':
+                        key_name_value = extend_full_array(
+                            key_name_value, key_name_shape_new, '')
 
-                    del(new_keyword_shape_new)
+                    del(key_name_shape_new)
 
                     if _n > -1:
                         if i - 1 + _u - _l >= n_arguments:
                             msg = '\nERROR: there is not enough input '
                             msg += 'arguments to use.\n Processing the {"'
-                            msg += '{}'.format(new_keyword)
+                            msg += '{}'.format(key_name)
                             msg += '"}:{"'
-                            msg += '{}'.format(new_keyword_key)
+                            msg += '{}'.format(key_name_key)
                             msg += '"} input arguments failed.\n '
                             msg += 'We have {} '.format(n_arguments - i + 1)
                             msg += 'more input arguments while '
@@ -375,674 +378,674 @@ def kim_property_modify(property_instances, instance_id, *argv):
                             msg += 'are required.'
                             raise KIMPropertyError(msg)
 
-                        if new_keyword_ndims == 1:
-                            if new_keyword_type == 'int':
+                        if key_name_ndims == 1:
+                            if key_name_type == 'int':
                                 for d0 in range(_l, _u):
-                                    new_keyword_value[d0] = int(argv[i])
+                                    key_name_value[d0] = int(argv[i])
                                     i += 1
-                            elif new_keyword_type == 'float':
+                            elif key_name_type == 'float':
                                 for d0 in range(_l, _u):
-                                    new_keyword_value[d0] = float(argv[i])
+                                    key_name_value[d0] = float(argv[i])
                                     i += 1
-                            elif new_keyword_type == 'bool':
+                            elif key_name_type == 'bool':
                                 for d0 in range(_l, _u):
                                     if argv[i] == 'true' or \
                                             argv[i] == 'True' or argv[i]:
-                                        new_keyword_value[d0] = True
+                                        key_name_value[d0] = True
                                     i += 1
-                            elif new_keyword_type == 'string':
+                            elif key_name_type == 'string':
                                 for d0 in range(_l, _u):
-                                    new_keyword_value[d0] = argv[i]
+                                    key_name_value[d0] = argv[i]
                                     i += 1
-                            elif new_keyword_type == 'file':
+                            elif key_name_type == 'file':
                                 for d0 in range(_l, _u):
-                                    new_keyword_value[d0] = argv[i]
+                                    key_name_value[d0] = argv[i]
                                     i += 1
-                        elif new_keyword_ndims == 2:
-                            d0, d1 = new_keyword_index
+                        elif key_name_ndims == 2:
+                            d0, d1 = key_name_index
                             if _n == 0:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1] = int(
+                                        key_name_value[d0][d1] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1] = float(
+                                        key_name_value[d0][d1] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d0 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1] = True
+                                            key_name_value[d0][d1] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1] = argv[i]
+                                        key_name_value[d0][d1] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1] = argv[i]
+                                        key_name_value[d0][d1] = argv[i]
                                         i += 1
                             else:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1] = int(
+                                        key_name_value[d0][d1] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1] = float(
+                                        key_name_value[d0][d1] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d1 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1] = True
+                                            key_name_value[d0][d1] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1] = argv[i]
+                                        key_name_value[d0][d1] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1] = argv[i]
+                                        key_name_value[d0][d1] = argv[i]
                                         i += 1
-                        elif new_keyword_ndims == 3:
-                            d0, d1, d2 = new_keyword_index
+                        elif key_name_ndims == 3:
+                            d0, d1, d2 = key_name_index
                             if _n == 0:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2] = int(
+                                        key_name_value[d0][d1][d2] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2] = float(
+                                        key_name_value[d0][d1][d2] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d0 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2] = True
+                                            key_name_value[d0][d1][d2] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2] = argv[i]
+                                        key_name_value[d0][d1][d2] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2] = argv[i]
+                                        key_name_value[d0][d1][d2] = argv[i]
                                         i += 1
                             elif _n == 1:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2] = int(
+                                        key_name_value[d0][d1][d2] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2] = float(
+                                        key_name_value[d0][d1][d2] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d1 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2] = True
+                                            key_name_value[d0][d1][d2] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2] = argv[i]
+                                        key_name_value[d0][d1][d2] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2] = argv[i]
+                                        key_name_value[d0][d1][d2] = argv[i]
                                         i += 1
                             else:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2] = int(
+                                        key_name_value[d0][d1][d2] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2] = float(
+                                        key_name_value[d0][d1][d2] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d2 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2] = True
+                                            key_name_value[d0][d1][d2] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2] = argv[i]
+                                        key_name_value[d0][d1][d2] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2] = argv[i]
+                                        key_name_value[d0][d1][d2] = argv[i]
                                         i += 1
-                        elif new_keyword_ndims == 4:
-                            d0, d1, d2, d3 = new_keyword_index
+                        elif key_name_ndims == 4:
+                            d0, d1, d2, d3 = key_name_index
                             if _n == 0:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = int(
+                                        key_name_value[d0][d1][d2][d3] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = float(
+                                        key_name_value[d0][d1][d2][d3] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d0 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3] = True
+                                            key_name_value[d0][d1][d2][d3] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = argv[i]
+                                        key_name_value[d0][d1][d2][d3] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = argv[i]
+                                        key_name_value[d0][d1][d2][d3] = argv[i]
                                         i += 1
                             elif _n == 1:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = int(
+                                        key_name_value[d0][d1][d2][d3] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = float(
+                                        key_name_value[d0][d1][d2][d3] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d1 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3] = True
+                                            key_name_value[d0][d1][d2][d3] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = argv[i]
+                                        key_name_value[d0][d1][d2][d3] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = argv[i]
+                                        key_name_value[d0][d1][d2][d3] = argv[i]
                                         i += 1
                             elif _n == 2:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = int(
+                                        key_name_value[d0][d1][d2][d3] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = float(
+                                        key_name_value[d0][d1][d2][d3] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d2 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3] = True
+                                            key_name_value[d0][d1][d2][d3] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = argv[i]
+                                        key_name_value[d0][d1][d2][d3] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = argv[i]
+                                        key_name_value[d0][d1][d2][d3] = argv[i]
                                         i += 1
                             else:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d3 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = int(
+                                        key_name_value[d0][d1][d2][d3] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d3 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = float(
+                                        key_name_value[d0][d1][d2][d3] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d3 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3] = True
+                                            key_name_value[d0][d1][d2][d3] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d3 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = argv[i]
+                                        key_name_value[d0][d1][d2][d3] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d3 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = argv[i]
+                                        key_name_value[d0][d1][d2][d3] = argv[i]
                                         i += 1
-                        elif new_keyword_ndims == 5:
-                            d0, d1, d2, d3, d4 = new_keyword_index
+                        elif key_name_ndims == 5:
+                            d0, d1, d2, d3, d4 = key_name_index
                             if _n == 0:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = int(
+                                        key_name_value[d0][d1][d2][d3][d4] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = float(
+                                        key_name_value[d0][d1][d2][d3][d4] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d0 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3][d4] = True
+                                            key_name_value[d0][d1][d2][d3][d4] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4] = argv[i]
                                         i += 1
                             elif _n == 1:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = int(
+                                        key_name_value[d0][d1][d2][d3][d4] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = float(
+                                        key_name_value[d0][d1][d2][d3][d4] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d1 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3][d4] = True
+                                            key_name_value[d0][d1][d2][d3][d4] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4] = argv[i]
                                         i += 1
                             elif _n == 2:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = int(
+                                        key_name_value[d0][d1][d2][d3][d4] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = float(
+                                        key_name_value[d0][d1][d2][d3][d4] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d2 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3][d4] = True
+                                            key_name_value[d0][d1][d2][d3][d4] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4] = argv[i]
                                         i += 1
                             elif _n == 3:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d3 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = int(
+                                        key_name_value[d0][d1][d2][d3][d4] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d3 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = float(
+                                        key_name_value[d0][d1][d2][d3][d4] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d3 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3][d4] = True
+                                            key_name_value[d0][d1][d2][d3][d4] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d3 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d3 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4] = argv[i]
                                         i += 1
                             else:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d4 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = int(
+                                        key_name_value[d0][d1][d2][d3][d4] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d4 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = float(
+                                        key_name_value[d0][d1][d2][d3][d4] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d4 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3][d4] = True
+                                            key_name_value[d0][d1][d2][d3][d4] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d4 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d4 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4] = argv[i]
                                         i += 1
-                        elif new_keyword_ndims == 6:
-                            d0, d1, d2, d3, d4, d5 = new_keyword_index
+                        elif key_name_ndims == 6:
+                            d0, d1, d2, d3, d4, d5 = key_name_index
                             if _n == 0:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = int(
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = float(
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d0 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3][d4][d5] = True
+                                            key_name_value[d0][d1][d2][d3][d4][d5] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
                             elif _n == 1:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = int(
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = float(
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d1 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3][d4][d5] = True
+                                            key_name_value[d0][d1][d2][d3][d4][d5] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
                             elif _n == 2:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = int(
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = float(
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d2 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3][d4][d5] = True
+                                            key_name_value[d0][d1][d2][d3][d4][d5] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
                             elif _n == 3:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d3 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = int(
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d3 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = float(
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d3 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3][d4][d5] = True
+                                            key_name_value[d0][d1][d2][d3][d4][d5] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d3 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d3 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
                             elif _n == 4:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d4 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = int(
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d4 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = float(
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d4 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3][d4][d5] = True
+                                            key_name_value[d0][d1][d2][d3][d4][d5] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d4 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d4 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
                             else:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d5 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = int(
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d5 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = float(
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d5 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3][d4][d5] = True
+                                            key_name_value[d0][d1][d2][d3][d4][d5] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d5 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d5 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
                     else:
                         if i >= n_arguments:
                             msg = '\nERROR: there is not enough input '
                             msg += 'arguments to use.\n Processing the {"'
-                            msg += '{}'.format(new_keyword)
+                            msg += '{}'.format(key_name)
                             msg += '"}:{"'
-                            msg += '{}'.format(new_keyword_key)
+                            msg += '{}'.format(key_name_key)
                             msg += '"} input arguments failed.\n '
                             msg += 'At least we need one further input.'
                             raise KIMPropertyError(msg)
 
-                        if new_keyword_ndims == 1:
-                            d0 = new_keyword_index
-                            if new_keyword_type == 'int':
-                                new_keyword_value[d0] = int(argv[i])
-                            elif new_keyword_type == 'float':
-                                new_keyword_value[d0] = float(argv[i])
-                            elif new_keyword_type == 'bool':
+                        if key_name_ndims == 1:
+                            d0 = key_name_index
+                            if key_name_type == 'int':
+                                key_name_value[d0] = int(argv[i])
+                            elif key_name_type == 'float':
+                                key_name_value[d0] = float(argv[i])
+                            elif key_name_type == 'bool':
                                 if argv[i] == 'true' or \
                                         argv[i] == 'True' or argv[i]:
-                                    new_keyword_value[d0] = True
-                            elif new_keyword_type == 'string':
-                                new_keyword_value[d0] = argv[i]
-                            elif new_keyword_type == 'file':
-                                new_keyword_value[d0] = argv[i]
-                        elif new_keyword_ndims == 2:
-                            d0, d1 = new_keyword_index
-                            if new_keyword_type == 'int':
-                                new_keyword_value[d0][d1] = int(argv[i])
-                            elif new_keyword_type == 'float':
-                                new_keyword_value[d0][d1] = float(argv[i])
-                            elif new_keyword_type == 'bool':
+                                    key_name_value[d0] = True
+                            elif key_name_type == 'string':
+                                key_name_value[d0] = argv[i]
+                            elif key_name_type == 'file':
+                                key_name_value[d0] = argv[i]
+                        elif key_name_ndims == 2:
+                            d0, d1 = key_name_index
+                            if key_name_type == 'int':
+                                key_name_value[d0][d1] = int(argv[i])
+                            elif key_name_type == 'float':
+                                key_name_value[d0][d1] = float(argv[i])
+                            elif key_name_type == 'bool':
                                 if argv[i] == 'true' or \
                                         argv[i] == 'True' or argv[i]:
-                                    new_keyword_value[d0][d1] = True
-                            elif new_keyword_type == 'string':
-                                new_keyword_value[d0][d1] = argv[i]
-                            elif new_keyword_type == 'file':
-                                new_keyword_value[d0][d1] = argv[i]
-                        elif new_keyword_ndims == 3:
-                            d0, d1, d2 = new_keyword_index
-                            if new_keyword_type == 'int':
-                                new_keyword_value[d0][d1][d2] = int(argv[i])
-                            elif new_keyword_type == 'float':
-                                new_keyword_value[d0][d1][d2] = float(argv[i])
-                            elif new_keyword_type == 'bool':
+                                    key_name_value[d0][d1] = True
+                            elif key_name_type == 'string':
+                                key_name_value[d0][d1] = argv[i]
+                            elif key_name_type == 'file':
+                                key_name_value[d0][d1] = argv[i]
+                        elif key_name_ndims == 3:
+                            d0, d1, d2 = key_name_index
+                            if key_name_type == 'int':
+                                key_name_value[d0][d1][d2] = int(argv[i])
+                            elif key_name_type == 'float':
+                                key_name_value[d0][d1][d2] = float(argv[i])
+                            elif key_name_type == 'bool':
                                 if argv[i] == 'true' or \
                                         argv[i] == 'True' or argv[i]:
-                                    new_keyword_value[d0][d1][d2] = True
-                            elif new_keyword_type == 'string':
-                                new_keyword_value[d0][d1][d2] = argv[i]
-                            elif new_keyword_type == 'file':
-                                new_keyword_value[d0][d1][d2] = argv[i]
-                        elif new_keyword_ndims == 4:
-                            d0, d1, d2, d3 = new_keyword_index
-                            if new_keyword_type == 'int':
-                                new_keyword_value[d0][d1][d2][d3] = int(
+                                    key_name_value[d0][d1][d2] = True
+                            elif key_name_type == 'string':
+                                key_name_value[d0][d1][d2] = argv[i]
+                            elif key_name_type == 'file':
+                                key_name_value[d0][d1][d2] = argv[i]
+                        elif key_name_ndims == 4:
+                            d0, d1, d2, d3 = key_name_index
+                            if key_name_type == 'int':
+                                key_name_value[d0][d1][d2][d3] = int(
                                     argv[i])
-                            elif new_keyword_type == 'float':
-                                new_keyword_value[d0][d1][d2][d3] = float(
+                            elif key_name_type == 'float':
+                                key_name_value[d0][d1][d2][d3] = float(
                                     argv[i])
-                            elif new_keyword_type == 'bool':
+                            elif key_name_type == 'bool':
                                 if argv[i] == 'true' or \
                                         argv[i] == 'True' or argv[i]:
-                                    new_keyword_value[d0][d1][d2][d3] = True
-                            elif new_keyword_type == 'string':
-                                new_keyword_value[d0][d1][d2][d3] = argv[i]
-                            elif new_keyword_type == 'file':
-                                new_keyword_value[d0][d1][d2][d3] = argv[i]
-                        elif new_keyword_ndims == 5:
-                            d0, d1, d2, d3, d4 = new_keyword_index
-                            if new_keyword_type == 'int':
-                                new_keyword_value[d0][d1][d2][d3][d4] = int(
+                                    key_name_value[d0][d1][d2][d3] = True
+                            elif key_name_type == 'string':
+                                key_name_value[d0][d1][d2][d3] = argv[i]
+                            elif key_name_type == 'file':
+                                key_name_value[d0][d1][d2][d3] = argv[i]
+                        elif key_name_ndims == 5:
+                            d0, d1, d2, d3, d4 = key_name_index
+                            if key_name_type == 'int':
+                                key_name_value[d0][d1][d2][d3][d4] = int(
                                     argv[i])
-                            elif new_keyword_type == 'float':
-                                new_keyword_value[d0][d1][d2][d3][d4] = float(
+                            elif key_name_type == 'float':
+                                key_name_value[d0][d1][d2][d3][d4] = float(
                                     argv[i])
-                            elif new_keyword_type == 'bool':
+                            elif key_name_type == 'bool':
                                 if argv[i] == 'true' or \
                                         argv[i] == 'True' or argv[i]:
-                                    new_keyword_value[d0][d1][d2][d3][d4] = True
-                            elif new_keyword_type == 'string':
-                                new_keyword_value[d0][d1][d2][d3][d4] = argv[i]
-                            elif new_keyword_type == 'file':
-                                new_keyword_value[d0][d1][d2][d3][d4] = argv[i]
-                        elif new_keyword_ndims == 6:
-                            d0, d1, d2, d3, d4, d5 = new_keyword_index
-                            if new_keyword_type == 'int':
-                                new_keyword_value[d0][d1][d2][d3][d4][d5] = int(
+                                    key_name_value[d0][d1][d2][d3][d4] = True
+                            elif key_name_type == 'string':
+                                key_name_value[d0][d1][d2][d3][d4] = argv[i]
+                            elif key_name_type == 'file':
+                                key_name_value[d0][d1][d2][d3][d4] = argv[i]
+                        elif key_name_ndims == 6:
+                            d0, d1, d2, d3, d4, d5 = key_name_index
+                            if key_name_type == 'int':
+                                key_name_value[d0][d1][d2][d3][d4][d5] = int(
                                     argv[i])
-                            elif new_keyword_type == 'float':
-                                new_keyword_value[d0][d1][d2][d3][d4][d5] = float(
+                            elif key_name_type == 'float':
+                                key_name_value[d0][d1][d2][d3][d4][d5] = float(
                                     argv[i])
-                            elif new_keyword_type == 'bool':
+                            elif key_name_type == 'bool':
                                 if argv[i] == 'true' or \
                                         argv[i] == 'True' or argv[i]:
-                                    new_keyword_value[d0][d1][d2][d3][d4][d5] = True
-                            elif new_keyword_type == 'string':
-                                new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
-                            elif new_keyword_type == 'file':
-                                new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                    key_name_value[d0][d1][d2][d3][d4][d5] = True
+                            elif key_name_type == 'string':
+                                key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                            elif key_name_type == 'file':
+                                key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                         i += 1
                 else:
-                    if new_keyword_type == 'int':
-                        new_keyword_value = int(argv[i])
-                    elif new_keyword_type == 'float':
-                        new_keyword_value = float(argv[i])
-                    elif new_keyword_type == 'bool':
+                    if key_name_type == 'int':
+                        key_name_value = int(argv[i])
+                    elif key_name_type == 'float':
+                        key_name_value = float(argv[i])
+                    elif key_name_type == 'bool':
                         if argv[i] == 'true' or \
                                 argv[i] == 'True' or argv[i]:
-                            new_keyword_value = True
+                            key_name_value = True
                         else:
-                            new_keyword_value = False
-                    elif new_keyword_type == 'string':
-                        new_keyword_value = argv[i]
-                    elif new_keyword_type == 'file':
-                        new_keyword_value = argv[i]
+                            key_name_value = False
+                    elif key_name_type == 'string':
+                        key_name_value = argv[i]
+                    elif key_name_type == 'file':
+                        key_name_value = argv[i]
                     i += 1
             # Set
             else:
-                if new_keyword_ndims > 0:
-                    new_keyword_shape_new = []
-                    for s in new_keyword_shape:
-                        new_keyword_shape_new.append(s)
-                    new_keyword_index = []
+                if key_name_ndims > 0:
+                    key_name_shape_new = []
+                    for s in key_name_shape:
+                        key_name_shape_new.append(s)
+                    key_name_index = []
                     _n = -1
                     _l = 0
                     _u = 0
-                    for n in range(new_keyword_ndims):
+                    for n in range(key_name_ndims):
                         if i >= n_arguments:
                             msg = '\nERROR: there is not enough input '
                             msg += 'arguments to use.\n Processing the {"'
-                            msg += '{}'.format(new_keyword)
+                            msg += '{}'.format(key_name)
                             msg += '"}:{"'
-                            msg += '{}'.format(new_keyword_key)
+                            msg += '{}'.format(key_name_key)
                             msg += '"} input arguments failed.\n The '
                             if n == 0:
                                 msg += 'first '
@@ -1059,16 +1062,18 @@ def kim_property_modify(property_instances, instance_id, *argv):
                         if re.match(r'^[1-9][0-9]*$', arg) is None:
                             if re.match(r'^[1-9][:0-9]*$', arg) is None:
                                 msg = '\nERROR: input value '
-                                msg += '"{}" doesn\'t meet '.format(arg)
-                                msg += 'the format specification (an '
-                                msg += 'integer equal to or greater than 1 '
+                                msg += '"{}" doesn\'t meet the '.format(arg)
+                                msg += 'format specification. An integer '
+                                msg += 'equal to or greater than 1 '
                                 msg += 'or integer indices range of '
-                                msg += '"start:stop").'
+                                msg += '"start:stop".'
                                 raise KIMPropertyError(msg)
                             else:
                                 if _n > -1:
-                                    msg = '\nERROR: use of indices range is '
-                                    msg += 'only accepted in one direction.'
+                                    msg = '\nERROR: for multidimensional '
+                                    msg += 'arrays, only one '
+                                    msg += 'colon-separated range is '
+                                    msg += 'allowed in the index listing.'
                                     raise KIMPropertyError(msg)
                                 _n = n
                                 if arg.count(':') > 1:
@@ -1089,17 +1094,17 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                     msg += 'format is "start:stop", where start '
                                     msg += 'is less or equal than stop.'
                                     raise KIMPropertyError(msg)
-                                if new_keyword_shape[n] > 1 and \
-                                        new_keyword_shape[n] < _u:
+                                if key_name_shape[n] > 1 and \
+                                        key_name_shape[n] < _u:
                                     msg = '\nERROR: this dimension has a '
                                     msg += 'fixed length = '
-                                    msg += '{}'.format(new_keyword_shape[n])
+                                    msg += '{}'.format(key_name_shape[n])
                                     msg += ', while, wrong index = '
                                     msg += '{} is requested.\n '.format(_u)
                                     msg += 'Processing the {"'
-                                    msg += '{}'.format(new_keyword)
+                                    msg += '{}'.format(key_name)
                                     msg += '"}:{"'
-                                    msg += '{}'.format(new_keyword_key)
+                                    msg += '{}'.format(key_name_key)
                                     msg += '"} input arguments, wrong index '
                                     if n == 0:
                                         msg += 'at the first '
@@ -1111,24 +1116,24 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                         msg += 'at the {}th '.format(n + 1)
                                     msg += 'dimension is requested.'
                                     raise KIMPropertyError(msg)
-                                if new_keyword_shape[n] == 1 and _u > 1:
-                                    if property_def[new_keyword]["extent"][n] == ':':
-                                        new_keyword_shape_new[n] = _u
+                                if key_name_shape[n] == 1 and _u > 1:
+                                    if property_def[key_name]["extent"][n] == ':':
+                                        key_name_shape_new[n] = _u
 
                                 _l -= 1
-                                new_keyword_index.append(-1)
+                                key_name_index.append(-1)
                         else:
-                            if new_keyword_shape[n] > 1 and \
-                                    new_keyword_shape[n] < int(arg):
+                            if key_name_shape[n] > 1 and \
+                                    key_name_shape[n] < int(arg):
                                 msg = '\nERROR: this dimension has a fixed '
                                 msg += 'length = '
-                                msg += '{}, '.format(new_keyword_shape[n])
+                                msg += '{}, '.format(key_name_shape[n])
                                 msg += 'while, wrong index = '
                                 msg += '{} is requested.\n '.format(arg)
                                 msg += 'Processing the {"'
-                                msg += '{}'.format(new_keyword)
+                                msg += '{}'.format(key_name)
                                 msg += '"}:{"'
-                                msg += '{}'.format(new_keyword_key)
+                                msg += '{}'.format(key_name_key)
                                 msg += '"} input arguments, wrong index at '
                                 if n == 0:
                                     msg += 'the first '
@@ -1140,18 +1145,18 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                     msg += 'the {}th '.format(n + 1)
                                 msg += 'dimension is requested.'
                                 raise KIMPropertyError(msg)
-                            if new_keyword_shape[n] == 1 and int(arg) > 1:
-                                if property_def[new_keyword]["extent"][n] == ':':
-                                    new_keyword_shape_new[n] = int(arg)
+                            if key_name_shape[n] == 1 and int(arg) > 1:
+                                if property_def[key_name]["extent"][n] == ':':
+                                    key_name_shape_new[n] = int(arg)
                                 else:
                                     msg = '\nERROR: this dimension has a '
                                     msg += 'fixed length = 1, while, wrong '
                                     msg += 'index = {} '.format(arg)
                                     msg += 'is requested.\n '
                                     msg += 'Processing the {"'
-                                    msg += '{}'.format(new_keyword)
+                                    msg += '{}'.format(key_name)
                                     msg += '"}:{"'
-                                    msg += '{}'.format(new_keyword_key)
+                                    msg += '{}'.format(key_name_key)
                                     msg += '"} input arguments, wrong index '
                                     if n == 0:
                                         msg += 'at the first '
@@ -1163,34 +1168,34 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                         msg += 'at the {}th '.format(n + 1)
                                     msg += 'dimension is requested.'
                                     raise KIMPropertyError(msg)
-                            new_keyword_index.append(int(arg) - 1)
+                            key_name_index.append(int(arg) - 1)
                         i += 1
 
-                    if new_keyword_type == 'int':
-                        new_keyword_value = create_full_array(
-                            new_keyword_shape_new, 0)
-                    elif new_keyword_type == 'float':
-                        new_keyword_value = create_full_array(
-                            new_keyword_shape_new, 0.0)
-                    elif new_keyword_type == 'bool':
-                        new_keyword_value = create_full_array(
-                            new_keyword_shape_new, False)
-                    elif new_keyword_type == 'string':
-                        new_keyword_value = create_full_array(
-                            new_keyword_shape_new, '')
-                    elif new_keyword_type == 'file':
-                        new_keyword_value = create_full_array(
-                            new_keyword_shape_new, '')
+                    if key_name_type == 'int':
+                        key_name_value = create_full_array(
+                            key_name_shape_new, 0)
+                    elif key_name_type == 'float':
+                        key_name_value = create_full_array(
+                            key_name_shape_new, 0.0)
+                    elif key_name_type == 'bool':
+                        key_name_value = create_full_array(
+                            key_name_shape_new, False)
+                    elif key_name_type == 'string':
+                        key_name_value = create_full_array(
+                            key_name_shape_new, '')
+                    elif key_name_type == 'file':
+                        key_name_value = create_full_array(
+                            key_name_shape_new, '')
 
-                    del(new_keyword_shape_new)
+                    del(key_name_shape_new)
 
                     if _n > -1:
                         if i - 1 + _u - _l >= n_arguments:
                             msg = '\nERROR: there is not enough input '
                             msg += 'arguments to use.\n Processing the {"'
-                            msg += '{}'.format(new_keyword)
+                            msg += '{}'.format(key_name)
                             msg += '"}:{"'
-                            msg += '{}'.format(new_keyword_key)
+                            msg += '{}'.format(key_name_key)
                             msg += '"} input arguments failed.\n '
                             msg += 'We have {} '.format(n_arguments - i + 1)
                             msg += 'more input arguments while '
@@ -1198,660 +1203,660 @@ def kim_property_modify(property_instances, instance_id, *argv):
                             msg += 'are required.'
                             raise KIMPropertyError(msg)
 
-                        if new_keyword_ndims == 1:
-                            if new_keyword_type == 'int':
+                        if key_name_ndims == 1:
+                            if key_name_type == 'int':
                                 for d0 in range(_l, _u):
-                                    new_keyword_value[d0] = int(argv[i])
+                                    key_name_value[d0] = int(argv[i])
                                     i += 1
-                            elif new_keyword_type == 'float':
+                            elif key_name_type == 'float':
                                 for d0 in range(_l, _u):
-                                    new_keyword_value[d0] = float(argv[i])
+                                    key_name_value[d0] = float(argv[i])
                                     i += 1
-                            elif new_keyword_type == 'bool':
+                            elif key_name_type == 'bool':
                                 for d0 in range(_l, _u):
                                     if argv[i] == 'true' or \
                                             argv[i] == 'True' or argv[i]:
-                                        new_keyword_value[d0] = True
+                                        key_name_value[d0] = True
                                     i += 1
-                            elif new_keyword_type == 'string':
+                            elif key_name_type == 'string':
                                 for d0 in range(_l, _u):
-                                    new_keyword_value[d0] = argv[i]
+                                    key_name_value[d0] = argv[i]
                                     i += 1
-                            elif new_keyword_type == 'file':
+                            elif key_name_type == 'file':
                                 for d0 in range(_l, _u):
-                                    new_keyword_value[d0] = argv[i]
+                                    key_name_value[d0] = argv[i]
                                     i += 1
-                        elif new_keyword_ndims == 2:
-                            d0, d1 = new_keyword_index
+                        elif key_name_ndims == 2:
+                            d0, d1 = key_name_index
                             if _n == 0:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1] = int(
+                                        key_name_value[d0][d1] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1] = float(
+                                        key_name_value[d0][d1] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d0 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1] = True
+                                            key_name_value[d0][d1] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1] = argv[i]
+                                        key_name_value[d0][d1] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1] = argv[i]
+                                        key_name_value[d0][d1] = argv[i]
                                         i += 1
                             else:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1] = int(
+                                        key_name_value[d0][d1] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1] = float(
+                                        key_name_value[d0][d1] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d1 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1] = True
+                                            key_name_value[d0][d1] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1] = argv[i]
+                                        key_name_value[d0][d1] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1] = argv[i]
+                                        key_name_value[d0][d1] = argv[i]
                                         i += 1
-                        elif new_keyword_ndims == 3:
-                            d0, d1, d2 = new_keyword_index
+                        elif key_name_ndims == 3:
+                            d0, d1, d2 = key_name_index
                             if _n == 0:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2] = int(
+                                        key_name_value[d0][d1][d2] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2] = float(
+                                        key_name_value[d0][d1][d2] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d0 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2] = True
+                                            key_name_value[d0][d1][d2] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2] = argv[i]
+                                        key_name_value[d0][d1][d2] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2] = argv[i]
+                                        key_name_value[d0][d1][d2] = argv[i]
                                         i += 1
                             elif _n == 1:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2] = int(
+                                        key_name_value[d0][d1][d2] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2] = float(
+                                        key_name_value[d0][d1][d2] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d1 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2] = True
+                                            key_name_value[d0][d1][d2] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2] = argv[i]
+                                        key_name_value[d0][d1][d2] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2] = argv[i]
+                                        key_name_value[d0][d1][d2] = argv[i]
                                         i += 1
                             else:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2] = int(
+                                        key_name_value[d0][d1][d2] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2] = float(
+                                        key_name_value[d0][d1][d2] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d2 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2] = True
+                                            key_name_value[d0][d1][d2] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2] = argv[i]
+                                        key_name_value[d0][d1][d2] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2] = argv[i]
+                                        key_name_value[d0][d1][d2] = argv[i]
                                         i += 1
-                        elif new_keyword_ndims == 4:
-                            d0, d1, d2, d3 = new_keyword_index
+                        elif key_name_ndims == 4:
+                            d0, d1, d2, d3 = key_name_index
                             if _n == 0:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = int(
+                                        key_name_value[d0][d1][d2][d3] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = float(
+                                        key_name_value[d0][d1][d2][d3] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d0 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3] = True
+                                            key_name_value[d0][d1][d2][d3] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = argv[i]
+                                        key_name_value[d0][d1][d2][d3] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = argv[i]
+                                        key_name_value[d0][d1][d2][d3] = argv[i]
                                         i += 1
                             elif _n == 1:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = int(
+                                        key_name_value[d0][d1][d2][d3] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = float(
+                                        key_name_value[d0][d1][d2][d3] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d1 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3] = True
+                                            key_name_value[d0][d1][d2][d3] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = argv[i]
+                                        key_name_value[d0][d1][d2][d3] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = argv[i]
+                                        key_name_value[d0][d1][d2][d3] = argv[i]
                                         i += 1
                             elif _n == 2:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = int(
+                                        key_name_value[d0][d1][d2][d3] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = float(
+                                        key_name_value[d0][d1][d2][d3] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d2 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3] = True
+                                            key_name_value[d0][d1][d2][d3] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = argv[i]
+                                        key_name_value[d0][d1][d2][d3] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = argv[i]
+                                        key_name_value[d0][d1][d2][d3] = argv[i]
                                         i += 1
                             else:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d3 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = int(
+                                        key_name_value[d0][d1][d2][d3] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d3 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = float(
+                                        key_name_value[d0][d1][d2][d3] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d3 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3] = True
+                                            key_name_value[d0][d1][d2][d3] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d3 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = argv[i]
+                                        key_name_value[d0][d1][d2][d3] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d3 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3] = argv[i]
+                                        key_name_value[d0][d1][d2][d3] = argv[i]
                                         i += 1
-                        elif new_keyword_ndims == 5:
-                            d0, d1, d2, d3, d4 = new_keyword_index
+                        elif key_name_ndims == 5:
+                            d0, d1, d2, d3, d4 = key_name_index
                             if _n == 0:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = int(
+                                        key_name_value[d0][d1][d2][d3][d4] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = float(
+                                        key_name_value[d0][d1][d2][d3][d4] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d0 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3][d4] = True
+                                            key_name_value[d0][d1][d2][d3][d4] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4] = argv[i]
                                         i += 1
                             elif _n == 1:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = int(
+                                        key_name_value[d0][d1][d2][d3][d4] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = float(
+                                        key_name_value[d0][d1][d2][d3][d4] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d1 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3][d4] = True
+                                            key_name_value[d0][d1][d2][d3][d4] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4] = argv[i]
                                         i += 1
                             elif _n == 2:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = int(
+                                        key_name_value[d0][d1][d2][d3][d4] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = float(
+                                        key_name_value[d0][d1][d2][d3][d4] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d2 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3][d4] = True
+                                            key_name_value[d0][d1][d2][d3][d4] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4] = argv[i]
                                         i += 1
                             elif _n == 3:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d3 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = int(
+                                        key_name_value[d0][d1][d2][d3][d4] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d3 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = float(
+                                        key_name_value[d0][d1][d2][d3][d4] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d3 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3][d4] = True
+                                            key_name_value[d0][d1][d2][d3][d4] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d3 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d3 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4] = argv[i]
                                         i += 1
                             else:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d4 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = int(
+                                        key_name_value[d0][d1][d2][d3][d4] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d4 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = float(
+                                        key_name_value[d0][d1][d2][d3][d4] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d4 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3][d4] = True
+                                            key_name_value[d0][d1][d2][d3][d4] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d4 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d4 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4] = argv[i]
                                         i += 1
-                        elif new_keyword_ndims == 6:
-                            d0, d1, d2, d3, d4, d5 = new_keyword_index
+                        elif key_name_ndims == 6:
+                            d0, d1, d2, d3, d4, d5 = key_name_index
                             if _n == 0:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = int(
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = float(
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d0 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3][d4][d5] = True
+                                            key_name_value[d0][d1][d2][d3][d4][d5] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d0 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
                             elif _n == 1:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = int(
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = float(
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d1 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3][d4][d5] = True
+                                            key_name_value[d0][d1][d2][d3][d4][d5] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d1 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
                             elif _n == 2:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = int(
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = float(
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d2 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3][d4][d5] = True
+                                            key_name_value[d0][d1][d2][d3][d4][d5] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d2 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
                             elif _n == 3:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d3 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = int(
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d3 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = float(
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d3 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3][d4][d5] = True
+                                            key_name_value[d0][d1][d2][d3][d4][d5] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d3 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d3 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
                             elif _n == 4:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d4 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = int(
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d4 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = float(
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d4 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3][d4][d5] = True
+                                            key_name_value[d0][d1][d2][d3][d4][d5] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d4 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d4 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
                             else:
-                                if new_keyword_type == 'int':
+                                if key_name_type == 'int':
                                     for d5 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = int(
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = int(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'float':
+                                elif key_name_type == 'float':
                                     for d5 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = float(
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = float(
                                             argv[i])
                                         i += 1
-                                elif new_keyword_type == 'bool':
+                                elif key_name_type == 'bool':
                                     for d5 in range(_l, _u):
                                         if argv[i] == 'true' or \
                                                 argv[i] == 'True' or argv[i]:
-                                            new_keyword_value[d0][d1][d2][d3][d4][d5] = True
+                                            key_name_value[d0][d1][d2][d3][d4][d5] = True
                                         i += 1
-                                elif new_keyword_type == 'string':
+                                elif key_name_type == 'string':
                                     for d5 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
-                                elif new_keyword_type == 'file':
+                                elif key_name_type == 'file':
                                     for d5 in range(_l, _u):
-                                        new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                        key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                                         i += 1
                     else:
                         if i >= n_arguments:
                             msg = '\nERROR: there is not enough input '
                             msg += 'arguments to use.\n Processing the {'
-                            msg += '{}'.format(new_keyword)
+                            msg += '{}'.format(key_name)
                             msg += '}:{'
-                            msg += '{}'.format(new_keyword_key)
+                            msg += '{}'.format(key_name_key)
                             msg += '} input arguments failed.\n '
                             msg += 'At least we need one further input.'
                             raise KIMPropertyError(msg)
 
-                        if new_keyword_ndims == 1:
-                            d0 = new_keyword_index[0]
-                            if new_keyword_type == 'int':
-                                new_keyword_value[d0] = int(argv[i])
-                            elif new_keyword_type == 'float':
-                                new_keyword_value[d0] = float(argv[i])
-                            elif new_keyword_type == 'bool':
+                        if key_name_ndims == 1:
+                            d0 = key_name_index[0]
+                            if key_name_type == 'int':
+                                key_name_value[d0] = int(argv[i])
+                            elif key_name_type == 'float':
+                                key_name_value[d0] = float(argv[i])
+                            elif key_name_type == 'bool':
                                 if argv[i] == 'true' or \
                                         argv[i] == 'True' or argv[i]:
-                                    new_keyword_value[d0] = True
-                            elif new_keyword_type == 'string':
-                                new_keyword_value[d0] = argv[i]
-                            elif new_keyword_type == 'file':
-                                new_keyword_value[d0] = argv[i]
-                        elif new_keyword_ndims == 2:
-                            d0, d1 = new_keyword_index
-                            if new_keyword_type == 'int':
-                                new_keyword_value[d0][d1] = int(argv[i])
-                            elif new_keyword_type == 'float':
-                                new_keyword_value[d0][d1] = float(argv[i])
-                            elif new_keyword_type == 'bool':
+                                    key_name_value[d0] = True
+                            elif key_name_type == 'string':
+                                key_name_value[d0] = argv[i]
+                            elif key_name_type == 'file':
+                                key_name_value[d0] = argv[i]
+                        elif key_name_ndims == 2:
+                            d0, d1 = key_name_index
+                            if key_name_type == 'int':
+                                key_name_value[d0][d1] = int(argv[i])
+                            elif key_name_type == 'float':
+                                key_name_value[d0][d1] = float(argv[i])
+                            elif key_name_type == 'bool':
                                 if argv[i] == 'true' or \
                                         argv[i] == 'True' or argv[i]:
-                                    new_keyword_value[d0][d1] = True
-                            elif new_keyword_type == 'string':
-                                new_keyword_value[d0][d1] = argv[i]
-                            elif new_keyword_type == 'file':
-                                new_keyword_value[d0][d1] = argv[i]
-                        elif new_keyword_ndims == 3:
-                            d0, d1, d2 = new_keyword_index
-                            if new_keyword_type == 'int':
-                                new_keyword_value[d0][d1][d2] = int(argv[i])
-                            elif new_keyword_type == 'float':
-                                new_keyword_value[d0][d1][d2] = float(argv[i])
-                            elif new_keyword_type == 'bool':
+                                    key_name_value[d0][d1] = True
+                            elif key_name_type == 'string':
+                                key_name_value[d0][d1] = argv[i]
+                            elif key_name_type == 'file':
+                                key_name_value[d0][d1] = argv[i]
+                        elif key_name_ndims == 3:
+                            d0, d1, d2 = key_name_index
+                            if key_name_type == 'int':
+                                key_name_value[d0][d1][d2] = int(argv[i])
+                            elif key_name_type == 'float':
+                                key_name_value[d0][d1][d2] = float(argv[i])
+                            elif key_name_type == 'bool':
                                 if argv[i] == 'true' or \
                                         argv[i] == 'True' or argv[i]:
-                                    new_keyword_value[d0][d1][d2] = True
-                            elif new_keyword_type == 'string':
-                                new_keyword_value[d0][d1][d2] = argv[i]
-                            elif new_keyword_type == 'file':
-                                new_keyword_value[d0][d1][d2] = argv[i]
-                        elif new_keyword_ndims == 4:
-                            d0, d1, d2, d3 = new_keyword_index
-                            if new_keyword_type == 'int':
-                                new_keyword_value[d0][d1][d2][d3] = int(
+                                    key_name_value[d0][d1][d2] = True
+                            elif key_name_type == 'string':
+                                key_name_value[d0][d1][d2] = argv[i]
+                            elif key_name_type == 'file':
+                                key_name_value[d0][d1][d2] = argv[i]
+                        elif key_name_ndims == 4:
+                            d0, d1, d2, d3 = key_name_index
+                            if key_name_type == 'int':
+                                key_name_value[d0][d1][d2][d3] = int(
                                     argv[i])
-                            elif new_keyword_type == 'float':
-                                new_keyword_value[d0][d1][d2][d3] = float(
+                            elif key_name_type == 'float':
+                                key_name_value[d0][d1][d2][d3] = float(
                                     argv[i])
-                            elif new_keyword_type == 'bool':
+                            elif key_name_type == 'bool':
                                 if argv[i] == 'true' or \
                                         argv[i] == 'True' or argv[i]:
-                                    new_keyword_value[d0][d1][d2][d3] = True
-                            elif new_keyword_type == 'string':
-                                new_keyword_value[d0][d1][d2][d3] = argv[i]
-                            elif new_keyword_type == 'file':
-                                new_keyword_value[d0][d1][d2][d3] = argv[i]
-                        elif new_keyword_ndims == 5:
-                            d0, d1, d2, d3, d4 = new_keyword_index
-                            if new_keyword_type == 'int':
-                                new_keyword_value[d0][d1][d2][d3][d4] = int(
+                                    key_name_value[d0][d1][d2][d3] = True
+                            elif key_name_type == 'string':
+                                key_name_value[d0][d1][d2][d3] = argv[i]
+                            elif key_name_type == 'file':
+                                key_name_value[d0][d1][d2][d3] = argv[i]
+                        elif key_name_ndims == 5:
+                            d0, d1, d2, d3, d4 = key_name_index
+                            if key_name_type == 'int':
+                                key_name_value[d0][d1][d2][d3][d4] = int(
                                     argv[i])
-                            elif new_keyword_type == 'float':
-                                new_keyword_value[d0][d1][d2][d3][d4] = float(
+                            elif key_name_type == 'float':
+                                key_name_value[d0][d1][d2][d3][d4] = float(
                                     argv[i])
-                            elif new_keyword_type == 'bool':
+                            elif key_name_type == 'bool':
                                 if argv[i] == 'true' or \
                                         argv[i] == 'True' or argv[i]:
-                                    new_keyword_value[d0][d1][d2][d3][d4] = True
-                            elif new_keyword_type == 'string':
-                                new_keyword_value[d0][d1][d2][d3][d4] = argv[i]
-                            elif new_keyword_type == 'file':
-                                new_keyword_value[d0][d1][d2][d3][d4] = argv[i]
-                        elif new_keyword_ndims == 6:
-                            d0, d1, d2, d3, d4, d5 = new_keyword_index
-                            if new_keyword_type == 'int':
-                                new_keyword_value[d0][d1][d2][d3][d4][d5] = int(
+                                    key_name_value[d0][d1][d2][d3][d4] = True
+                            elif key_name_type == 'string':
+                                key_name_value[d0][d1][d2][d3][d4] = argv[i]
+                            elif key_name_type == 'file':
+                                key_name_value[d0][d1][d2][d3][d4] = argv[i]
+                        elif key_name_ndims == 6:
+                            d0, d1, d2, d3, d4, d5 = key_name_index
+                            if key_name_type == 'int':
+                                key_name_value[d0][d1][d2][d3][d4][d5] = int(
                                     argv[i])
-                            elif new_keyword_type == 'float':
-                                new_keyword_value[d0][d1][d2][d3][d4][d5] = float(
+                            elif key_name_type == 'float':
+                                key_name_value[d0][d1][d2][d3][d4][d5] = float(
                                     argv[i])
-                            elif new_keyword_type == 'bool':
+                            elif key_name_type == 'bool':
                                 if argv[i] == 'true' or \
                                         argv[i] == 'True' or argv[i]:
-                                    new_keyword_value[d0][d1][d2][d3][d4][d5] = True
-                            elif new_keyword_type == 'string':
-                                new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
-                            elif new_keyword_type == 'file':
-                                new_keyword_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                                    key_name_value[d0][d1][d2][d3][d4][d5] = True
+                            elif key_name_type == 'string':
+                                key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
+                            elif key_name_type == 'file':
+                                key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                         i += 1
                 else:
-                    if new_keyword_type == 'int':
-                        new_keyword_value = int(argv[i])
-                    elif new_keyword_type == 'float':
-                        new_keyword_value = float(argv[i])
-                    elif new_keyword_type == 'bool':
+                    if key_name_type == 'int':
+                        key_name_value = int(argv[i])
+                    elif key_name_type == 'float':
+                        key_name_value = float(argv[i])
+                    elif key_name_type == 'bool':
                         if argv[i] == 'true' or \
                                 argv[i] == 'True' or argv[i]:
-                            new_keyword_value = True
+                            key_name_value = True
                         else:
-                            new_keyword_value = False
-                    elif new_keyword_type == 'string':
-                        new_keyword_value = argv[i]
-                    elif new_keyword_type == 'file':
-                        new_keyword_value = argv[i]
+                            key_name_value = False
+                    elif key_name_type == 'string':
+                        key_name_value = argv[i]
+                    elif key_name_type == 'file':
+                        key_name_value = argv[i]
                     i += 1
         else:
-            if new_keyword_key in new_keyword_map:
-                msg = '\nERROR: the key {} '.format(new_keyword_key)
+            if key_name_key in key_name_map:
+                msg = '\nERROR: the key {} '.format(key_name_key)
                 msg += 'doesn\'t have any existing array argument. One can '
                 msg += 'not append new data to keys with no extent.'
                 raise KIMPropertyError(msg)
@@ -1859,34 +1864,34 @@ def kim_property_modify(property_instances, instance_id, *argv):
             if i >= n_arguments:
                 msg = '\nERROR: there is not enough input arguments '
                 msg += 'to use.\n Processing the {"'
-                msg += '{}'.format(new_keyword)
+                msg += '{}'.format(key_name)
                 msg += '"}:{"'
-                msg += '{}'.format(new_keyword_key)
+                msg += '{}'.format(key_name_key)
                 msg += '"} input arguments failed.\n '
                 msg += 'At least we need one further input.'
                 raise KIMPropertyError(msg)
 
-            if new_keyword_key == 'source-unit':
-                new_keyword_value = argv[i]
-            elif new_keyword_key == 'si-unit':
-                new_keyword_value = argv[i]
-            elif new_keyword_key == 'coverage-factor':
-                new_keyword_value = float(argv[i])
-            elif new_keyword_key == 'source-asym-std-uncert-neg':
-                new_keyword_value = float(argv[i])
-            elif new_keyword_key == 'source-asym-std-uncert-pos':
-                new_keyword_value = float(argv[i])
-            elif new_keyword_key == 'source-asym-expand-uncert-neg':
-                new_keyword_value = float(argv[i])
-            elif new_keyword_key == 'source-asym-expand-uncert-pos':
-                new_keyword_value = float(argv[i])
-            elif new_keyword_key == 'uncert-lev-of-confid':
-                new_keyword_value = float(argv[i])
-            elif new_keyword_key == 'digits':
-                new_keyword_value = int(argv[i])
+            if key_name_key == 'source-unit':
+                key_name_value = argv[i]
+            elif key_name_key == 'si-unit':
+                key_name_value = argv[i]
+            elif key_name_key == 'coverage-factor':
+                key_name_value = float(argv[i])
+            elif key_name_key == 'source-asym-std-uncert-neg':
+                key_name_value = float(argv[i])
+            elif key_name_key == 'source-asym-std-uncert-pos':
+                key_name_value = float(argv[i])
+            elif key_name_key == 'source-asym-expand-uncert-neg':
+                key_name_value = float(argv[i])
+            elif key_name_key == 'source-asym-expand-uncert-pos':
+                key_name_value = float(argv[i])
+            elif key_name_key == 'uncert-lev-of-confid':
+                key_name_value = float(argv[i])
+            elif key_name_key == 'digits':
+                key_name_value = int(argv[i])
             i += 1
 
-        new_keyword_map[new_keyword_key] = new_keyword_value
+        key_name_map[key_name_key] = key_name_value
         continue
 
     return kim_edn.dumps(kim_property_instances)
