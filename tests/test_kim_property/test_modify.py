@@ -235,41 +235,25 @@ class TestModifyModule:
             1, 'cohesive-potential-energy-cubic-crystal')
 
         # Fails paasing the wrong type
-        self.assertRaises(self.KIMPropertyError,
+        self.assertRaises(ValueError,
                           self.kim_property.kim_property_modify,
                           str_obj, 1,
                           "key", "a", "source-value", "True")
 
-        msg = '\nERROR: could not convert the '
-        msg += 'input argument to `float`.'
+        self.assertRaises(ValueError,
+                          self.kim_property.kim_property_modify,
+                          str_obj, 1,
+                          "key", "a", "source-value", "false")
 
-        self.assertRaisesRegex(self.KIMPropertyError, msg,
-                               self.kim_property.kim_property_modify,
-                               str_obj, 1,
-                               "key", "a", "source-value", "true")
-
-        self.assertRaisesRegex(self.KIMPropertyError, msg,
-                               self.kim_property.kim_property_modify,
-                               str_obj, 1,
-                               "key", "a", "source-value", "false")
-
-        self.assertRaises(self.KIMPropertyError,
+        self.assertRaises(ValueError,
                           self.kim_property.kim_property_modify,
                           str_obj, 1,
                           "key", "a", "digits", "false")
 
-        self.assertRaises(self.KIMPropertyError,
+        self.assertRaises(ValueError,
                           self.kim_property.kim_property_modify,
                           str_obj, 1,
                           "key", "a", "digits", "true")
-
-        msg = '\nERROR: could not convert the '
-        msg += 'input argument to `int`.'
-
-        self.assertRaisesRegex(self.KIMPropertyError, msg,
-                               self.kim_property.kim_property_modify,
-                               str_obj, 1,
-                               "key", "a", "digits", "False")
 
 
 class TestPyTestModifyModule(TestModifyModule, PyTest):
