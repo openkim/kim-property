@@ -5777,7 +5777,7 @@ sg1941
 sg1943
 I01
 sg1944
-VRelaxed grain boundary excess energy density (energy per unit area), i.e. the difference between the energy of the bi-crystal containing the symmetric tilt grain boundary structure and the energy of an ideal crystal with the same number of atoms per unit area of the interface.
+VRelaxed grain boundary excess energy density (energy per unit area), i.e. the difference between the ground state energy of the bi-crystal containing the symmetric tilt grain boundary structure and the energy of an ideal crystal with the same number of atoms per unit area of the interface.
 p2004
 ssVrelaxed-interface-positions
 p2005
@@ -6034,7 +6034,7 @@ g40
 asg2030
 I01
 sg2031
-VVector of relaxed grain boundary excess energy densities (energy per unit area), i.e. the difference between the energy of the bi-crystal containing the symmetric tilt grain boundary structure and the energy of an ideal crystal with the same number of atoms per unit area of the interface. The order of the entries must correspond to the order of the entries in 'tilt-angle'.
+VVector of relaxed grain boundary excess energy densities (energy per unit area), i.e. the difference between the ground state energy of the bi-crystal containing the symmetric tilt grain boundary structure and the energy of an ideal crystal with the same number of atoms per unit area of the interface. The order of the entries must correspond to the order of the entries in 'tilt-angle'.
 p2091
 ssVrelaxed-interface-positions
 p2092
