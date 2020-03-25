@@ -203,6 +203,21 @@ class TestModifyModule:
         self.assertRaises(self.KIMPropertyError,
                           self.kim_property.kim_property_modify,
                           str_obj, 1,
+                          "key", "basis-atom-coordinates", "source-value", "1", "1:3", 0.0, 0.0)
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify,
+                          str_obj, 1,
+                          "key", "basis-atom-coordinates", "source-value", "2", "1:3", 0.0, 0.5)
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify,
+                          str_obj, 1,
+                          "key", "basis-atom-coordinates", "source-value", "2", "2:3", 0.5)
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify,
+                          str_obj, 1,
                           "key", "basis-atom-coordinates", "source-value", 3, 3)
 
         msg = '\nERROR: there is not enough input arguments '
