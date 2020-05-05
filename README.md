@@ -69,11 +69,32 @@ A property instance is stored in a subset of the KIM-EDN format as described
 in [KIM Property Instances](https://openkim.org/doc/schema/properties-framework).
 Each property instance must contain the `property-id` and `instance-id`.
 `kim-property` utility module can create a new property instance, using a KIM
-property ID (e.g.
-`tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal`)
-or only a KIM property name (e.g `cohesive-energy-relation-cubic-crystal`)
-where, it internally will use the correct KIM property ID. Both use cases are
-depicted above.
+property ID. A KIM property ID is an identifier of a KIM Property Definition, 
+which can be,
+(1) a property short name, 
+(2) the full unique ID of the property (including the contributor and date), 
+(3) a file name corresponding to a local property definition file. 
+
+Examples of each of these cases are shown below:
+
+````py
+    >>> kim_property_create(1, 'atomic-mass')
+    >>> kim_property_create(2, 'cohesive-energy-relation-cubic-crystal')
+````
+
+````py
+    >>> kim_property_create(1, 'tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass')
+    >>> kim_property_create(2, 'tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal')
+````
+
+````py
+    >>> kim_property_create(1, 'new-property.edn')
+    >>> kim_property_create(2, '/home/mary/marys-kim-properties/dissociation-energy.edn')
+````
+
+In the last example, “new-property.edn” and 
+“/home/mary/marys-kim-properties/dissociation-energy.edn” 
+are the names of files that contain user-defined (local) property definitions.
 
 ## Destroy
 
@@ -93,7 +114,18 @@ Destroying property instances::
 
 ## Modify
 
-Modifying (setting) property instances::
+Modifying (setting) property instances.
+
+Once a `kim_property_create` has been given to instantiate a property 
+instance, maps associated with the property’s keys can be edited using the 
+kim_property_modify. 
+In using this command, the special keyword “key” should be given, followed 
+by the property key name and the key-value pair in the map associated with 
+the key that is to be set. 
+
+For example, the `cohesive-energy-relation-cubic-crystal` property definition 
+consists of property keys named “short-name”, “species”, ...  
+An instance of this property could be created like so::
 
 ````py
     >>> str = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
