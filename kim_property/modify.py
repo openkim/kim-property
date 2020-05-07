@@ -1025,6 +1025,24 @@ def kim_property_modify(property_instances, instance_id, *argv):
                     elif key_name_type == 'file':
                         key_name_value = argv[i]
                     i += 1
+
+                    # Extra check for the scalar values
+                    # see https://github.com/openkim/kim-property/issues/1
+                    if i < n_arguments:
+                        try:
+                            arg = argv[i]
+                        except IndexError:
+                            break
+                        if arg != 'key' and not arg in standard_keys:
+                            msg = 'two arguments are provided for a scalar '
+                            msg += 'key. For "{}" in '.format(key_name)
+                            msg += 'property-definition, the '
+                            msg += '"{}"-key '.format(key_name_key)
+                            msg += 'is scalar, but is provided with two '
+                            msg += 'arguments: "{}", '.format(argv[i - 1])
+                            msg += '"{}" (Note: '.format(arg)
+                            msg += 'one can not use index for scalar keys.)'
+                            raise KIMPropertyError(msg)
             # Set
             else:
                 if key_name_ndims > 0:
@@ -1850,6 +1868,24 @@ def kim_property_modify(property_instances, instance_id, *argv):
                     elif key_name_type == 'file':
                         key_name_value = argv[i]
                     i += 1
+
+                    # Extra check for the scalar values
+                    # see https://github.com/openkim/kim-property/issues/1
+                    if i < n_arguments:
+                        try:
+                            arg = argv[i]
+                        except IndexError:
+                            break
+                        if arg != 'key' and not arg in standard_keys:
+                            msg = 'two arguments are provided for a scalar '
+                            msg += 'key. For "{}" in '.format(key_name)
+                            msg += 'property-definition, the '
+                            msg += '"{}"-key '.format(key_name_key)
+                            msg += 'is scalar, but is provided with two '
+                            msg += 'arguments: "{}", '.format(argv[i - 1])
+                            msg += '"{}" (Note: '.format(arg)
+                            msg += 'one can not use index for scalar keys.)'
+                            raise KIMPropertyError(msg)
         else:
             if key_name_key in key_name_map:
                 msg = 'the key {} '.format(key_name_key)
@@ -1886,6 +1922,23 @@ def kim_property_modify(property_instances, instance_id, *argv):
             elif key_name_key == 'digits':
                 key_name_value = int(argv[i])
             i += 1
+
+            # Extra check for the scalar values
+            # see https://github.com/openkim/kim-property/issues/1
+            if i < n_arguments:
+                try:
+                    arg = argv[i]
+                except IndexError:
+                    break
+                if arg != 'key' and not arg in standard_keys:
+                    msg = 'two arguments are provided for a key with no '
+                    msg += 'extent. For "{}" in '.format(key_name)
+                    msg += 'property-definition, the'
+                    msg += '"{}"-key has no extent, '.format(key_name_key)
+                    msg += 'but is provided with two arguments: '
+                    msg += '"{}", "{}" (Note: '.format(argv[i - 1], arg)
+                    msg += 'one can not use index for keys with no extent.)'
+                    raise KIMPropertyError(msg)
 
         key_name_map[key_name_key] = key_name_value
         continue
