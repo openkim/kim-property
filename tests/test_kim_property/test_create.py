@@ -1,10 +1,7 @@
 import os
 from os.path import join, isfile
 
-try:
-    import kim_edn
-except:
-    raise Exception('Failed to import `kim_edn` utility module')
+import kim_edn
 
 from tests.test_kim_property import PyTest
 

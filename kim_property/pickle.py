@@ -5,14 +5,10 @@ from os.path import abspath, join, isdir, pardir, isfile, dirname
 from io import BytesIO
 import pickle
 
-from .definition import KIMPropertyError
-from .instance import get_property_id_path
+import kim_edn
 
-try:
-    import kim_edn
-except:
-    msg = '\nERROR: Failed to import the `kim_edn` utility module.'
-    raise KIMPropertyError(msg)
+from .err import KIMPropertyError
+from .instance import get_property_id_path
 
 __all__ = [
     "pickle_kim_properties",
@@ -58,7 +54,7 @@ def pickle_kim_properties(properties=None,
         if isdir(abspath(kim_property_files_path)):
             kim_property_files_path = abspath(kim_property_files_path)
         else:
-            msg = '\nERROR: property files can not be found!'
+            msg = 'property files can not be found!'
             raise KIMPropertyError(msg)
 
         # KIM property names.
@@ -185,7 +181,7 @@ def pickle_kim_properties(properties=None,
             _path, _, _, _ = get_property_id_path(_id)
             kim_property_files.append(join(kim_property_files_path, _path))
             if not isfile(kim_property_files[-1]):
-                msg = '\nERROR: the property file =\n"'
+                msg = 'the property file =\n"'
                 msg += kim_property_files[-1]
                 msg += '"\n can not be found!'
                 raise KIMPropertyError(msg)
@@ -214,11 +210,11 @@ def pickle_kim_properties(properties=None,
         ]
     else:
         if not (isinstance(properties, dict)):
-            msg = '\nERROR: wrong input, "properties" is not a `dict`.'
+            msg = 'wrong input, "properties" is not a `dict`.'
             raise KIMPropertyError(msg)
 
         if len(properties) == 0:
-            msg = '\nERROR: wrong input, "properties" is empty.'
+            msg = 'wrong input, "properties" is empty.'
             raise KIMPropertyError(msg)
 
         property_ids = [k for k in properties]
@@ -254,7 +250,7 @@ def pickle_kim_properties(properties=None,
         try:
             pickle.dump(kim_properties_list, fp, protocol=protocol)
         except:
-            msg = '\nERROR: wrong input. ("fp" should refer to a bytes-like '
+            msg = 'wrong input. ("fp" should refer to a bytes-like '
             msg += 'object.)'
             raise KIMPropertyError(msg)
 
@@ -283,7 +279,7 @@ def unpickle_kim_properties(fp=join(kim_properties_path, 'kim_properties.pickle'
             with open(fp, 'rb') as f:
                 return pickle.load(f)
 
-        msg = '\nERROR: wrong input. Can\'t load pickle from unicode '
+        msg = 'wrong input. Can\'t load pickle from unicode '
         msg += 'string.\n If "fp" refers to a file name, make sure it '
         msg += 'exists in PATH or provide the file name with its '
         msg += 'absolute PATH.'
@@ -293,5 +289,5 @@ def unpickle_kim_properties(fp=join(kim_properties_path, 'kim_properties.pickle'
             f = BytesIO(fp)
             return pickle.load(f)
         except:
-            msg = '\nERROR: wrong input. Can not open nor load the input.'
+            msg = 'wrong input. Can not open nor load the input.'
             raise KIMPropertyError(msg)

@@ -5,14 +5,16 @@ import os
 from os.path import abspath, isabs, join, isdir, isfile
 import re
 
+import kim_edn
+
+from .err import KIMPropertyError
 from .definition import required_keys as def_required_keys
-from .definition import KIMPropertyError, \
+from .definition import \
     check_property_id_format, \
     check_required_keys_present, \
     check_key_format, \
     check_optional_key_extent_scalar, \
     get_optional_key_extent_ndimensions
-
 from .numeric import shape, size
 
 __all__ = [
@@ -27,12 +29,6 @@ __all__ = [
     "check_instance_optional_key_marked_required_are_present",
     "check_property_instances",
 ]
-
-try:
-    import kim_edn
-except:
-    msg = '\nERROR: Failed to import the `kim_edn` utility module.'
-    raise KIMPropertyError(msg)
 
 
 # A Property Instance must contain the following required key-value pairs:
@@ -137,12 +133,12 @@ def check_instance_id_format(s, _m=INSTANCE_ID.match):
     """
     if isinstance(s, int):
         if _m(str(s)) is None:
-            msg = '\nERROR: the "instance-id" = {}, '.format(s)
+            msg = 'the "instance-id" = {}, '.format(s)
             msg += 'doesn\'t meet the format specification (an integer '
             msg += 'equal to or greater than 1).'
             raise KIMPropertyError(msg)
     else:
-        msg = '\nERROR: the "instance-id" value is not an `int` '
+        msg = 'the "instance-id" value is not an `int` '
         msg += 'and doesn\'t meet the format specification.'
         raise KIMPropertyError(msg)
 
@@ -175,7 +171,7 @@ def check_optional_key_source_value_scalar(l, s, _size=size):
     elif isinstance(l, bool):
         return s == "bool"
     else:
-        msg = '\nERROR: Input to the function doesn\'t comply with '
+        msg = 'Input to the function doesn\'t comply with '
         msg += 'the defined variable type.\n'
         msg += 'The variable type can be one of :: \n'
         msg += '"string", "float", "int", "bool", or "file".'
@@ -208,7 +204,7 @@ def get_optional_key_source_value_ndimensions(l, _shape=shape):
     elif isinstance(l, bool):
         return 0
     else:
-        msg = '\nERROR: Input to the function is not any of:: \n'
+        msg = 'Input to the function is not any of:: \n'
         msg += '`list`, `str`, `float`, `int`, `bool` types.'
         raise KIMPropertyError(msg)
 
@@ -231,13 +227,13 @@ def check_instance_optional_key_standard_pairs_format(im, pm):
 
     """
     if not isinstance(im, dict):
-        msg = '\nERROR: Property instance input to the function is '
+        msg = 'Property instance input to the function is '
         msg += 'not a `dict`.'
         raise KIMPropertyError(msg)
 
     for k in im:
         if not k in standard_keys:
-            msg = '\nERROR: Wrong key. \n'
+            msg = 'Wrong key. \n'
             msg += 'The input "{}"-key is not part of '.format(k)
             msg += 'the standard key-value pairs definition.\n '
             msg += 'See KIM standard key-value pairs at '
@@ -247,13 +243,13 @@ def check_instance_optional_key_standard_pairs_format(im, pm):
 
     # Check the required fields in the instance property optional field key-value pairs
     if "source-value" not in im:
-        msg = '\nERROR: "source-value" (required) not in the property '
+        msg = '"source-value" (required) not in the property '
         msg += 'instance optional field key-value pairs.'
         raise KIMPropertyError(msg)
 
     if pm is not None:
         if not isinstance(pm, dict):
-            msg = '\nERROR: Property map input to the function is not a '
+            msg = 'Property map input to the function is not a '
             msg += '`dict`.'
             raise KIMPropertyError(msg)
 
@@ -263,7 +259,7 @@ def check_instance_optional_key_standard_pairs_format(im, pm):
 
         if check_optional_key_extent_scalar(l_p):
             if not check_optional_key_source_value_scalar(l_i, t_p):
-                msg = '\nERROR: "extent" specifies single item, but '
+                msg = '"extent" specifies single item, but '
                 msg += '"source-value" in the property instance is an array '
                 msg += 'of values.'
                 raise KIMPropertyError(msg)
@@ -278,7 +274,7 @@ def check_instance_optional_key_standard_pairs_format(im, pm):
                         l_p[0] == ':':
                     pass
                 else:
-                    msg = '\nERROR: "source-value"-value number of dimensions = '
+                    msg = '"source-value"-value number of dimensions = '
                     msg += '{}, doesn\'t match '.format(instance_ndims)
                     msg += 'the "extent"-value number of dimensions = '
                     msg += '{}.'.format(property_ndims)
@@ -290,7 +286,7 @@ def check_instance_optional_key_standard_pairs_format(im, pm):
 
         if pm["has-unit"]:
             if "source-unit" not in im:
-                msg = '\nERROR: "source-unit" is required, but it is not in '
+                msg = '"source-unit" is required, but it is not in '
                 msg += 'the property instance optional field "key-value" '
                 msg += 'pairs.'
                 raise KIMPropertyError(msg)
@@ -317,7 +313,7 @@ def check_instnace_optional_key_map(k, m, pm=None, _m=KEY_FORMAT.match):
         check_key_format(k, _m=_m)
         check_instance_optional_key_standard_pairs_format(m, pm)
     except KIMPropertyError:
-        msg = '\nERROR: in property instance key = "{}"\n'.format(k)
+        msg = 'in property instance key = "{}"\n'.format(k)
         msg += str(KIMPropertyError)
         raise KIMPropertyError(msg)
 
@@ -339,7 +335,7 @@ def check_instance_optional_key_marked_required_are_present(pi, pd):
         if not k in def_required_keys:
             if pd[k]["required"]:
                 if not k in pi:
-                    msg = '\nERROR: variable marked required is not present.'
+                    msg = 'variable marked required is not present.'
                     msg += '\nA "required" flag in the property definition '
                     msg += 'indicates the variable {} must be '.format(k)
                     msg += 'in the property-instance of the property.'
@@ -379,7 +375,7 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
     if fp is None:
         # Check whether the path is provided to the property files?
         if fp_path is None:
-            msg = '\nERROR: either the absolute path to the KIM properties '
+            msg = 'either the absolute path to the KIM properties '
             msg += 'or a KIM property definition should be provided.'
             raise KIMPropertyError(msg)
         else:
@@ -390,17 +386,17 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
                     if isdir(fp_path):
                         fp_path = abspath(fp_path)
                     else:
-                        msg = '\nERROR: the path KIM properties should be an '
+                        msg = 'the path KIM properties should be an '
                         msg += 'absolute path name.'
                         raise KIMPropertyError(msg)
             else:
                 if not isinstance(fp_path, dict):
-                    msg = '\nERROR: wrong KIM properties object.'
+                    msg = 'wrong KIM properties object.'
                     raise KIMPropertyError(msg)
     # Property definition file is provided
     else:
         if fp_path is not None:
-            msg = '\nERROR: only the absolute path to the KIM properties '
+            msg = 'only the absolute path to the KIM properties '
             msg += 'or a KIM property file should be provided (not both).'
             raise KIMPropertyError(msg)
 
@@ -420,7 +416,7 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
                 if pi["property-id"] in fp_path:
                     fp = fp_path[pi["property-id"]]
                 else:
-                    msg = '\nERROR: the requested property ID = \n"'
+                    msg = 'the requested property ID = \n"'
                     msg += pi["property-id"]
                     msg += '"\n does not exist in the input KIM properties.'
                     raise KIMPropertyError(msg)
@@ -433,7 +429,7 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
                 elif isfile(join(fp_path, _property_name + ".edn")):
                     fp = join(fp_path, _property_name + ".edn")
                 else:
-                    msg = '\nERROR: unable to find a KIM property '
+                    msg = 'unable to find a KIM property '
                     msg += 'definition at {\n"'
                     msg += join(fp_path, _path)
                     msg += '",\n nor at\n"'
@@ -454,7 +450,7 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
             pd = kim_edn.load(fp)
 
         if pd["property-id"] != pi["property-id"]:
-            msg = '\nERROR: wrong property definition is provided.\n'
+            msg = 'wrong property definition is provided.\n'
             msg += 'Property id :\n'
             msg += '{}\n'.format(pd["property-id"])
             msg += 'read from the property definition file is different '
@@ -485,7 +481,7 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
                     if pi_["property-id"] in fp_path:
                         pd = fp_path[pi_["property-id"]]
                     else:
-                        msg = '\nERROR: the requested property ID = \n"'
+                        msg = 'the requested property ID = \n"'
                         msg += pi_["property-id"]
                         msg += '"\n does not exist in the input KIM '
                         msg += 'properties.'
@@ -499,7 +495,7 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
                     elif isfile(join(fp_path, _property_name + ".edn")):
                         fp = join(fp_path, _property_name + ".edn")
                     else:
-                        msg = '\nERROR: unable to find a KIM property '
+                        msg = 'unable to find a KIM property '
                         msg += 'definition at {\n"'
                         msg += join(fp_path, _path)
                         msg += '",\n nor at\n"'
@@ -523,7 +519,7 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
                     pd = kim_edn.load(fp)
 
             if pd["property-id"] != pi_["property-id"]:
-                msg = '\nERROR: wrong property definition is provided.\n'
+                msg = 'wrong property definition is provided.\n'
                 msg += 'Property id :\n'
                 msg += '{}\n'.format(pd["property-id"])
                 msg += 'read from the property definition file is different '
@@ -535,7 +531,7 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
             check_instance_id_format(pi_["instance-id"])
 
             if pi_["instance-id"] in instance_id:
-                msg = '\nERROR: the "instance-id’s" cannot repeat.'
+                msg = 'the "instance-id’s" cannot repeat.'
                 raise KIMPropertyError(msg)
 
             instance_id.append(pi_["instance-id"])
@@ -549,6 +545,6 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
                     else:
                         check_instnace_optional_key_map(k, pi_[k], _m=_m)
     else:
-        msg = '\nERROR: Input to the function does not have a '
+        msg = 'Input to the function does not have a '
         msg += 'correct KIM-EDN format.'
         raise KIMPropertyError(msg)

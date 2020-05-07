@@ -1,9 +1,6 @@
 from io import StringIO
 
-try:
-    import kim_edn
-except:
-    raise Exception('Failed to import `kim_edn` utility module')
+import kim_edn
 
 from tests.test_kim_property import PyTest
 
@@ -244,7 +241,7 @@ class TestPropertyModule:
                           str_obj, 1,
                           "key", "basis-atom-coordinates", "source-value", 3)
 
-        msg = '\nERROR: there is not enough input arguments '
+        msg = 'there is not enough input arguments '
         msg += 'to use.\n Processing the {"basis-atom-coordinates"}:'
         msg += '{"source-value"} input arguments failed.\n The second '
         msg += 'index is missing from the input arguments.'
@@ -259,7 +256,7 @@ class TestPropertyModule:
                           str_obj, 1,
                           "key", "basis-atom-coordinates", "source-value", 3, 3)
 
-        msg = '\nERROR: there is not enough input arguments '
+        msg = 'there is not enough input arguments '
         msg += 'to use.\n Processing the {"basis-atom-coordinates"}:'
         msg += '{"source-value"} input arguments failed.\n '
         msg += 'At least we need one further input.'
@@ -274,7 +271,7 @@ class TestPropertyModule:
                           str_obj, 1,
                           "key", "basis-atom-coordinates", "source-value", 3, 4)
 
-        msg = '\nERROR: this dimension has a fixed length = 3, while, '
+        msg = 'this dimension has a fixed length = 3, while, '
         msg += 'wrong index = 4 is requested.\n Processing the '
         msg += '{"basis-atom-coordinates"}:{"source-value"} input arguments,'
         msg += ' wrong index at the second dimension is requested.'

@@ -2,13 +2,9 @@ import os
 from os.path import join, isfile
 import re
 
+import kim_edn
+
 from kim_property.create import property_id_to_property_name
-
-try:
-    import kim_edn
-except:
-    raise Exception('Failed to import `kim_edn` utility module')
-
 from tests.test_kim_property import PyTest
 
 EXTENT_LIST = [

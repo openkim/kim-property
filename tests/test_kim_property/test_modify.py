@@ -1,10 +1,7 @@
 import os
 from os.path import join, isfile
 
-try:
-    import kim_edn
-except:
-    raise Exception('Failed to import `kim_edn` utility module')
+import kim_edn
 
 from tests.test_kim_property import PyTest
 
@@ -157,7 +154,7 @@ class TestModifyModule:
                           str_obj, 1,
                           "key", "short-name", "source-value", "fcc")
 
-        msg = '\nERROR: input value '
+        msg = 'input value '
         msg += '"{}" doesn\'t meet the '.format("fcc")
         msg += 'format specification. An integer '
         msg += 'equal to or greater than 1 '
@@ -190,7 +187,7 @@ class TestModifyModule:
                           str_obj, 1,
                           "key", "basis-atom-coordinates", "source-value", 3)
 
-        msg = '\nERROR: there is not enough input arguments '
+        msg = 'there is not enough input arguments '
         msg += 'to use.\n Processing the {"basis-atom-coordinates"}:'
         msg += '{"source-value"} input arguments failed.\n The second '
         msg += 'index is missing from the input arguments.'
@@ -220,7 +217,7 @@ class TestModifyModule:
                           str_obj, 1,
                           "key", "basis-atom-coordinates", "source-value", 3, 3)
 
-        msg = '\nERROR: there is not enough input arguments '
+        msg = 'there is not enough input arguments '
         msg += 'to use.\n Processing the {"basis-atom-coordinates"}:'
         msg += '{"source-value"} input arguments failed.\n '
         msg += 'At least we need one further input.'
@@ -235,7 +232,7 @@ class TestModifyModule:
                           str_obj, 1,
                           "key", "basis-atom-coordinates", "source-value", 3, 4)
 
-        msg = '\nERROR: this dimension has a fixed length = 3, while, '
+        msg = 'this dimension has a fixed length = 3, while, '
         msg += 'wrong index = 4 is requested.\n Processing the '
         msg += '{"basis-atom-coordinates"}:{"source-value"} input arguments,'
         msg += ' wrong index at the second dimension is requested.'

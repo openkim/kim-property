@@ -3,16 +3,12 @@
 import os
 from os.path import join, isfile
 
-from .definition import KIMPropertyError, check_property_definition
+import kim_edn
+
+from .err import KIMPropertyError
+from .definition import check_property_definition
 from .instance import get_property_id_path, check_instance_id_format
-
 from .pickle import unpickle_kim_properties
-
-try:
-    import kim_edn
-except:
-    msg = '\nERROR: Failed to import the `kim_edn` utility module.'
-    raise KIMPropertyError(msg)
 
 __all__ = [
     "get_properties",
@@ -126,14 +122,14 @@ def kim_property_create(instance_id, property_name, property_instances=None):
     global new_property_ids
 
     if not isinstance(instance_id, int):
-        msg = '\nERROR: the "instance_id" is not an `int`.'
+        msg = 'the "instance_id" is not an `int`.'
         raise KIMPropertyError(msg)
 
     # Check instance id format to prevent mistakes as early as possible
     check_instance_id_format(instance_id)
 
     if not isinstance(property_name, str):
-        msg = '\nERROR: the "property_name" is not an `str`.'
+        msg = 'the "property_name" is not an `str`.'
         raise KIMPropertyError(msg)
 
     if property_instances is None:
@@ -144,7 +140,7 @@ def kim_property_create(instance_id, property_name, property_instances=None):
 
         for a_property_instance in kim_property_instances:
             if instance_id == a_property_instance["instance-id"]:
-                msg = '\nERROR: the "instance-id"’s cannot repeat. '
+                msg = 'the "instance-id"’s cannot repeat. '
                 msg += 'In the case where there are multiple property '
                 msg += 'instances, the instance-id’s cannot repeat.'
                 raise KIMPropertyError(msg)
@@ -170,7 +166,7 @@ def kim_property_create(instance_id, property_name, property_instances=None):
 
         # Check to make sure that this property does not exist in OpenKIM
         if _property_id in kim_properties:
-            msg = '\nERROR: the input property_name file contains a '
+            msg = 'the input property_name file contains a '
             msg += 'property ID which already exists in OpenKIM.'
             msg += 'Use the KIM Property Definition or update the ID in the'
             msg += 'property_name file.\n'
@@ -204,7 +200,7 @@ def kim_property_create(instance_id, property_name, property_instances=None):
         elif property_name in kim_property_ids:
             new_property_instance["property-id"] = property_name
         else:
-            msg = '\nERROR: the requested "property_name" :\n'
+            msg = 'the requested "property_name" :\n'
             msg += '"{}"\n'.format(property_name)
             msg += 'is not a valid KIM property name nor '
             msg += 'a path-like object to a file.\n '
