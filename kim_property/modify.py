@@ -919,7 +919,7 @@ def kim_property_modify(property_instances, instance_id, *argv):
                             raise KIMPropertyError(msg)
 
                         if key_name_ndims == 1:
-                            d0 = key_name_index
+                            d0 = key_name_index[0]
                             if key_name_type == 'int':
                                 key_name_value[d0] = int(argv[i])
                             elif key_name_type == 'float':
