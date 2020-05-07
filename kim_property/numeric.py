@@ -191,7 +191,7 @@ def extend_full_array(full_array, array_shape, fill_value=None, _shape=shape):
         raise KIMPropertyError(msg)
 
     if full_array_ndims == 1:
-        d0 = full_array_shape
+        d0 = full_array_shape[0]
         new_array[0:d0] = full_array[0:d0]
     elif full_array_ndims == 2:
         d0, d1 = full_array_shape
