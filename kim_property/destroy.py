@@ -1,13 +1,9 @@
 """Destroy module."""
 
-from .definition import KIMPropertyError
-from .create import unset_property_id
+import kim_edn
 
-try:
-    import kim_edn
-except:
-    msg = '\nERROR: Failed to import the `kim_edn` utility module.'
-    raise KIMPropertyError(msg)
+from .err import KIMPropertyError
+from .create import unset_property_id
 
 __all__ = [
     "kim_property_destroy",
@@ -42,7 +38,7 @@ def kim_property_destroy(property_instances, instance_id):
 
     """
     if not isinstance(instance_id, int):
-        msg = '\nERROR: the "instance_id" is not an `int`.'
+        msg = 'the "instance_id" is not an `int`.'
         raise KIMPropertyError(msg)
 
     if property_instances is None or \

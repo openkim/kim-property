@@ -3,13 +3,11 @@ from os.path import join, isfile
 from io import BytesIO, StringIO
 import pickle
 
-from kim_property.pickle import pickle_kim_properties, unpickle_kim_properties
+import kim_edn
 
-try:
-    import kim_edn
-except:
-    raise Exception('Failed to import `kim_edn` utility module')
-
+from kim_property.pickle import \
+    pickle_kim_properties, \
+    unpickle_kim_properties
 from tests.test_kim_property import PyTest
 
 
@@ -49,12 +47,12 @@ class TestPickle:
                           properties, sio)
 
         # Test the unpickle utility
-        _properties, _name_to_id, _id_to_name = unpickle_kim_properties(bio.getvalue())
+        _properties, _name_to_id, _id_to_name = unpickle_kim_properties(
+            bio.getvalue())
 
         self.assertTrue(_properties == properties)
         self.assertTrue(_name_to_id == name_to_id)
         self.assertTrue(_id_to_name == id_to_name)
-
 
 
 class TestPyTestPickle(TestPickle, PyTest):

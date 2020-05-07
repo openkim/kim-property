@@ -1,10 +1,7 @@
 import os
 from os.path import join, isfile
 
-try:
-    import kim_edn
-except:
-    raise Exception('Failed to import `kim_edn` utility module')
+import kim_edn
 
 from tests.test_kim_property import PyTest
 
@@ -25,7 +22,8 @@ class TestModifyModule:
             "key", "species",
             "source-value", "1:4", "Al", "Al", "Al", "Al",
             "key", "a",
-            "source-value", "1:5", "3.9149", "4.0000", "4.032", "4.0817", "4.1602",
+            "source-value",
+            "1:5", "3.9149", "4.0000", "4.032", "4.0817", "4.1602",
             "source-unit", "angstrom", "digits", "5",
             "key", "basis-atom-coordinates",
             "source-value", "2", "1:2", "0.5", "0.5",
@@ -34,8 +32,10 @@ class TestModifyModule:
             "key", "basis-atom-coordinates",
             "source-value", "4", "2:3", "0.5", "0.5",
             "key", "cohesive-potential-energy",
-            "source-value", "1:5", "3.324", "3.3576", "3.3600", "3.3550", "3.3260",
-            "source-std-uncert-value", "1:5", "0.002", "0.0001", "0.00001", "0.0012", "0.00015",
+            "source-value",
+            "1:5", "3.324", "3.3576", "3.3600", "3.3550", "3.3260",
+            "source-std-uncert-value",
+            "1:5", "0.002", "0.0001", "0.00001", "0.0012", "0.00015",
             "source-unit", "eV",
             "digits", "5")
 
@@ -59,7 +59,8 @@ class TestModifyModule:
         str_obj = self.kim_property.kim_property_modify(
             str_obj, 1,
             "key", "a",
-            "source-value", "1:5", "3.9149", "4.0000", "4.032", "4.0817", "4.1602")
+            "source-value",
+            "1:5", "3.9149", "4.0000", "4.032", "4.0817", "4.1602")
 
         str_obj = self.kim_property.kim_property_modify(
             str_obj, 1,
@@ -83,8 +84,10 @@ class TestModifyModule:
         str_obj = self.kim_property.kim_property_modify(
             str_obj, 1,
             "key", "cohesive-potential-energy",
-            "source-value", "1:5", "3.324", "3.3576", "3.3600", "3.3550", "3.3260",
-            "source-std-uncert-value", "1:5", "0.002", "0.0001", "0.00001", "0.0012", "0.00015",
+            "source-value",
+            "1:5", "3.324", "3.3576", "3.3600", "3.3550", "3.3260",
+            "source-std-uncert-value",
+            "1:5", "0.002", "0.0001", "0.00001", "0.0012", "0.00015",
             "source-unit", "eV",
             "digits", "5")
 
@@ -139,7 +142,27 @@ class TestModifyModule:
 
         # Fails when the instance id is not an integer
         self.assertRaises(self.KIMPropertyError,
-                          self.kim_property.kim_property_modify, str_obj, 1.0)
+                          self.kim_property.kim_property_modify, str_obj,
+                          1.0)
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify, str_obj,
+                          "1")
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify, str_obj,
+                          "id")
+
+        # Fails when one forgts to put the comma between inputs
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify,
+                          str_obj, 1,
+                          "key", "a" "source-value", 1, 3.9149)
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify,
+                          str_obj, 1,
+                          "key" "a", "source-value", 1, 3.9149)
 
         # Fails when value passed instead of index
         self.assertRaises(self.KIMPropertyError,
@@ -157,7 +180,7 @@ class TestModifyModule:
                           str_obj, 1,
                           "key", "short-name", "source-value", "fcc")
 
-        msg = '\nERROR: input value '
+        msg = 'input value '
         msg += '"{}" doesn\'t meet the '.format("fcc")
         msg += 'format specification. An integer '
         msg += 'equal to or greater than 1 '
@@ -182,15 +205,17 @@ class TestModifyModule:
         self.assertRaises(self.KIMPropertyError,
                           self.kim_property.kim_property_modify,
                           str_obj, 1,
-                          "key", "basis-atom-coordinates", "source-unknown", 2.5)
+                          "key", "basis-atom-coordinates",
+                          "source-unknown", 2.5)
 
         # Fails when not enough input
         self.assertRaises(self.KIMPropertyError,
                           self.kim_property.kim_property_modify,
                           str_obj, 1,
-                          "key", "basis-atom-coordinates", "source-value", 3)
+                          "key", "basis-atom-coordinates",
+                          "source-value", 3)
 
-        msg = '\nERROR: there is not enough input arguments '
+        msg = 'there is not enough input arguments '
         msg += 'to use.\n Processing the {"basis-atom-coordinates"}:'
         msg += '{"source-value"} input arguments failed.\n The second '
         msg += 'index is missing from the input arguments.'
@@ -198,29 +223,34 @@ class TestModifyModule:
         self.assertRaisesRegex(self.KIMPropertyError, msg,
                                self.kim_property.kim_property_modify,
                                str_obj, 1,
-                               "key", "basis-atom-coordinates", "source-value", 3)
+                               "key", "basis-atom-coordinates",
+                               "source-value", 3)
 
         self.assertRaises(self.KIMPropertyError,
                           self.kim_property.kim_property_modify,
                           str_obj, 1,
-                          "key", "basis-atom-coordinates", "source-value", "1", "1:3", 0.0, 0.0)
+                          "key", "basis-atom-coordinates",
+                          "source-value", "1", "1:3", 0.0, 0.0)
 
         self.assertRaises(self.KIMPropertyError,
                           self.kim_property.kim_property_modify,
                           str_obj, 1,
-                          "key", "basis-atom-coordinates", "source-value", "2", "1:3", 0.0, 0.5)
+                          "key", "basis-atom-coordinates",
+                          "source-value", "2", "1:3", 0.0, 0.5)
 
         self.assertRaises(self.KIMPropertyError,
                           self.kim_property.kim_property_modify,
                           str_obj, 1,
-                          "key", "basis-atom-coordinates", "source-value", "2", "2:3", 0.5)
+                          "key", "basis-atom-coordinates",
+                          "source-value", "2", "2:3", 0.5)
 
         self.assertRaises(self.KIMPropertyError,
                           self.kim_property.kim_property_modify,
                           str_obj, 1,
-                          "key", "basis-atom-coordinates", "source-value", 3, 3)
+                          "key", "basis-atom-coordinates",
+                          "source-value", 3, 3)
 
-        msg = '\nERROR: there is not enough input arguments '
+        msg = 'there is not enough input arguments '
         msg += 'to use.\n Processing the {"basis-atom-coordinates"}:'
         msg += '{"source-value"} input arguments failed.\n '
         msg += 'At least we need one further input.'
@@ -228,14 +258,16 @@ class TestModifyModule:
         self.assertRaisesRegex(self.KIMPropertyError, msg,
                                self.kim_property.kim_property_modify,
                                str_obj, 1,
-                               "key", "basis-atom-coordinates", "source-value", 3, 3)
+                               "key", "basis-atom-coordinates",
+                               "source-value", 3, 3)
 
         self.assertRaises(self.KIMPropertyError,
                           self.kim_property.kim_property_modify,
                           str_obj, 1,
-                          "key", "basis-atom-coordinates", "source-value", 3, 4)
+                          "key", "basis-atom-coordinates",
+                          "source-value", 3, 4)
 
-        msg = '\nERROR: this dimension has a fixed length = 3, while, '
+        msg = 'this dimension has a fixed length = 3, while, '
         msg += 'wrong index = 4 is requested.\n Processing the '
         msg += '{"basis-atom-coordinates"}:{"source-value"} input arguments,'
         msg += ' wrong index at the second dimension is requested.'
@@ -243,7 +275,8 @@ class TestModifyModule:
         self.assertRaisesRegex(self.KIMPropertyError, msg,
                                self.kim_property.kim_property_modify,
                                str_obj, 1,
-                               "key", "basis-atom-coordinates", "source-value", 3, 4)
+                               "key", "basis-atom-coordinates",
+                               "source-value", 3, 4)
 
         # Create the property instance with the property name
         str_obj = self.kim_property.kim_property_create(
@@ -269,6 +302,57 @@ class TestModifyModule:
                           self.kim_property.kim_property_modify,
                           str_obj, 1,
                           "key", "a", "digits", "true")
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify,
+                          str_obj, 1,
+                          "key", "a", "digits", 3.14)
+
+
+    # Extra check for the scalar values
+    # see https://github.com/openkim/kim-property/issues/1
+    def test_modify_exception_issue1(self):
+        """Test the modify functionality on exceptions."""
+        # Create the property instance with the property name
+        str_obj = self.kim_property.kim_property_create(
+            1, 'cohesive-energy-relation-cubic-crystal')
+
+        str_obj = self.kim_property.kim_property_modify(
+            str_obj, 1,
+            "key", "short-name",
+            "source-value", "1", "fcc",
+            "key", "species",
+            "source-value", "1:4", "Al", "Al", "Al", "Al",
+            "key", "a",
+            "source-value",
+            "1:5", "3.9149", "4.0000", "4.032", "4.0817", "4.1602")
+
+        # index for scalar key
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify, str_obj, 1,
+                          "key", "space-group", "source-value", 1, "Fm-3m")
+
+        # index for keys with no extent
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify, str_obj, 1,
+                          "key", "a", "source-unit", 1, "angstrom")
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify, str_obj, 1,
+                          "key", "a", "source-unit", "angstrom",
+                          "digits", 1, 5)
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify, str_obj, 1,
+                          "key", "cohesive-potential-energy",
+                          "source-unit", 1, "eV", "digits", 1, "5")
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify, str_obj, 1,
+                          "key", "cohesive-potential-energy",
+                          "source-value", "1:5", "3.324", "3.3576",
+                          "3.3600", "3.3550", "3.3260",
+                          "source-unit", 1, "eV", "digits", 1, "5")
 
 
 class TestPyTestModifyModule(TestModifyModule, PyTest):

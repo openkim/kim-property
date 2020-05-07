@@ -369,8 +369,8 @@ Removing (a) key(s) from a property instance::
 
 from ._version import get_versions
 
+from .err import KIMPropertyError
 from .definition import \
-    KIMPropertyError, \
     check_key_present, \
     check_property_id_format, \
     check_property_title_format, \
@@ -384,7 +384,6 @@ from .definition import \
     check_property_optional_key_standard_pairs_format, \
     check_property_optional_key_map, \
     check_property_definition
-
 from .instance import \
     get_property_id_path, \
     check_instance_id_format, \
@@ -394,7 +393,6 @@ from .instance import \
     check_instnace_optional_key_map, \
     check_instance_optional_key_marked_required_are_present, \
     check_property_instances
-
 from .create import get_properties, kim_property_create, unset_property_id
 from .destroy import kim_property_destroy
 from .modify import kim_property_modify

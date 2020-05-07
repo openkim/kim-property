@@ -3,15 +3,11 @@
 import os
 from os.path import isabs
 
-from .definition import KIMPropertyError
+import kim_edn
+
+from .err import KIMPropertyError
 from .instance import check_property_instances
 from .create import get_properties
-
-try:
-    import kim_edn
-except:
-    msg = '\nERROR: Failed to import the `kim_edn` utility module.'
-    raise KIMPropertyError(msg)
 
 __all__ = [
     "kim_property_dump",
@@ -55,7 +51,7 @@ def kim_property_dump(property_instances, fp, *,
             property_instances == 'None' or \
             property_instances == '' or \
             property_instances == '[]':
-        msg = '\nERROR: There is no property instance to dump the content.'
+        msg = 'There is no property instance to dump the content.'
         raise KIMPropertyError(msg)
 
     # Deserialize the KIM property instances.

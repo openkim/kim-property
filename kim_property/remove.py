@@ -1,12 +1,8 @@
 """Remove module."""
 
-from .definition import KIMPropertyError
+import kim_edn
 
-try:
-    import kim_edn
-except:
-    msg = '\nERROR: Failed to import the `kim_edn` utility module.'
-    raise KIMPropertyError(msg)
+from .err import KIMPropertyError
 
 __all__ = [
     "kim_property_remove",
@@ -30,11 +26,11 @@ def kim_property_remove(property_instances, instance_id, *argv):
             property_instances == 'None' or \
             property_instances == '' or \
             property_instances == '[]':
-        msg = '\nERROR: There is no property instance to remove the content.'
+        msg = 'There is no property instance to remove the content.'
         raise KIMPropertyError(msg)
 
     if not isinstance(instance_id, int):
-        msg = '\nERROR: the "instance_id" is not an `int`.'
+        msg = 'the "instance_id" is not an `int`.'
         raise KIMPropertyError(msg)
 
     # Deserialize the KIM property instances.
@@ -48,7 +44,7 @@ def kim_property_remove(property_instances, instance_id, *argv):
             break
 
     if a_property_instance is None:
-        msg = '\nERROR: There requested instance id :\n'
+        msg = 'There requested instance id :\n'
         msg += '{} \n'.format(instance_id)
         msg += 'doesn\'t match any of the property instances ids.'
         raise KIMPropertyError(msg)
@@ -68,7 +64,7 @@ def kim_property_remove(property_instances, instance_id, *argv):
         try:
             arg = argv[i]
         except IndexError:
-            msg = '\nERROR: unexpected index exception happened.'
+            msg = 'unexpected index exception happened.'
             raise KIMPropertyError(msg)
 
         if arg == 'key':
@@ -82,7 +78,7 @@ def kim_property_remove(property_instances, instance_id, *argv):
             # new keyword
             new_keyword = arg
             if new_keyword not in a_property_instance:
-                msg = '\nERROR: the key {} '.format(new_keyword)
+                msg = 'the key {} '.format(new_keyword)
                 msg += 'doesn\'t exist in the property instance.'
                 raise KIMPropertyError(msg)
 
@@ -91,7 +87,7 @@ def kim_property_remove(property_instances, instance_id, *argv):
                 try:
                     arg = argv[i + 1]
                 except IndexError:
-                    msg = '\nERROR: unexpected index exception happened.'
+                    msg = 'unexpected index exception happened.'
                     raise KIMPropertyError(msg)
 
                 if arg == 'key':

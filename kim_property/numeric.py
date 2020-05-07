@@ -1,6 +1,6 @@
 """Numerics functionality for kim utility module."""
 
-from .definition import KIMPropertyError
+from .err import KIMPropertyError
 
 __all__ = [
     "shape",
@@ -138,7 +138,7 @@ def create_full_array(array_shape, fill_value=None):
         else:
             return fill_value
     else:
-        msg = '\nERROR: input "array_shape" is not a `list` or `tuple`.'
+        msg = 'input "array_shape" is not a `list` or `tuple`.'
         raise KIMPropertyError(msg)
 
 
@@ -160,11 +160,11 @@ def extend_full_array(full_array, array_shape, fill_value=None, _shape=shape):
     """
     if not isinstance(array_shape, list):
         if not isinstance(array_shape, tuple):
-            msg = '\nERROR: input "array_shape" is not a `list` or `tuple`.'
+            msg = 'input "array_shape" is not a `list` or `tuple`.'
             raise KIMPropertyError(msg)
 
     if not is_array_uniform(full_array):
-        msg = '\nERROR: the input array is not uniform along all dimensions.'
+        msg = 'the input array is not uniform along all dimensions.'
         raise KIMPropertyError(msg)
 
     # Creat a new array
@@ -177,14 +177,14 @@ def extend_full_array(full_array, array_shape, fill_value=None, _shape=shape):
 
     # Dimensionality check
     if new_array_ndims != full_array_ndims:
-        msg = '\nERROR: the old array has "{}" '.format(full_array_ndims)
+        msg = 'the old array has "{}" '.format(full_array_ndims)
         msg += 'dimensions and can not be extended to a new '
         msg += '"{}" dimensional array.'.format(new_array_ndims)
         raise KIMPropertyError(msg)
 
     # Shape check
     if full_array_shape > array_shape:
-        msg = '\nERROR: the old array with the shape of '
+        msg = 'the old array with the shape of '
         msg += '{} '.format(full_array_shape)
         msg += 'does not fit within the new array with the shape of '
         msg += '{}.'.format(array_shape)
@@ -233,7 +233,7 @@ def extend_full_array(full_array, array_shape, fill_value=None, _shape=shape):
                             for n in range(d5):
                                 new_array[i][j][k][l][m][n][0:d6] = full_array[i][j][k][l][m][n][0:d6]
     else:
-        msg = '\nERROR: maximum number of 6 dimensions is '
+        msg = 'maximum number of 6 dimensions is '
         msg += 'supported while {} is requested.'.format(full_array_ndims)
         raise KIMPropertyError(msg)
 
