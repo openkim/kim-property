@@ -1921,6 +1921,11 @@ def kim_property_modify(property_instances, instance_id, *argv):
                 key_name_value = float(argv[i])
             elif key_name_key == 'digits':
                 key_name_value = int(argv[i])
+                if key_name_value != float(argv[i]):
+                    msg = '"digits"-key is provided with a `float` value. '
+                    msg += '"digits"-key has an `int` type, and must be '
+                    msg += 'set to the number of reported digits.'
+                    raise KIMPropertyError(msg)
             i += 1
 
             # Extra check for the scalar values
