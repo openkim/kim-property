@@ -269,7 +269,7 @@ class TestModifyModule:
 
     # Extra check for the scalar values
     # see https://github.com/openkim/kim-property/issues/1
-    def test_modify_exception1(self):
+    def test_modify_exception_issue1(self):
         """Test the modify functionality on exceptions."""
         # Create the property instance with the property name
         str_obj = self.kim_property.kim_property_create(
