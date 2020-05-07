@@ -267,6 +267,48 @@ class TestModifyModule:
                           str_obj, 1,
                           "key", "a", "digits", "true")
 
+    # Extra check for the scalar values
+    # see https://github.com/openkim/kim-property/issues/1
+    def test_modify_exception1(self):
+        """Test the modify functionality on exceptions."""
+        # Create the property instance with the property name
+        str_obj = self.kim_property.kim_property_create(
+            1, 'cohesive-energy-relation-cubic-crystal')
+
+        str_obj = self.kim_property.kim_property_modify(
+            str_obj, 1,
+            "key", "short-name",
+            "source-value", "1", "fcc",
+            "key", "species",
+            "source-value", "1:4", "Al", "Al", "Al", "Al",
+            "key", "a",
+            "source-value", "1:5", "3.9149", "4.0000", "4.032", "4.0817", "4.1602")
+
+        # index for scalar key
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify, str_obj, 1,
+                          "key", "space-group", "source-value", 1, "Fm-3m")
+
+        # index for keys with no extent
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify, str_obj, 1,
+                          "key", "a", "source-unit", 1, "angstrom")
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify, str_obj, 1,
+                          "key", "a", "source-unit", "angstrom",
+                          "digits", 1, 5)
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify, str_obj, 1,
+                          "key", "cohesive-potential-energy",
+                          "source-unit", 1, "eV", "digits", 1, "5")
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify, str_obj, 1,
+                          "key", "cohesive-potential-energy",
+                          "source-value", "1:5", "3.324", "3.3576", "3.3600", "3.3550", "3.3260",
+                          "source-unit", 1, "eV", "digits", 1, "5")
 
 class TestPyTestModifyModule(TestModifyModule, PyTest):
     pass
