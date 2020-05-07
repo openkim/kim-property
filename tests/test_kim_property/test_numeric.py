@@ -84,6 +84,9 @@ MULTIDIMENSION_ARRAYS_NONUNIFORM_SIZE = [
     4,  # [[[[1, 2, 3]], [1, 2, 3]], [[1, 2, 3], [1, 2, 3]]],
 ]
 
+FULL_ARRAY_0 = [1, 1, 1]
+
+
 FULL_ARRAY_1 = [
     [1, 1, 1],
     [1, 1, 1]
@@ -243,11 +246,21 @@ class TestNumericComponents:
 
     def test_extend_full_array(self):
         """Test the extend_full_array function."""
+        a0 = extend_full_array(FULL_ARRAY_0, shape(FULL_ARRAY_0), 0)
+        self.assertTrue(a0 == FULL_ARRAY_0)
+
+        a1 = extend_full_array(FULL_ARRAY_1, shape(FULL_ARRAY_1), 0)
+        self.assertTrue(a1 == FULL_ARRAY_1)
+
         a1 = extend_full_array(FULL_ARRAY_1, [6, 3], 0)
         self.assertTrue(a1 == FULL_ARRAY_1_EXTENDED)
 
         a2 = extend_full_array(FULL_ARRAY_1, [3, 4], 0)
         self.assertTrue(a2 == FULL_ARRAY_1_EXTENDED_2)
+
+        a3 = extend_full_array(
+            FULL_ARRAY_2, shape(FULL_ARRAY_2), False)
+        self.assertTrue(a3 == FULL_ARRAY_2)
 
         a3 = extend_full_array(
             FULL_ARRAY_2, [3, 4, 2], False)
