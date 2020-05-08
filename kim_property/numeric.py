@@ -52,7 +52,7 @@ def shape(a):
 
     Returns:
         list -- shape, the elements of the shape list give the lengths of
-        the corresponding array dimensions.
+            the corresponding array dimensions.
 
     """
     if not is_array_first_dimension_uniform(a):
@@ -129,7 +129,7 @@ def create_full_array(array_shape, fill_value=None):
 
     Returns:
         ndarray -- array of fill_value with the requested shape filled with
-        fill_value
+            fill_value
 
     """
     if isinstance(array_shape, list) or isinstance(array_shape, tuple):
@@ -155,7 +155,7 @@ def extend_full_array(full_array, array_shape, fill_value=None, _shape=shape):
 
     Returns:
         ndarray -- array of fill_value with the requested shape filled with
-        fill_value
+            fill_value
 
     """
     if not isinstance(array_shape, list):
@@ -233,8 +233,8 @@ def extend_full_array(full_array, array_shape, fill_value=None, _shape=shape):
                             for n in range(d5):
                                 new_array[i][j][k][l][m][n][0:d6] = full_array[i][j][k][l][m][n][0:d6]
     else:
-        msg = 'maximum number of 6 dimensions is '
-        msg += 'supported while {} is requested.'.format(full_array_ndims)
+        msg = 'maximum number of 6 dimensions is supported while '
+        msg += '{} is requested.'.format(full_array_ndims)
         raise KIMPropertyError(msg)
 
     return new_array

@@ -250,8 +250,7 @@ def pickle_kim_properties(properties=None,
         try:
             pickle.dump(kim_properties_list, fp, protocol=protocol)
         except:
-            msg = 'wrong input. ("fp" should refer to a bytes-like '
-            msg += 'object.)'
+            msg = 'wrong input. ("fp" should refer to a bytes-like object.)'
             raise KIMPropertyError(msg)
 
 
@@ -279,15 +278,14 @@ def unpickle_kim_properties(fp=join(kim_properties_path, 'kim_properties.pickle'
             with open(fp, 'rb') as f:
                 return pickle.load(f)
 
-        msg = 'wrong input. Can\'t load pickle from unicode '
-        msg += 'string.\n If "fp" refers to a file name, make sure it '
-        msg += 'exists in PATH or provide the file name with its '
-        msg += 'absolute PATH.'
+        msg = 'wrong input. Can\'t load pickle from unicode string.\n'
+        msg += 'If "fp" refers to a file name, make sure it exists in PATH '
+        msg += 'or provide the file name with its absolute PATH.'
         raise KIMPropertyError(msg)
     else:
         try:
             f = BytesIO(fp)
             return pickle.load(f)
         except:
-            msg = 'wrong input. Can not open nor load the input.'
+            msg = 'wrong input. Neither can open nor load the input.'
             raise KIMPropertyError(msg)

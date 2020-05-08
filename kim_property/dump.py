@@ -14,9 +14,13 @@ __all__ = [
 ]
 
 
-def kim_property_dump(property_instances, fp, *,
-                      fp_path=None, cls=None, indent=4,
-                      default=None, sort_keys=False):
+def kim_property_dump(property_instances,
+                      fp, *,
+                      fp_path=None,
+                      cls=None,
+                      indent=4,
+                      default=None,
+                      sort_keys=False):
     """Serialize ``property_instances`` object.
 
     Arguments:
@@ -51,7 +55,7 @@ def kim_property_dump(property_instances, fp, *,
             property_instances == 'None' or \
             property_instances == '' or \
             property_instances == '[]':
-        msg = 'There is no property instance to dump the content.'
+        msg = 'there is no property instance to dump it.'
         raise KIMPropertyError(msg)
 
     # Deserialize the KIM property instances.

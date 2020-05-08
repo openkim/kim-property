@@ -14,9 +14,9 @@ def kim_property_remove(property_instances, instance_id, *argv):
 
     Arguments:
         property_instances {string} -- A string containing the serialized
-        KIM-EDN formatted property instances.
+            KIM-EDN formatted property instances.
         instance_id {int} -- A positive integer identifying the property
-        instance.
+            instance.
 
     Returns:
         string -- serialized KIM-EDN formatted property instances.
@@ -26,7 +26,7 @@ def kim_property_remove(property_instances, instance_id, *argv):
             property_instances == 'None' or \
             property_instances == '' or \
             property_instances == '[]':
-        msg = 'There is no property instance to remove the content.'
+        msg = 'there is no property instance to remove the content.'
         raise KIMPropertyError(msg)
 
     if not isinstance(instance_id, int):
@@ -44,8 +44,7 @@ def kim_property_remove(property_instances, instance_id, *argv):
             break
 
     if a_property_instance is None:
-        msg = 'There requested instance id :\n'
-        msg += '{} \n'.format(instance_id)
+        msg = 'the requested instance id :\n{}\n'.format(instance_id)
         msg += 'doesn\'t match any of the property instances ids.'
         raise KIMPropertyError(msg)
 

@@ -76,7 +76,7 @@ def check_key_present(k, s):
             raise KIMPropertyError(msg)
         return
     else:
-        msg = 'Input to the function is not a `str`.'
+        msg = 'input to the function is not a `str`.'
         raise KIMPropertyError(msg)
 
 
@@ -110,13 +110,13 @@ def check_property_id_format(s, _m=PROPERTY_ID.match):
             msg = 'the "property-id" value :\n'
             msg += '{} \n'.format(s)
             msg += 'doesn\'t meet the format specification.\n '
-            msg += 'See KIM property-id, format specification at '
+            msg += 'See KIM "property-id" format specification at '
             msg += 'https://openkim.org/doc/schema/properties-framework/ '
             msg += 'in section 2.2 for more detailed information.'
             raise KIMPropertyError(msg)
         return
     else:
-        msg = 'Input to the function is not a `str`.'
+        msg = 'input to the function is not a `str`.'
         raise KIMPropertyError(msg)
 
 
@@ -132,13 +132,13 @@ def check_property_title_format(s):
     """
     if isinstance(s, str):
         if s.endswith('.'):
-            msg = 'The "property-title" value :\n'
-            msg += '{} \n'.format(s)
+            msg = 'the "property-title" value :\n'
+            msg += '{}\n'.format(s)
             msg += 'should not include an ending period.'
             raise KIMPropertyError(msg)
         return
     else:
-        msg = 'Input to the function is not a `str`.'
+        msg = 'input to the function is not a `str`.'
         raise KIMPropertyError(msg)
 
 
@@ -159,8 +159,8 @@ def check_required_keys_present(s, rk=required_keys):
                 msg = 'the required key "{}" is not found.'.format(r)
                 raise KIMPropertyError(msg)
     else:
-        msg = 'Input to the function is not a `str` '
-        msg += 'or `dict`.'
+        msg = 'input to the function is not a `str` '
+        msg += 'or a `dict`.'
         raise KIMPropertyError(msg)
 
 # checks for optional keys
@@ -188,7 +188,7 @@ def check_key_format(s, _m=KEY_FORMAT.match):
             raise KIMPropertyError(msg)
         return
     else:
-        msg = 'Input to the function is not a `str`.'
+        msg = 'input to the function is not a `str`.'
         raise KIMPropertyError(msg)
 
 
@@ -206,10 +206,10 @@ def check_optional_key_type_format(s):
             return
         msg = 'input string defining the variable type is not '
         msg += 'valid. A string defining the variable type can be set to '
-        msg += 'one of :: \n'
+        msg += 'one of ::\n'
         msg += '"string", "float", "int", "bool", or "file".'
     else:
-        msg = 'Input to the function is not a `str`.'
+        msg = 'input to the function is not a `str`.'
     raise KIMPropertyError(msg)
 
 
@@ -241,25 +241,25 @@ def check_optional_key_extent_format(s, _m=EXTENT_KEY.match, _ws=WHITESPACE.sub)
         e = _ws('', s)
         if _m(e) is None:
             msg = 'the specified extent :\n'
-            msg += '{} \n'.format(s)
+            msg += '{}\n'.format(s)
             msg += 'contains invalid character.'
             raise KIMPropertyError(msg)
     elif isinstance(s, list):
         for s_ in s:
             if isinstance(s_, str):
                 if s_ != ':':
-                    msg = 'the specified extent '
-                    msg += 'contains invalid input "{}".'.format(s_)
+                    msg = 'the specified extent contains '
+                    msg += 'invalid input "{}".'.format(s_)
                     raise KIMPropertyError(msg)
             elif isinstance(s_, int):
                 continue
             else:
-                msg = 'the specified extent '
-                msg += 'contains invalid input "{}".'.format(s_)
+                msg = 'the specified extent contains '
+                msg += 'invalid input "{}".'.format(s_)
                 raise KIMPropertyError(msg)
 
     else:
-        msg = 'Input to the function is not a `str` or a `list`.'
+        msg = 'input to the function is not a `str` or a `list`.'
         raise KIMPropertyError(msg)
 
 
@@ -284,7 +284,7 @@ def check_optional_key_extent_scalar(s, _ws=WHITESPACE_EDN.sub):
             return s[0] == 1
         return len(s) == 0
     else:
-        msg = 'Input to the function is not a `list` or `str`.'
+        msg = 'input to the function is not a `list` or `str`.'
         raise KIMPropertyError(msg)
 
 
@@ -307,7 +307,7 @@ def get_optional_key_extent_ndimensions(l):
             return 0
         return len(l)
     else:
-        msg = 'Input to the function is not a `list`.'
+        msg = 'input to the function is not a `list`.'
         raise KIMPropertyError(msg)
 
 
@@ -342,7 +342,7 @@ def get_optional_key_extent_shape(l):
                 raise KIMPropertyError(msg)
         return s
     else:
-        msg = 'Input to the function is not a `list`.'
+        msg = 'input to the function is not a `list`.'
         raise KIMPropertyError(msg)
 
 
@@ -359,12 +359,12 @@ def check_property_optional_key_standard_pairs_format(standard_pairs):
 
     """
     if not isinstance(standard_pairs, dict):
-        msg = 'Input to the function is not a `dict`.'
+        msg = 'input to the function is not a `dict`.'
         raise KIMPropertyError(msg)
 
     for k in standard_pairs:
         if not k in standard_keys:
-            msg = 'Wrong key. \n'
+            msg = 'wrong key.\n'
             msg += 'The input "{}"-key is not '.format(k)
             msg += 'part of the standard key-value pairs.\n '
             msg += 'See KIM standard key-value pairs at '
@@ -375,7 +375,7 @@ def check_property_optional_key_standard_pairs_format(standard_pairs):
     check_optional_key_type_format(standard_pairs["type"])
 
     if not isinstance(standard_pairs["has-unit"], bool):
-        msg = 'Invalid value.\n'
+        msg = 'invalid value.\n'
         msg += 'The input "{}" value '.format(standard_pairs["has-unit"])
         msg += 'should be a boolean that indicates '
         msg += 'whether the variable value is physically-dimensioned '
@@ -450,7 +450,7 @@ def check_property_definition(fp, _m=KEY_FORMAT.match):
             msg += str(KIMPropertyError)
             raise KIMPropertyError(msg)
     else:
-        msg = 'Input to the function :\n'
-        msg += '{} \n'.format(fp)
+        msg = 'input to the function :\n'
+        msg += '{}\n'.format(fp)
         msg += 'is not a correct KIM-EDN type.'
         raise KIMPropertyError(msg)

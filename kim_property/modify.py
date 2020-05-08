@@ -73,7 +73,7 @@ def kim_property_modify(property_instances, instance_id, *argv):
             property_instances == 'None' or \
             property_instances == '' or \
             property_instances == '[]':
-        msg = 'There is no property instance to modify the content.'
+        msg = 'there is no property instance to modify the content.'
         raise KIMPropertyError(msg)
 
     if not isinstance(instance_id, int):
@@ -87,22 +87,20 @@ def kim_property_modify(property_instances, instance_id, *argv):
 
     for p in kim_property_instances:
         if "instance-id" not in p:
-            msg = 'wrong input. The required "instance-id"-key is '
-            msg += 'missing.'
+            msg = 'wrong input. The required "instance-id"-key is missing.'
             raise KIMPropertyError(msg)
         if p["instance-id"] == instance_id:
             a_property_instance = p
             break
 
     if a_property_instance is None:
-        msg = 'The requested instance id :\n'
+        msg = 'the requested instance id :\n'
         msg += '{}\n '.format(instance_id)
         msg += 'does not match any of the property instances ids.'
         raise KIMPropertyError(msg)
 
     if "property-id" not in a_property_instance:
-        msg = 'wrong input. The required "property-id"-key is '
-        msg += 'missing.\n '
+        msg = 'wrong input. The required "property-id"-key is missing.\n'
         msg += 'See KIM property instances at '
         msg += 'https://openkim.org/doc/schema/properties-framework/ '
         msg += 'in section 3 for more detailed information.'
@@ -146,9 +144,8 @@ def kim_property_modify(property_instances, instance_id, *argv):
             key_name = arg
 
             if key_name not in property_def:
-                msg = 'wrong keyword. The input '
-                msg += '"{}"-key is not defined in '.format(key_name)
-                msg += 'the property definition \n'
+                msg = 'wrong keyword. The input "{}"-key '.format(key_name)
+                msg += 'is not defined in the property definition.\n'
                 msg += '({})\n '.format(property_def['property-id'])
                 msg += 'See the KIM Property Definitions at '
                 msg += 'https://openkim.org/properties for more detailed '
@@ -175,9 +172,8 @@ def kim_property_modify(property_instances, instance_id, *argv):
         i += 1
 
         if not key_name_key in standard_keys:
-            msg = 'wrong key. The input '
-            msg += '"{}"-key is not part of '.format(key_name_key)
-            msg += 'the standard key-value pairs definition.\n '
+            msg = 'wrong key. The input "{}"-key is '.format(key_name_key)
+            msg += 'not part of the standard key-value pairs definition.\n'
             msg += 'See KIM standard key-value pairs at '
             msg += 'https://openkim.org/doc/schema/properties-framework/ '
             msg += 'in section 3 for more detailed information.'
@@ -185,10 +181,10 @@ def kim_property_modify(property_instances, instance_id, *argv):
 
         if key_name_key == 'source-unit':
             if not property_def[key_name]['has-unit']:
-                msg = 'wrong key. The unit is wrongly provided '
-                msg += 'to a key that does not have a unit. '
-                msg += 'The corresponding "has-unit" key in the property '
-                msg += 'definition has a `False` value.\n '
+                msg = 'wrong key. The unit is wrongly provided to a key '
+                msg += 'that does not have a unit. The corresponding '
+                msg += '"has-unit" key in the property definition has '
+                msg += 'a `False` value.\n'
                 msg += 'See the KIM Property Definitions at '
                 msg += 'https://openkim.org/properties for more detailed '
                 msg += 'information.'
@@ -1084,17 +1080,16 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                 raise KIMPropertyError(msg)
                             else:
                                 if _n > -1:
-                                    msg = 'for multidimensional '
-                                    msg += 'arrays, only one '
-                                    msg += 'colon-separated range is '
+                                    msg = 'for multidimensional arrays, only '
+                                    msg += 'one colon-separated range is '
                                     msg += 'allowed in the index listing.'
                                     raise KIMPropertyError(msg)
                                 _n = n
                                 if arg.count(':') > 1:
                                     msg = 'use of indices range as '
                                     msg += '"{}" '.format(arg)
-                                    msg += 'is not accepted.\n'
-                                    msg += 'The only supported indices range '
+                                    msg += 'is not accepted.\nThe only '
+                                    msg += 'supported indices range '
                                     msg += 'format is "start:stop".'
                                     raise KIMPropertyError(msg)
                                 l, u = arg.split(':')
@@ -1103,9 +1098,9 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                 if _u < _l:
                                     msg = 'use of indices range as '
                                     msg += '"{}" '.format(arg)
-                                    msg += 'is not accepted.\n'
-                                    msg += 'The only supported indices range '
-                                    msg += 'format is "start:stop", where start '
+                                    msg += 'is not accepted.\nThe only '
+                                    msg += 'supported indices range format '
+                                    msg += 'is "start:stop", where start '
                                     msg += 'is less or equal than stop.'
                                     raise KIMPropertyError(msg)
                                 if key_name_shape[n] > 1 and \
