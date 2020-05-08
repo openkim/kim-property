@@ -1,5 +1,6 @@
 """Error module."""
 
+import inspect
 
 __all__ = [
     "KIMPropertyError",
@@ -17,8 +18,10 @@ class KIMPropertyError(Exception):
 
     def __init__(self, msg):
         """Constuctor."""
-        Exception.__init__(self, '\nERROR: ' + msg)
-        self.msg = '\nERROR: ' + msg
+        _msg = '\nERROR(@' + \
+            inspect.currentframe().f_back.f_code.co_name + '): ' + msg
+        Exception.__init__(self, _msg)
+        self.msg = _msg
 
     def __reduce__(self):
         """Efficient pickling."""
