@@ -33,6 +33,15 @@ class TestCreateModule:
         self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_create,
                           0, 'cohesive-energy-relation-cubic-crystal')
 
+        self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_create,
+                          "1", 'cohesive-energy-relation-cubic-crystal')
+
+        self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_create,
+                          False, 'cohesive-energy-relation-cubic-crystal')
+
+        self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_create,
+                          [1], 'cohesive-energy-relation-cubic-crystal')
+
         # Fails when property-name is not an string
         self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_create,
                           10, 1)
@@ -71,7 +80,13 @@ class TestCreateModule:
         self.assertTrue(str1 == str_obj)
 
         kim_properties = self.kim_property.get_properties()
-        self.assertTrue("tag:yafshar@noreply.openkim.org,2020-03-02:property/atomic-mass-test" in kim_properties)
+        self.assertTrue(
+            "tag:yafshar@noreply.openkim.org,2020-03-02:property/atomic-mass-test" in kim_properties)
+
+        # Fails if the property instance already exists in OpenKIM
+        self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_create,
+                          1, join("tests", "fixtures", "atomic-mass.edn"))
+
 
 
 class TestPyTestCreateModule(TestCreateModule, PyTest):
