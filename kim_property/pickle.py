@@ -183,7 +183,7 @@ def pickle_kim_properties(properties=None,
             if not isfile(kim_property_files[-1]):
                 msg = 'the property file =\n"'
                 msg += kim_property_files[-1]
-                msg += '"\n can not be found!'
+                msg += '"\ncan not be found!'
                 raise KIMPropertyError(msg)
 
         del(kim_property_files_path)

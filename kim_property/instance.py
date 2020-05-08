@@ -233,7 +233,7 @@ def check_instance_optional_key_standard_pairs_format(im, pm):
     for k in im:
         if not k in standard_keys:
             msg = 'wrong key.\nThe input "{}"-key is not part of '.format(k)
-            msg += 'the standard key-value pairs definition.\n '
+            msg += 'the standard key-value pairs definition.\n'
             msg += 'See KIM standard key-value pairs at '
             msg += 'https://openkim.org/doc/schema/properties-framework/ '
             msg += 'in section 3 for more detailed information.'
@@ -424,12 +424,11 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
                 elif isfile(join(fp_path, _property_name + ".edn")):
                     fp = join(fp_path, _property_name + ".edn")
                 else:
-                    msg = 'unable to find a KIM property '
-                    msg += 'definition at {\n"'
+                    msg = 'unable to find a KIM property definition at {\n"'
                     msg += join(fp_path, _path)
-                    msg += '",\n nor at\n"'
+                    msg += '",\nnor at\n"'
                     msg += join(fp_path, _property_name + ".edn")
-                    msg += '" }'
+                    msg += '"}'
                     raise KIMPropertyError(msg)
                 del(_path)
                 del(_property_name)
@@ -478,7 +477,7 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
                     else:
                         msg = 'the requested property ID = \n"'
                         msg += pi_["property-id"]
-                        msg += '"\n does not exist in the input KIM '
+                        msg += '"\ndoes not exist in the input KIM '
                         msg += 'properties.'
                         raise KIMPropertyError(msg)
                 else:
@@ -490,12 +489,12 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
                     elif isfile(join(fp_path, _property_name + ".edn")):
                         fp = join(fp_path, _property_name + ".edn")
                     else:
-                        msg = 'unable to find a KIM property '
-                        msg += 'definition at {\n"'
+                        msg = 'unable to find a KIM property definition '
+                        msg += 'at {\n"'
                         msg += join(fp_path, _path)
-                        msg += '",\n nor at\n"'
+                        msg += '",\nnor at\n"'
                         msg += join(fp_path, _property_name + ".edn")
-                        msg += '" }'
+                        msg += '"}'
                         raise KIMPropertyError(msg)
 
                     # property definition

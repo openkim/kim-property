@@ -216,8 +216,8 @@ class TestModifyModule:
                           "source-value", 3)
 
         msg = 'there is not enough input arguments '
-        msg += 'to use.\n Processing the {"basis-atom-coordinates"}:'
-        msg += '{"source-value"} input arguments failed.\n The second '
+        msg += 'to use.\nProcessing the {"basis-atom-coordinates"}:'
+        msg += '{"source-value"} input arguments failed.\nThe second '
         msg += 'index is missing from the input arguments.'
 
         self.assertRaisesRegex(self.KIMPropertyError, msg,
@@ -251,8 +251,8 @@ class TestModifyModule:
                           "source-value", 3, 3)
 
         msg = 'there is not enough input arguments '
-        msg += 'to use.\n Processing the {"basis-atom-coordinates"}:'
-        msg += '{"source-value"} input arguments failed.\n '
+        msg += 'to use.\nProcessing the {"basis-atom-coordinates"}:'
+        msg += '{"source-value"} input arguments failed.\n'
         msg += 'At least we need one further input.'
 
         self.assertRaisesRegex(self.KIMPropertyError, msg,
@@ -268,7 +268,7 @@ class TestModifyModule:
                           "source-value", 3, 4)
 
         msg = 'this dimension has a fixed length = 3, while, '
-        msg += 'wrong index = 4 is requested.\n Processing the '
+        msg += 'wrong index = 4 is requested.\nProcessing the '
         msg += '{"basis-atom-coordinates"}:{"source-value"} input arguments,'
         msg += ' wrong index at the second dimension is requested.'
 

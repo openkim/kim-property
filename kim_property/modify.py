@@ -95,7 +95,7 @@ def kim_property_modify(property_instances, instance_id, *argv):
 
     if a_property_instance is None:
         msg = 'the requested instance id :\n'
-        msg += '{}\n '.format(instance_id)
+        msg += '{}\n'.format(instance_id)
         msg += 'does not match any of the property instances ids.'
         raise KIMPropertyError(msg)
 
@@ -146,7 +146,7 @@ def kim_property_modify(property_instances, instance_id, *argv):
             if key_name not in property_def:
                 msg = 'wrong keyword. The input "{}"-key '.format(key_name)
                 msg += 'is not defined in the property definition.\n'
-                msg += '({})\n '.format(property_def['property-id'])
+                msg += '({})\n'.format(property_def['property-id'])
                 msg += 'See the KIM Property Definitions at '
                 msg += 'https://openkim.org/properties for more detailed '
                 msg += 'information.'
@@ -203,11 +203,11 @@ def kim_property_modify(property_instances, instance_id, *argv):
                     for n in range(key_name_ndims):
                         if i >= n_arguments:
                             msg = 'there is not enough input '
-                            msg += 'arguments to use.\n Processing the {"'
+                            msg += 'arguments to use.\nProcessing the {"'
                             msg += '{}'.format(key_name)
                             msg += '"}:{"'
                             msg += '{}'.format(key_name_key)
-                            msg += '"} input arguments failed.\n The '
+                            msg += '"} input arguments failed.\nThe '
                             if n == 0:
                                 msg += 'first '
                             elif n == 1:
@@ -264,7 +264,7 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                     msg += '{}'.format(key_name_shape[n])
                                     msg += ', while, wrong index = '
                                     msg += '{} '.format(_u)
-                                    msg += 'is requested.\n Processing the '
+                                    msg += 'is requested.\nProcessing the '
                                     msg += '{"'
                                     msg += '{}'.format(key_name)
                                     msg += '"}:{"'
@@ -295,7 +295,7 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                     key_name_shape[n])
                                 msg += ', while, wrong index = {} '.format(
                                     arg)
-                                msg += 'is requested.\n Processing the {"'
+                                msg += 'is requested.\nProcessing the {"'
                                 msg += '{}'.format(key_name)
                                 msg += '"}:{"'
                                 msg += '{}'.format(key_name_key)
@@ -318,7 +318,7 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                     msg = 'this dimension has a '
                                     msg += 'fixed length = 1, while, wrong '
                                     msg += 'index = {} '.format(arg)
-                                    msg += 'is requested.\n Processing the '
+                                    msg += 'is requested.\nProcessing the '
                                     msg += '{"'
                                     msg += '{}'.format(key_name)
                                     msg += '"}:{"'
@@ -359,11 +359,11 @@ def kim_property_modify(property_instances, instance_id, *argv):
                     if _n > -1:
                         if i - 1 + _u - _l >= n_arguments:
                             msg = 'there is not enough input '
-                            msg += 'arguments to use.\n Processing the {"'
+                            msg += 'arguments to use.\nProcessing the {"'
                             msg += '{}'.format(key_name)
                             msg += '"}:{"'
                             msg += '{}'.format(key_name_key)
-                            msg += '"} input arguments failed.\n '
+                            msg += '"} input arguments failed.\n'
                             msg += 'We have {} '.format(n_arguments - i + 1)
                             msg += 'more input arguments while '
                             msg += 'at least {} arguments '.format(_u - _l)
@@ -906,11 +906,11 @@ def kim_property_modify(property_instances, instance_id, *argv):
                     else:
                         if i >= n_arguments:
                             msg = 'there is not enough input '
-                            msg += 'arguments to use.\n Processing the {"'
+                            msg += 'arguments to use.\nProcessing the {"'
                             msg += '{}'.format(key_name)
                             msg += '"}:{"'
                             msg += '{}'.format(key_name_key)
-                            msg += '"} input arguments failed.\n '
+                            msg += '"} input arguments failed.\n'
                             msg += 'At least we need one further input.'
                             raise KIMPropertyError(msg)
 
@@ -1052,11 +1052,11 @@ def kim_property_modify(property_instances, instance_id, *argv):
                     for n in range(key_name_ndims):
                         if i >= n_arguments:
                             msg = 'there is not enough input '
-                            msg += 'arguments to use.\n Processing the {"'
+                            msg += 'arguments to use.\nProcessing the {"'
                             msg += '{}'.format(key_name)
                             msg += '"}:{"'
                             msg += '{}'.format(key_name_key)
-                            msg += '"} input arguments failed.\n The '
+                            msg += '"} input arguments failed.\nThe '
                             if n == 0:
                                 msg += 'first '
                             elif n == 1:
@@ -1109,7 +1109,7 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                     msg += 'fixed length = '
                                     msg += '{}'.format(key_name_shape[n])
                                     msg += ', while, wrong index = '
-                                    msg += '{} is requested.\n '.format(_u)
+                                    msg += '{} is requested.\n'.format(_u)
                                     msg += 'Processing the {"'
                                     msg += '{}'.format(key_name)
                                     msg += '"}:{"'
@@ -1138,7 +1138,7 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                 msg += 'length = '
                                 msg += '{}, '.format(key_name_shape[n])
                                 msg += 'while, wrong index = '
-                                msg += '{} is requested.\n '.format(arg)
+                                msg += '{} is requested.\n'.format(arg)
                                 msg += 'Processing the {"'
                                 msg += '{}'.format(key_name)
                                 msg += '"}:{"'
@@ -1161,7 +1161,7 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                     msg = 'this dimension has a '
                                     msg += 'fixed length = 1, while, wrong '
                                     msg += 'index = {} '.format(arg)
-                                    msg += 'is requested.\n '
+                                    msg += 'is requested.\n'
                                     msg += 'Processing the {"'
                                     msg += '{}'.format(key_name)
                                     msg += '"}:{"'
@@ -1201,11 +1201,11 @@ def kim_property_modify(property_instances, instance_id, *argv):
                     if _n > -1:
                         if i - 1 + _u - _l >= n_arguments:
                             msg = 'there is not enough input '
-                            msg += 'arguments to use.\n Processing the {"'
+                            msg += 'arguments to use.\nProcessing the {"'
                             msg += '{}'.format(key_name)
                             msg += '"}:{"'
                             msg += '{}'.format(key_name_key)
-                            msg += '"} input arguments failed.\n '
+                            msg += '"} input arguments failed.\n'
                             msg += 'We have {} '.format(n_arguments - i + 1)
                             msg += 'more input arguments while '
                             msg += 'at least {} arguments '.format(_u - _l)
@@ -1748,11 +1748,11 @@ def kim_property_modify(property_instances, instance_id, *argv):
                     else:
                         if i >= n_arguments:
                             msg = 'there is not enough input '
-                            msg += 'arguments to use.\n Processing the {'
+                            msg += 'arguments to use.\nProcessing the {'
                             msg += '{}'.format(key_name)
                             msg += '}:{'
                             msg += '{}'.format(key_name_key)
-                            msg += '} input arguments failed.\n '
+                            msg += '} input arguments failed.\n'
                             msg += 'At least we need one further input.'
                             raise KIMPropertyError(msg)
 
@@ -1890,11 +1890,11 @@ def kim_property_modify(property_instances, instance_id, *argv):
 
             if i >= n_arguments:
                 msg = 'there is not enough input arguments '
-                msg += 'to use.\n Processing the {"'
+                msg += 'to use.\nProcessing the {"'
                 msg += '{}'.format(key_name)
                 msg += '"}:{"'
                 msg += '{}'.format(key_name_key)
-                msg += '"} input arguments failed.\n '
+                msg += '"} input arguments failed.\n'
                 msg += 'At least we need one further input.'
                 raise KIMPropertyError(msg)
 
