@@ -166,8 +166,9 @@ def kim_property_create(instance_id, property_name, property_instances=None):
 
         # Check to make sure that this property does not exist in OpenKIM
         if _property_id in kim_properties:
-            msg = 'the input property_name file contains a '
-            msg += 'property ID which already exists in OpenKIM.'
+            msg = 'the input property_name file contains a property ID:\n'
+            msg += '"{}"\nwhich already '.format(_property_id)
+            msg += 'exists in the KIM Property Definition list.\n'
             msg += 'Use the KIM Property Definition or update the ID in the'
             msg += 'property_name file.\n'
             msg += 'See the KIM Property Definitions at '
