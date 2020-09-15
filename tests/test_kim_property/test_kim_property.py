@@ -410,6 +410,13 @@ class TestPropertyModule:
         out_str = kim_edn.dumps(kim_obj, indent=0) + '\n'
 
         sio = StringIO()
+
+        # Fail when there is no property instance to dump it.
+        for s in [None, 'None', '', '[]']:
+            self.assertRaises(self.KIMPropertyError,
+                              self.kim_property.kim_property_dump,
+                              s, sio)   
+
         self.kim_property.kim_property_dump(str_obj, sio, indent=0)
 
         self.assertTrue(sio.getvalue() == out_str)
@@ -418,6 +425,13 @@ class TestPropertyModule:
         self.assertRaises(self.KIMPropertyError,
                           self.kim_property.kim_property_modify,
                           str_obj, "output/results.edn")
+
+        str_obj = self.kim_property.kim_property_create(
+            2, 'atomic-mass', str_obj)
+
+        self.kim_property.kim_property_dump(str_obj, sio, indent=0)
+
+        
 
 
 class TestPyTestPropertyModule(TestPropertyModule, PyTest):
