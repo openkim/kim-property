@@ -165,36 +165,63 @@ class TestPropertyDefinitionModuleComponents:
     def test_check_optional_key_type_format(self):
         """Test if the optional key type is a valid type."""
         # key is not an string
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_key_format,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_optional_key_type_format,
                           ["float"])
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_optional_key_type_format,
+                          ("int", "int"))
+
+        # key is not in str_type
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_optional_key_type_format,
+                          "long")
 
     def test_check_optional_key_extent_format(self):
         """Test if the optional key extent format is correct."""
         # key is not an string or list
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_optional_key_extent_format,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_optional_key_extent_format,
                           (":"))
 
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_optional_key_extent_format,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_optional_key_extent_format,
                           {":"})
 
         # invalid character
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_optional_key_extent_format,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_optional_key_extent_format,
                           '[\':\']')
 
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_optional_key_extent_format,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_optional_key_extent_format,
                           '[";"]')
 
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_optional_key_extent_format,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_optional_key_extent_format,
                           [";"])
 
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_optional_key_extent_format,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_optional_key_extent_format,
                           '[":", 2, , ";"]')
 
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_optional_key_extent_format,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_optional_key_extent_format,
                           '["a"]')
 
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_optional_key_extent_format,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_optional_key_extent_format,
                           [":", "a"])
+
+        # key is a list with invalid input
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_optional_key_extent_format,
+                          [":", 2.34])
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_optional_key_extent_format,
+                          [":", (1, 2)])
 
     def test_check_optional_key_extent_scalar(self):
         """Test the key-extent checking scalar component."""
@@ -204,10 +231,12 @@ class TestPropertyDefinitionModuleComponents:
             self.assertTrue(n1 == n2)
 
         # input is not an string or list
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_optional_key_extent_scalar,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_optional_key_extent_scalar,
                           ())
 
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_optional_key_extent_scalar,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_optional_key_extent_scalar,
                           {})
 
         # input is an empty string
@@ -222,10 +251,12 @@ class TestPropertyDefinitionModuleComponents:
             self.assertTrue(n1 == n2)
 
         # input is not a list
-        self.assertRaises(self.KIMPropertyError, self.kim_property.get_optional_key_extent_ndimensions,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.get_optional_key_extent_ndimensions,
                           ())
 
-        self.assertRaises(self.KIMPropertyError, self.kim_property.get_optional_key_extent_ndimensions,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.get_optional_key_extent_ndimensions,
                           "[]")
 
     def test_get_optional_key_extent_shape(self):
@@ -236,16 +267,23 @@ class TestPropertyDefinitionModuleComponents:
             self.assertTrue(n1 == n2)
 
         # input is not a list
-        self.assertRaises(self.KIMPropertyError, self.kim_property.get_optional_key_extent_shape,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.get_optional_key_extent_shape,
                           ())
 
-        self.assertRaises(self.KIMPropertyError, self.kim_property.get_optional_key_extent_shape,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.get_optional_key_extent_shape,
                           "[]")
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.get_optional_key_extent_shape,
+                          [1, ":", "|"])
 
     def test_check_property_optional_key_standard_pairs_format(self):
         """Test if the standard key-map pairs format is correct."""
         # input is not a dict
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_property_optional_key_standard_pairs_format,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_property_optional_key_standard_pairs_format,
                           [])
 
         s = {"type": "string",
@@ -260,28 +298,45 @@ class TestPropertyDefinitionModuleComponents:
 
         s["has-unit"] = "False"
 
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_property_optional_key_standard_pairs_format,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_property_optional_key_standard_pairs_format,
                           s)
 
         # required is not a boolean
         s["has-unit"] = False
         s["required"] = "False"
 
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_property_optional_key_standard_pairs_format,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_property_optional_key_standard_pairs_format,
                           s)
 
         # description is not a string
         s["required"] = False
         s["description"] = []
 
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_property_optional_key_standard_pairs_format,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_property_optional_key_standard_pairs_format,
+                          s)
+
+        # key is not in standard keys
+        s["description"] = "Short name defining the cubic crystal type."
+        s["none"] = False
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_property_optional_key_standard_pairs_format,
                           s)
 
     def test_check_property_definition(self):
         """Test the KIM property definition format is correct."""
         # input is not a dict
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_property_definition,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_property_definition,
                           {})
+
+        s = '"property-id"'
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_property_definition,
+                          s)
 
 
 FLAGS = re.VERBOSE | re.MULTILINE | re.DOTALL
