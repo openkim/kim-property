@@ -59,7 +59,7 @@ class TestPropertyInstanceModuleComponents:
     def test_get_property_id_path(self):
         """Test the source-value checking scalar component."""
         kim_properties = self.kim_property.get_properties()
-        for k, v in kim_properties.items():
+        for k, _ in kim_properties.items():
             _, _, _, _property_name = self.kim_property.get_property_id_path(
                 k)
 
@@ -69,19 +69,23 @@ class TestPropertyInstanceModuleComponents:
     def test_check_instance_id_format(self):
         """Test if the instance id format is correct."""
         # instance-id is a float
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_instance_id_format,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_instance_id_format,
                           1.0)
 
         # instance-id is a negative
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_instance_id_format,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_instance_id_format,
                           -1)
 
         # instance-id is zero
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_instance_id_format,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_instance_id_format,
                           0)
 
         # instance-id is bool zero
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_instance_id_format,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_instance_id_format,
                           False)
 
     def test_check_optional_key_source_value_scalar(self):
@@ -93,10 +97,12 @@ class TestPropertyInstanceModuleComponents:
             self.assertTrue(n1 == n2)
 
         # input is not a list, str, float, int or bool
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_optional_key_source_value_scalar,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_optional_key_source_value_scalar,
                           (1,), "int")
 
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_optional_key_source_value_scalar,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_optional_key_source_value_scalar,
                           {1, }, "int")
 
         # input is float but type is different
@@ -165,16 +171,20 @@ class TestPropertyInstanceModuleComponents:
             self.assertTrue(n1 == n2)
 
         # input is not a list, str, float, int or bool
-        self.assertRaises(self.KIMPropertyError, self.kim_property.get_optional_key_source_value_ndimensions,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.get_optional_key_source_value_ndimensions,
                           (1,))
 
-        self.assertRaises(self.KIMPropertyError, self.kim_property.get_optional_key_source_value_ndimensions,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.get_optional_key_source_value_ndimensions,
                           (1, 2))
 
-        self.assertRaises(self.KIMPropertyError, self.kim_property.get_optional_key_source_value_ndimensions,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.get_optional_key_source_value_ndimensions,
                           {1, })
 
-        self.assertRaises(self.KIMPropertyError, self.kim_property.get_optional_key_source_value_ndimensions,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.get_optional_key_source_value_ndimensions,
                           {1: 100, 2: 200})
 
         self.assertTrue(
@@ -210,38 +220,69 @@ class TestPropertyInstanceModuleComponents:
     def test_check_instance_optional_key_standard_pairs_format(self):
         """Test the standard key-map pairs correctness."""
         # input is not a dict
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_instance_optional_key_standard_pairs_format,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_instance_optional_key_standard_pairs_format,
                           [], None)
 
         # "source-value" is not available
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_instance_optional_key_standard_pairs_format,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_instance_optional_key_standard_pairs_format,
                           {"source-unit": "angstrom", "digits": 5}, None)
 
         # input pm is not a dict
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_instance_optional_key_standard_pairs_format,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_instance_optional_key_standard_pairs_format,
                           {"source-value": [3.9149], "source-unit": "angstrom", "digits": 5}, [])
 
         # "extent" specifies single item
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_instance_optional_key_standard_pairs_format,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_instance_optional_key_standard_pairs_format,
                           {"source-value": [3.9149, 3.149], "source-unit": "angstrom", "digits": 5}, {"type": "float", "has-unit": True, "extent": [], "required": True})
 
         # "source-unit" is required but is not there
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_instance_optional_key_standard_pairs_format,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_instance_optional_key_standard_pairs_format,
                           {"source-value": [3.9149], "digits": 5}, {"type": "float", "has-unit": True, "extent": [2], "required": True})
+
+        # Fail for a wrong key in standard key-value pairs
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_instance_optional_key_standard_pairs_format,
+                          {"source-value": [3.9149], "unknown": 5}, None)
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_instance_optional_key_standard_pairs_format,
+                          {"source-value": [3.9149], "source-unit": "angstrom", "unknown": 5}, None)
 
     def test_check_instnace_optional_key_map(self):
         """Test the inctances optional fields key-map pairs correctness."""
         # the key format is not correct
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_instnace_optional_key_map,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_instnace_optional_key_map,
                           "A", {"source-unit": "angstrom", "digits": 5})
+
+    def test_check_instance_optional_key_marked_required_are_present(self):
+        """Test the inctances optional presence of the keys marked as required."""
+        import kim_edn
+        pi = {"property-id": "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal", "instance-id": 1}
+        pd = kim_edn.load(
+            join("tests", "fixtures", "cohesive-energy-relation-cubic-crystal.edn"))
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_instance_optional_key_marked_required_are_present,
+                          pi, pd)
 
     def test_check_property_instances(self):
         """Test property instances format."""
         # the input is None
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_property_instances,
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_property_instances,
                           None, None)
 
         pi = {"property-id": "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal", "instance-id": 1}
+
+        self.assertRaises(self.KIMPropertyError, self.kim_property.check_property_instances,
+                          pi, fp=None, fp_path=join("tests", "fixtures", "cohesive-energy-relation-cubic-crystal.edn"))
+
         pd = {"property-id": "tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass",
               "property-title": "Atomic mass",
               "property-description": "The atomic mass of the element."}
@@ -249,6 +290,14 @@ class TestPropertyInstanceModuleComponents:
         # the property-id is different
         self.assertRaises(self.KIMPropertyError, self.kim_property.check_property_instances,
                           pi, pd)
+
+        # Fails if the path KIM properties is not bsolute
+        self.assertRaises(self.KIMPropertyError, self.kim_property.check_property_instances,
+                          pi, fp=None, fp_path="cohesive-energy-relation-cubic-crystal.edn")
+
+        # Fails if wrong KIM properties object
+        self.assertRaises(self.KIMPropertyError, self.kim_property.check_property_instances,
+                          pi, fp=None, fp_path=[])
 
 
 property_instance_names = [
