@@ -183,12 +183,13 @@ def extend_full_array(full_array, array_shape, fill_value=None, _shape=shape):
         raise KIMPropertyError(msg)
 
     # Shape check
-    if full_array_shape > array_shape:
-        msg = 'the old array with the shape of '
-        msg += '{} '.format(full_array_shape)
-        msg += 'does not fit within the new array with the shape of '
-        msg += '{}.'.format(array_shape)
-        raise KIMPropertyError(msg)
+    for o, n in zip(full_array_shape, array_shape):
+        if o > n:
+            msg = 'the old array with the shape of '
+            msg += '{} '.format(full_array_shape)
+            msg += 'does not fit within the new array with the shape of '
+            msg += '{}.'.format(array_shape)
+            raise KIMPropertyError(msg)
 
     if full_array_ndims == 1:
         d0 = full_array_shape[0]
