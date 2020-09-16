@@ -312,6 +312,60 @@ class TestNumericComponents:
         self.assertRaises(self.KIMPropertyError, extend_full_array,
                           a, [1, 1, 1, 1, 1, 1, 1, 2], 0)
 
+        # the input array is not uniform along all dimensions
+        a = [[1, 2], [0, 0, 0]]
+        self.assertRaises(self.KIMPropertyError, extend_full_array,
+                          a, [3, 3], 0)
+
+        a = [[], [1]]
+        self.assertRaises(self.KIMPropertyError, extend_full_array,
+                          a, [2, 2], 0)
+
+        a = create_full_array([2, 2, 2, 2], 0)
+        b = extend_full_array(a, [2, 2, 2, 4], 100)
+        self.assertTrue(b[0][0][0][0] == 0)
+        self.assertTrue(b[0][0][0][1] == 0)
+        self.assertTrue(b[0][0][0][2] == 100)
+        self.assertTrue(b[0][0][0][3] == 100)
+
+        # Fail if the old shape is bigger than the new
+        a = create_full_array([2, 2, 2, 2], 0)
+        self.assertRaises(self.KIMPropertyError, extend_full_array,
+                          a, [2, 2, 1, 4], 0)
+
+        a = create_full_array([1, 1, 1, 1, 1], 0)
+        b = extend_full_array(a, [2, 2, 2, 2, 2], 100)
+        self.assertTrue(b[0][0][0][0][0] == 0)
+        self.assertTrue(b[0][0][0][0][1] == 100)
+
+        a = create_full_array([2, 1, 2, 1, 2], 0)
+        b = extend_full_array(a, [2, 2, 2, 2, 2], 100)
+        self.assertTrue(b[0][0][0][0][0] == 0)
+        self.assertTrue(b[0][0][0][0][1] == 0)
+        self.assertTrue(b[0][0][0][1][1] == 100)
+        self.assertTrue(b[1][1][1][1][1] == 100)
+
+        # Fail if the old shape is bigger than the new
+        a = create_full_array([2, 1, 2, 1, 2], 0)
+        self.assertRaises(self.KIMPropertyError, extend_full_array,
+                          a, [2, 2, 2, 2, 1], 0)
+
+        a = create_full_array([1, 1, 1, 1, 1, 1], 0)
+        b = extend_full_array(a, [2, 2, 2, 2, 2, 2], 100)
+        self.assertTrue(b[0][0][0][0][0][0] == 0)
+        self.assertTrue(b[0][0][0][0][0][1] == 100)
+        self.assertTrue(b[0][0][0][0][1][1] == 100)
+
+        # Fail if the old shape is bigger than the new
+        a = create_full_array([1, 2, 3, 3, 2, 1], 0)
+        self.assertRaises(self.KIMPropertyError, extend_full_array,
+                          a, [2, 2, 2, 2, 2, 2], 0)
+
+        b = extend_full_array(a, [2, 2, 3, 3, 2, 2], 100)
+        self.assertTrue(b[0][0][0][0][0][0] == 0)
+        self.assertTrue(b[1][0][0][0][0][0] == 100)
+        self.assertTrue(b[1][0][0][0][0][1] == 100)
+
 
 class TestPyTestNumericComponents(TestNumericComponents, PyTest):
     pass
