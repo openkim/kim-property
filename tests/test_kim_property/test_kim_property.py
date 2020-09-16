@@ -315,6 +315,48 @@ class TestPropertyModule:
         self.assertTrue("cohesive-potential-energy" in kim_obj)
         self.assertTrue("basis-atom-coordinates" in kim_obj)
 
+        # Fail when there is no property instance to remove the content.
+        for str_obj1 in [None, 'None', '', '[]']:
+            self.assertRaises(self.KIMPropertyError,
+                              self.kim_property.kim_property_remove,
+                              str_obj1, 1, "key", "a")
+
+        # Fails when the "instance_id" is not an `int`.
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_remove,
+                          str_obj, 1.0, "key", "a")
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_remove,
+                          str_obj, "1", "key", "a")
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_remove,
+                          str_obj, [1], "key", "a")
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_remove,
+                          str_obj, {1}, "key", "a")
+
+        # Fails when the requested instance id doesn\'t match any 
+        # of the property instances ids.
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_remove,
+                          str_obj, 10, "key", "a")
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_remove,
+                          str_obj, 2, "key", "a")
+
+        # Fails when the key doesn\'t exist in the property instance.
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_remove,
+                          str_obj, 1, "key", "new_item")
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_remove,
+                          str_obj, 1, "key", "aa")
+
         # Removing the whole key
         str_obj1 = self.kim_property.kim_property_remove(
             str_obj, 1, "key", "a")
@@ -412,10 +454,10 @@ class TestPropertyModule:
         sio = StringIO()
 
         # Fail when there is no property instance to dump it.
-        for s in [None, 'None', '', '[]']:
+        for str_obj1 in [None, 'None', '', '[]']:
             self.assertRaises(self.KIMPropertyError,
                               self.kim_property.kim_property_dump,
-                              s, sio)   
+                              str_obj1, sio)
 
         self.kim_property.kim_property_dump(str_obj, sio, indent=0)
 
@@ -430,8 +472,6 @@ class TestPropertyModule:
             2, 'atomic-mass', str_obj)
 
         self.kim_property.kim_property_dump(str_obj, sio, indent=0)
-
-        
 
 
 class TestPyTestPropertyModule(TestPropertyModule, PyTest):
