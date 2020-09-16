@@ -215,7 +215,7 @@ def extend_full_array(full_array, array_shape, fill_value=None, _shape=shape):
                 for k in range(d2):
                     for l in range(d3):
                         new_array[i][j][k][l][0:d4] = full_array[i][j][k][l][0:d4]
-    elif full_array_ndims == 5:
+    elif full_array_ndims == 6:
         d0, d1, d2, d3, d4, d5 = full_array_shape
         for i in range(d0):
             for j in range(d1):
@@ -223,15 +223,6 @@ def extend_full_array(full_array, array_shape, fill_value=None, _shape=shape):
                     for l in range(d3):
                         for m in range(d4):
                             new_array[i][j][k][l][m][0:d5] = full_array[i][j][k][l][m][0:d5]
-    elif full_array_ndims == 6:
-        d0, d1, d2, d3, d4, d5, d6 = full_array_shape
-        for i in range(d0):
-            for j in range(d1):
-                for k in range(d2):
-                    for l in range(d3):
-                        for m in range(d4):
-                            for n in range(d5):
-                                new_array[i][j][k][l][m][n][0:d6] = full_array[i][j][k][l][m][n][0:d6]
     else:
         msg = 'maximum number of 6 dimensions is supported while '
         msg += '{} is requested.'.format(full_array_ndims)
