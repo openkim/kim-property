@@ -480,22 +480,20 @@ and the [ThermoML standard notation](https://www.degruyter.com/view/journals/ci/
 The keys associated with uncertainty and precision of the
 [KIM Property Instances](https://openkim.org/doc/schema/properties-framework) are:
 
-````txt
-source-std-uncert-value
-source-expand-uncert-value
-coverage-factor
-source-asym-std-uncert-neg
-source-asym-std-uncert-pos
-source-asym-expand-uncert-neg
-source-asym-expand-uncert-pos
-uncert-lev-of-confid
-digits
-````
+- source-std-uncert-value
+- source-expand-uncert-value
+- coverage-factor
+- source-asym-std-uncert-neg
+- source-asym-std-uncert-pos
+- source-asym-expand-uncert-neg
+- source-asym-expand-uncert-pos
+- uncert-lev-of-confid
+- digits
 
 In below example, the `a`-key source-value key’s value is an array, which means the value of the
 `digits`-key must be either an array of the same extent, or a scalar.
 
-- The value of the `digits`-key is a scalar:
+1. The value of the `digits`-key is a scalar:
 
     ````py
         >>> str = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
@@ -524,7 +522,7 @@ In below example, the `a`-key source-value key’s value is an array, which mean
         ]
     ````
 
-- The value of the `digits`-key is an array of the same extent:
+2. The value of the `digits`-key is an array of the same extent:
 
     ````py
         >>> str = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
