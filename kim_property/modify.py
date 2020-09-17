@@ -2000,12 +2000,6 @@ def kim_property_modify(property_instances, instance_id, *argv):
                             msg += 'one can not use index for scalar keys.)'
                             raise KIMPropertyError(msg)
         else:
-            if key_name_key in key_name_map:
-                msg = 'the key {} '.format(key_name_key)
-                msg += 'doesn\'t have any existing array argument. One can '
-                msg += 'not append new data to keys with no extent.'
-                raise KIMPropertyError(msg)
-
             if i >= n_arguments:
                 msg = 'there is not enough input arguments '
                 msg += 'to use.\nProcessing the {"'
