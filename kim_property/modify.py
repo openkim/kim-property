@@ -22,8 +22,32 @@ STANDARD_KEYS_WITH_EXTENT = (
     "si-value",
     "source-std-uncert-value",
     "source-expand-uncert-value",
+    "coverage-factor",
+    "source-asym-std-uncert-neg",
+    "source-asym-std-uncert-pos",
+    "source-asym-expand-uncert-neg",
+    "source-asym-expand-uncert-pos",
+    "uncert-lev-of-confid",
+    "digits",
 )
 """tuple: KIM property standard keys which have the extent."""
+
+# see https://github.com/openkim/kim-property/issues/3
+STANDARD_KEYS_SCLAR_OR_WITH_EXTENT = (
+    "source-std-uncert-value",
+    "source-expand-uncert-value",
+    "coverage-factor",
+    "source-asym-std-uncert-neg",
+    "source-asym-std-uncert-pos",
+    "source-asym-expand-uncert-neg",
+    "source-asym-expand-uncert-pos",
+    "uncert-lev-of-confid",
+    "digits",
+)
+"""tuple: KIM property standard keys values of the uncertainty and 
+          digits keys must be either arrays of the same extent, or 
+          scalars in which case they are taken to apply equally to 
+          all values in the source-value array."""
 
 
 def kim_property_modify(property_instances, instance_id, *argv):
@@ -127,10 +151,7 @@ def kim_property_modify(property_instances, instance_id, *argv):
 
     i = 0
     while i < n_arguments:
-        try:
-            arg = argv[i]
-        except IndexError:
-            break
+        arg = argv[i]
 
         if arg == 'key':
             key = True
@@ -194,6 +215,43 @@ def kim_property_modify(property_instances, instance_id, *argv):
             # Append
             if key_name_key in key_name_map:
                 if key_name_ndims > 0:
+                    if key_name_key in STANDARD_KEYS_SCLAR_OR_WITH_EXTENT:
+                        key_name_value_is_scalar = False
+
+                        if (i + 1) < n_arguments:
+                            if argv[i + 1] == 'key' or \
+                                    argv[i + 1] in standard_keys:
+                                key_name_value_is_scalar = True
+                        else:
+                            try:
+                                float(argv[i])
+                                key_name_value_is_scalar = True
+                            except:
+                                pass
+
+                        if key_name_value_is_scalar:
+                            if key_name_key == 'digits':
+                                key_name_value = int(argv[i])
+                                if key_name_value != float(argv[i]):
+                                    msg = '"digits"-key is provided with a '
+                                    msg += '`float` value. "digits"-key has '
+                                    msg += 'an `int` type, and must be set '
+                                    msg += 'to the number of reported digits.'
+                                    raise KIMPropertyError(msg)
+                            else:
+                                key_name_value = float(argv[i])
+
+                            i += 1
+
+                            key_name_map[key_name_key] = key_name_value
+                            continue
+                        else:
+                            # Convert a scalar value to an array with extent
+                            key_name_value = key_name_map[key_name_key]
+                            if isinstance(key_name_value, int) or \
+                                    isinstance(key_name_value, float):
+                                key_name_map[key_name_key] = [key_name_value]
+
                     key_name_value = key_name_map[key_name_key]
                     key_name_shape_new = shape(key_name_value)
                     key_name_index = []
@@ -337,6 +395,10 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                     raise KIMPropertyError(msg)
                             key_name_index.append(int(arg) - 1)
                         i += 1
+
+                    digits_key_name_type = key_name_type
+                    if key_name_key == 'digits':
+                        key_name_type = 'int'
 
                     if key_name_type == 'int':
                         key_name_value = extend_full_array(
@@ -1005,30 +1067,41 @@ def kim_property_modify(property_instances, instance_id, *argv):
                             elif key_name_type == 'file':
                                 key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                         i += 1
+
+                    if key_name_key == 'digits':
+                        key_name_type = digits_key_name_type
                 else:
-                    if key_name_type == 'int':
-                        key_name_value = int(argv[i])
-                    elif key_name_type == 'float':
-                        key_name_value = float(argv[i])
-                    elif key_name_type == 'bool':
-                        if argv[i] == 'true' or \
-                                argv[i] == 'True' or argv[i]:
-                            key_name_value = True
+                    if key_name_key in STANDARD_KEYS_SCLAR_OR_WITH_EXTENT:
+                        if key_name_key == 'digits':
+                            key_name_value = int(argv[i])
+                            if key_name_value != float(argv[i]):
+                                msg = '"digits"-key is provided with a `float` value. '
+                                msg += '"digits"-key has an `int` type, and must be '
+                                msg += 'set to the number of reported digits.'
+                                raise KIMPropertyError(msg)
                         else:
-                            key_name_value = False
-                    elif key_name_type == 'string':
-                        key_name_value = argv[i]
-                    elif key_name_type == 'file':
-                        key_name_value = argv[i]
+                            key_name_value = float(argv[i])
+                    else:
+                        if key_name_type == 'int':
+                            key_name_value = int(argv[i])
+                        elif key_name_type == 'float':
+                            key_name_value = float(argv[i])
+                        elif key_name_type == 'bool':
+                            if argv[i] == 'true' or \
+                                    argv[i] == 'True' or argv[i]:
+                                key_name_value = True
+                            else:
+                                key_name_value = False
+                        elif key_name_type == 'string':
+                            key_name_value = argv[i]
+                        elif key_name_type == 'file':
+                            key_name_value = argv[i]
                     i += 1
 
                     # Extra check for the scalar values
                     # see https://github.com/openkim/kim-property/issues/1
                     if i < n_arguments:
-                        try:
-                            arg = argv[i]
-                        except IndexError:
-                            break
+                        arg = argv[i]
                         if arg != 'key' and not arg in standard_keys:
                             msg = 'two arguments are provided for a scalar '
                             msg += 'key. For "{}" in '.format(key_name)
@@ -1042,6 +1115,36 @@ def kim_property_modify(property_instances, instance_id, *argv):
             # Set
             else:
                 if key_name_ndims > 0:
+                    if key_name_key in STANDARD_KEYS_SCLAR_OR_WITH_EXTENT:
+                        key_name_value_is_scalar = False
+
+                        if (i + 1) < n_arguments:
+                            if argv[i + 1] == 'key' or \
+                                    argv[i + 1] in standard_keys:
+                                key_name_value_is_scalar = True
+                        else:
+                            try:
+                                float(argv[i])
+                                key_name_value_is_scalar = True
+                            except:
+                                pass
+
+                        if key_name_value_is_scalar:
+                            if key_name_key == 'digits':
+                                key_name_value = int(argv[i])
+                                if key_name_value != float(argv[i]):
+                                    msg = '"digits"-key is provided with a '
+                                    msg += '`float` value. "digits"-key has '
+                                    msg += 'an `int` type, and must be set '
+                                    msg += 'to the number of reported digits.'
+                                    raise KIMPropertyError(msg)
+                            else:
+                                key_name_value = float(argv[i])
+                            i += 1
+
+                            key_name_map[key_name_key] = key_name_value
+                            continue
+
                     key_name_shape_new = []
                     for s in key_name_shape:
                         key_name_shape_new.append(s)
@@ -1179,6 +1282,10 @@ def kim_property_modify(property_instances, instance_id, *argv):
                                     raise KIMPropertyError(msg)
                             key_name_index.append(int(arg) - 1)
                         i += 1
+
+                    digits_key_name_type = key_name_type
+                    if key_name_key == 'digits':
+                        key_name_type = 'int'
 
                     if key_name_type == 'int':
                         key_name_value = create_full_array(
@@ -1847,30 +1954,41 @@ def kim_property_modify(property_instances, instance_id, *argv):
                             elif key_name_type == 'file':
                                 key_name_value[d0][d1][d2][d3][d4][d5] = argv[i]
                         i += 1
+
+                    if key_name_key == 'digits':
+                        key_name_type = digits_key_name_type
                 else:
-                    if key_name_type == 'int':
-                        key_name_value = int(argv[i])
-                    elif key_name_type == 'float':
-                        key_name_value = float(argv[i])
-                    elif key_name_type == 'bool':
-                        if argv[i] == 'true' or \
-                                argv[i] == 'True' or argv[i]:
-                            key_name_value = True
+                    if key_name_key in STANDARD_KEYS_SCLAR_OR_WITH_EXTENT:
+                        if key_name_key == 'digits':
+                            key_name_value = int(argv[i])
+                            if key_name_value != float(argv[i]):
+                                msg = '"digits"-key is provided with a `float` value. '
+                                msg += '"digits"-key has an `int` type, and must be '
+                                msg += 'set to the number of reported digits.'
+                                raise KIMPropertyError(msg)
                         else:
-                            key_name_value = False
-                    elif key_name_type == 'string':
-                        key_name_value = argv[i]
-                    elif key_name_type == 'file':
-                        key_name_value = argv[i]
+                            key_name_value = float(argv[i])
+                    else:
+                        if key_name_type == 'int':
+                            key_name_value = int(argv[i])
+                        elif key_name_type == 'float':
+                            key_name_value = float(argv[i])
+                        elif key_name_type == 'bool':
+                            if argv[i] == 'true' or \
+                                    argv[i] == 'True' or argv[i]:
+                                key_name_value = True
+                            else:
+                                key_name_value = False
+                        elif key_name_type == 'string':
+                            key_name_value = argv[i]
+                        elif key_name_type == 'file':
+                            key_name_value = argv[i]
                     i += 1
 
                     # Extra check for the scalar values
                     # see https://github.com/openkim/kim-property/issues/1
                     if i < n_arguments:
-                        try:
-                            arg = argv[i]
-                        except IndexError:
-                            break
+                        arg = argv[i]
                         if arg != 'key' and not arg in standard_keys:
                             msg = 'two arguments are provided for a scalar '
                             msg += 'key. For "{}" in '.format(key_name)
@@ -1902,34 +2020,12 @@ def kim_property_modify(property_instances, instance_id, *argv):
                 key_name_value = argv[i]
             elif key_name_key == 'si-unit':
                 key_name_value = argv[i]
-            elif key_name_key == 'coverage-factor':
-                key_name_value = float(argv[i])
-            elif key_name_key == 'source-asym-std-uncert-neg':
-                key_name_value = float(argv[i])
-            elif key_name_key == 'source-asym-std-uncert-pos':
-                key_name_value = float(argv[i])
-            elif key_name_key == 'source-asym-expand-uncert-neg':
-                key_name_value = float(argv[i])
-            elif key_name_key == 'source-asym-expand-uncert-pos':
-                key_name_value = float(argv[i])
-            elif key_name_key == 'uncert-lev-of-confid':
-                key_name_value = float(argv[i])
-            elif key_name_key == 'digits':
-                key_name_value = int(argv[i])
-                if key_name_value != float(argv[i]):
-                    msg = '"digits"-key is provided with a `float` value. '
-                    msg += '"digits"-key has an `int` type, and must be '
-                    msg += 'set to the number of reported digits.'
-                    raise KIMPropertyError(msg)
             i += 1
 
             # Extra check for the scalar values
             # see https://github.com/openkim/kim-property/issues/1
             if i < n_arguments:
-                try:
-                    arg = argv[i]
-                except IndexError:
-                    break
+                arg = argv[i]
                 if arg != 'key' and not arg in standard_keys:
                     msg = 'two arguments are provided for a key with no '
                     msg += 'extent. For "{}" in '.format(key_name)
