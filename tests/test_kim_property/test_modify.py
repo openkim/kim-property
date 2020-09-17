@@ -114,6 +114,28 @@ class TestModifyModule:
 
         self.assertTrue(kim_obj["space-group"]["source-value"] == "Fm-3m")
 
+        # Test for scalar values with no extent
+        str_obj = self.kim_property.kim_property_modify(
+            str_obj, 1,
+            "key", "cohesive-potential-energy",
+            "source-unit", "eV")
+        
+        str_obj = self.kim_property.kim_property_modify(
+            str_obj, 1,
+            "key", "cohesive-potential-energy",
+            "source-unit", "eV-test")
+
+        str_obj = self.kim_property.kim_property_modify(
+            str_obj, 1,
+            "key", "cohesive-potential-energy",
+            "si-unit", "eV")
+        
+        str_obj = self.kim_property.kim_property_modify(
+            str_obj, 1,
+            "key", "cohesive-potential-energy",
+            "si-unit", "eV-test")
+
+
     def test_modify_exception(self):
         """Test the modify functionality on exceptions."""
         # Fails when the input is none or not created
