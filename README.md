@@ -463,6 +463,102 @@ Calling the `kim_property_modify` again set the scalar variable with a new value
 
 ````
 
+**Note:**
+
+If the source-value key is a scalar, the values of the uncertainty and digits keys must be scalars.
+Thus, calling the `kim_property_modify` with a non-scalar key where the source-value key is a scalar
+fails.
+
+**Note:**
+
+If the source-value key’s value is an array (EDN vector), the values of the uncertainty and digits
+keys must be either arrays of the same extent, or scalars in which case they are taken to apply
+equally to all values in the source-value array. The keys associated with uncertainty and precision
+conform to the [ISO Guide to the Expression of Uncertainty in Measurement](https://www.iso.org/standard/50461.html)
+and the [ThermoML standard notation](https://www.degruyter.com/view/journals/ci/28/3/article-p22.xml).
+
+The keys associated with uncertainty and precision of the
+[KIM Property Instances](https://openkim.org/doc/schema/properties-framework) are:
+
+````txt
+source-std-uncert-value
+source-expand-uncert-value
+coverage-factor
+source-asym-std-uncert-neg
+source-asym-std-uncert-pos
+source-asym-expand-uncert-neg
+source-asym-expand-uncert-pos
+uncert-lev-of-confid
+digits
+````
+
+In below example, the `a`-key source-value key’s value is an array, which means the value of the
+`digits`-key must be either an array of the same extent, or a scalar.
+
+- The value of the `digits`-key is a scalar:
+
+    ````py
+        >>> str = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
+        >>> str = kim_property_modify(str, 1,
+                    "key", "a",
+                    "source-value", "1:5", "3.9149", "4.0000", "4.032", "4.0817", "4.1602",
+                    "source-unit", "angstrom", "digits", "5")
+        >>> obj = kim_edn.loads(str)
+        >>> print(kim_edn.dumps(obj, indent=4))
+        [
+            {
+                "property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"
+                "instance-id" 1
+                "a" {
+                    "source-value" [
+                        3.9149
+                        4.0
+                        4.032
+                        4.0817
+                        4.1602
+                    ]
+                    "source-unit" "angstrom"
+                    "digits" 5
+                }
+            }
+        ]
+    ````
+
+- The value of the `digits`-key is an array of the same extent:
+
+    ````py
+        >>> str = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
+        >>> str = kim_property_modify(str, 1,
+                    "key", "a",
+                    "source-value", "1:5", "3.9149", "4.0000", "4.032", "4.0817", "4.1602",
+                    "source-unit", "angstrom", "digits", "1:5", "5", "5", "5", "5", "5")
+        >>> obj = kim_edn.loads(str)
+        >>> print(kim_edn.dumps(obj, indent=4))
+        [
+            {
+                "property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"
+                "instance-id" 1
+                "a" {
+                    "source-value" [
+                        3.9149
+                        4.0 
+                        4.032
+                        4.0817
+                        4.1602
+                    ]
+                    "source-unit" "angstrom"
+                    "digits" [
+                        5
+                        5
+                        5
+                        5
+                        5
+                    ]
+                }
+            }
+        ]
+    ````
+
 ## Remove
 
 Removing (a) key(s) from a property instance::
