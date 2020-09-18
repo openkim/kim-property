@@ -239,10 +239,15 @@ class TestPropertyInstanceModuleComponents:
                           self.kim_property.check_instance_optional_key_standard_pairs_format,
                           {"source-value": [3.9149, 3.149], "source-unit": "angstrom", "digits": 5}, {"type": "float", "has-unit": True, "extent": [], "required": True})
 
-        # "source-unit" is required but is not there
+        # "extent" dimension does not match with "source-unit" dimension
         self.assertRaises(self.KIMPropertyError,
                           self.kim_property.check_instance_optional_key_standard_pairs_format,
                           {"source-value": [3.9149], "digits": 5}, {"type": "float", "has-unit": True, "extent": [2], "required": True})
+
+        # "source-unit" is required but is not there
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_instance_optional_key_standard_pairs_format,
+                          {"source-value": [3.9149, 3.149], "digits": 5}, {"type": "float", "has-unit": True, "extent": [2], "required": True})
 
         # Fail for a wrong key in standard key-value pairs
         self.assertRaises(self.KIMPropertyError,
@@ -291,13 +296,21 @@ class TestPropertyInstanceModuleComponents:
         self.assertRaises(self.KIMPropertyError, self.kim_property.check_property_instances,
                           pi, pd)
 
-        # Fails if the path KIM properties is not bsolute
+        # Fails if the path KIM properties is not absolute
         self.assertRaises(self.KIMPropertyError, self.kim_property.check_property_instances,
                           pi, fp=None, fp_path="cohesive-energy-relation-cubic-crystal.edn")
 
         # Fails if wrong KIM properties object
         self.assertRaises(self.KIMPropertyError, self.kim_property.check_property_instances,
                           pi, fp=None, fp_path=[])
+
+        pd = {"property-id": "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal",
+              "property-title": "Cohesive energy versus lattice constant relation for a cubic crystal",
+              "property-description": "Cohesive energy versus lattice constant relation for a cubic crystal at zero absolute temperature."}
+
+        # Fails if both fp and fpath exists
+        self.assertRaises(self.KIMPropertyError, self.kim_property.check_property_instances,
+                          pi, fp=pd, fp_path="cohesive-energy-relation-cubic-crystal.edn")
 
 
 property_instance_names = [
