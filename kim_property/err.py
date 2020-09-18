@@ -25,7 +25,7 @@ class KIMPropertyError(Exception):
 
     def __reduce__(self):
         """Efficient pickling."""
-        return self.__class__, (self.msg)
+        return self.__class__, (self.msg, )
 
     def __str__(self):
         """Message string representation."""
