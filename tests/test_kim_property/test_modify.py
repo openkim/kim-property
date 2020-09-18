@@ -91,6 +91,20 @@ class TestModifyModule:
             "source-unit", "eV",
             "digits", "5")
 
+        # Test on different order inputs
+        str_obj = self.kim_property.kim_property_modify(
+            str_obj, 1,
+            "key", "cohesive-potential-energy",
+            "digits", "5",
+            "source-unit", "eV")
+
+        str_obj = self.kim_property.kim_property_modify(
+            str_obj, 1,
+            "key", "cohesive-potential-energy",
+            "digits", "5",
+            "key", "basis-atom-coordinates",
+            "source-value", "3", "1", "0.5")
+
         kim_obj = kim_edn.load(str_obj)[0]
 
         self.assertTrue(Property_Instance == kim_edn.dumps(kim_obj))
@@ -119,7 +133,7 @@ class TestModifyModule:
             str_obj, 1,
             "key", "cohesive-potential-energy",
             "source-unit", "eV")
-        
+
         str_obj = self.kim_property.kim_property_modify(
             str_obj, 1,
             "key", "cohesive-potential-energy",
@@ -129,12 +143,11 @@ class TestModifyModule:
             str_obj, 1,
             "key", "cohesive-potential-energy",
             "si-unit", "eV")
-        
+
         str_obj = self.kim_property.kim_property_modify(
             str_obj, 1,
             "key", "cohesive-potential-energy",
             "si-unit", "eV-test")
-
 
     def test_modify_exception(self):
         """Test the modify functionality on exceptions."""
@@ -365,6 +378,14 @@ class TestModifyModule:
                           str_obj, 1,
                           "key", "cohesive-potential-energy", "digits", 1, 5)
 
+        str_obj = self.kim_property.kim_property_modify(
+            str_obj, 1, "key", "a", "digits", 3)
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify,
+                          str_obj, 1,
+                          "key", "a", "digits", 3.14, "key", "a", "source-value", 3.14)
+
         # Create the property instance with the property name
         str_obj = self.kim_property.kim_property_create(
             1, 'cohesive-energy-relation-cubic-crystal')
@@ -452,6 +473,12 @@ class TestModifyModule:
                           self.kim_property.kim_property_modify, str_obj, 1,
                           "key", "a",
                           "digits", "1:5")
+
+        # Fails paasing the wrong type
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify, str_obj, 1,
+                          "key", "a", "digits", 5.1, "key",
+                          "basis-atom-coordinates", "source-value", "1:2", "1", 0.5, 0.5)
 
         # Fails when not enough input
         self.assertRaises(self.KIMPropertyError,
