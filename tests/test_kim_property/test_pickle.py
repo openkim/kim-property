@@ -46,6 +46,12 @@ class TestPickle:
         self.assertRaises(self.KIMPropertyError, pickle_kim_properties,
                           properties, sio)
 
+    def test_pickle_err_class(self):
+        """Test pickling the KIM Error module."""
+        obj = pickle.dumps(self.KIMPropertyError(
+            "Test pickling the KIM Error module."))
+        self.assertTrue(obj != None)
+
     def test_unpickle_kim_properties(self):
         """Test unpickling the KIM properties."""
 
