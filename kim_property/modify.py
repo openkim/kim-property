@@ -93,10 +93,7 @@ def kim_property_modify(property_instances, instance_id, *argv):
         string -- serialized KIM-EDN formatted property instances.
 
     """
-    if property_instances is None or \
-            property_instances == 'None' or \
-            property_instances == '' or \
-            property_instances == '[]':
+    if property_instances is None or property_instances in ('None', '','[]'):
         msg = 'there is no property instance to modify the content.'
         raise KIMPropertyError(msg)
 
