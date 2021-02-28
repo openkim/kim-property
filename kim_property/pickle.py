@@ -194,12 +194,12 @@ def pickle_kim_properties(properties=None,
             kim_property_ids, kim_property_files)}
 
         # KIM properties name to full ID dictionary.
-        property_name_to_property_id = {
-            k: v for k, v in zip(kim_property_names, kim_property_ids)}
+        property_name_to_property_id = \
+            dict(zip(kim_property_names, kim_property_ids))
 
         # KIM properties full ID to name dictionary.
-        property_id_to_property_name = {
-            k: v for k, v in zip(kim_property_ids, kim_property_names)}
+        property_id_to_property_name = \
+            dict(zip(kim_property_ids, kim_property_names))
 
         del kim_property_names
         del kim_property_ids
@@ -210,7 +210,7 @@ def pickle_kim_properties(properties=None,
             property_id_to_property_name,
         ]
     else:
-        if not (isinstance(properties, dict)):
+        if not isinstance(properties, dict):
             msg = 'wrong input, "properties" is not a `dict`.'
             raise KIMPropertyError(msg)
 
@@ -218,7 +218,7 @@ def pickle_kim_properties(properties=None,
             msg = 'wrong input, "properties" is empty.'
             raise KIMPropertyError(msg)
 
-        property_ids = [k for k in properties]
+        property_ids = list(properties.keys())
 
         property_names = []
         for _id in property_ids:
@@ -226,12 +226,10 @@ def pickle_kim_properties(properties=None,
             property_names.append(_name)
 
         # KIM properties name to full ID dictionary.
-        name_to_property_id = {
-            k: v for k, v in zip(property_names, property_ids)}
+        name_to_property_id = dict(zip(property_names, property_ids))
 
         # KIM properties full ID to name dictionary.
-        id_to_property_name = {
-            k: v for k, v in zip(property_ids, property_names)}
+        id_to_property_name = dict(zip(property_ids, property_names))
 
         del property_names
         del property_ids
@@ -255,7 +253,8 @@ def pickle_kim_properties(properties=None,
             raise KIMPropertyError(msg)
 
 
-def unpickle_kim_properties(fp=join(kim_properties_path, 'kim_properties.pickle')):
+def unpickle_kim_properties(fp=join(kim_properties_path,
+                                    'kim_properties.pickle')):
     """Deserialize KIM properties.
 
     Return reconstituted object hierarchy from the pickled object. Read the
@@ -283,10 +282,10 @@ def unpickle_kim_properties(fp=join(kim_properties_path, 'kim_properties.pickle'
         msg += 'If "fp" refers to a file name, make sure it exists in PATH '
         msg += 'or provide the file name with its absolute PATH.'
         raise KIMPropertyError(msg)
-    else:
-        try:
-            f = BytesIO(fp)
-            return pickle.load(f)
-        except:
-            msg = 'wrong input. Neither can open nor load the input.'
-            raise KIMPropertyError(msg)
+
+    try:
+        f = BytesIO(fp)
+        return pickle.load(f)
+    except:
+        msg = 'wrong input. Neither can open nor load the input.'
+        raise KIMPropertyError(msg)
