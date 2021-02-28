@@ -1,6 +1,5 @@
 """Dump module."""
 
-import os
 from os.path import isabs
 
 import kim_edn
@@ -52,9 +51,7 @@ def kim_property_dump(property_instances,
 
     """
     if property_instances is None or \
-            property_instances == 'None' or \
-            property_instances == '' or \
-            property_instances == '[]':
+            property_instances in ('None', '', '[]'):
         msg = 'there is no property instance to dump it.'
         raise KIMPropertyError(msg)
 
