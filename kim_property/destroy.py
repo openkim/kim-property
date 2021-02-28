@@ -42,9 +42,7 @@ def kim_property_destroy(property_instances, instance_id):
         raise KIMPropertyError(msg)
 
     if property_instances is None or \
-            property_instances == 'None' or \
-            property_instances == '' or \
-            property_instances == '[]':
+            property_instances in ('None', '', '[]'):
         return '[]'
 
     # Deserialize the KIM property instances.
