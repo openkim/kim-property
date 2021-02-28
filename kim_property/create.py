@@ -1,7 +1,6 @@
 """Create module."""
 
-import os
-from os.path import join, isfile
+from os.path import isfile
 
 import kim_edn
 
@@ -16,36 +15,37 @@ __all__ = [
     "unset_property_id",
 ]
 
-kim_properties = None
+KIM_PROPERTIES = None
 """dict: KIM properties dictionary indexed by properties full IDs."""
 
-property_name_to_property_id = None
+PROPERTY_NAME_TO_PROPERTY_ID = None
 """dict: KIM properties name to full ID dictionary."""
 
-property_id_to_property_name = None
+PROPERTY_ID_TO_PROPERTY_NAME = None
 """dict: KIM properties full ID to name dictionary."""
 
 # Get the standard KIM properties
-kim_properties, property_name_to_property_id, property_id_to_property_name = unpickle_kim_properties()
+KIM_PROPERTIES, PROPERTY_NAME_TO_PROPERTY_ID, \
+    PROPERTY_ID_TO_PROPERTY_NAME = unpickle_kim_properties()
 
-new_property_ids = None
+NEW_PROPERTY_IDS = None
 """list: Newly added property IDs """
 
 
 def get_properties():
-    """Get the reconstituted kim properties object hierarchy from the pickled object.
+    """Get the kim properties object hierarchy from the pickled object.
 
     Returns:
-        dict -- kim_properties.
+        dict -- KIM_PROPERTIES.
     """
-    return kim_properties
+    return KIM_PROPERTIES
 
 
 def unset_property_id(property_id):
     """Unset a property with a "property_id" from kim properties.
 
     If a requested property with a "property_id" is a newly created
-    property, then it will remove that property from kim_properties,
+    property, then it will remove that property from KIM_PROPERTIES,
     otherwise it does nothing.
 
     Arguments:
@@ -53,18 +53,19 @@ def unset_property_id(property_id):
             unique ID of the property.
 
     """
-    global new_property_ids
-    global property_name_to_property_id
-    global property_id_to_property_name
-    if new_property_ids is not None:
-        if property_id in new_property_ids:
-            del kim_properties[property_id]
-            _name = property_id_to_property_name[property_id]
-            del property_name_to_property_id[_name]
-            del property_id_to_property_name[property_id]
-            new_property_ids.remove(property_id)
-            if len(new_property_ids) == 0:
-                new_property_ids = None
+    global NEW_PROPERTY_IDS
+    global PROPERTY_NAME_TO_PROPERTY_ID
+    global PROPERTY_ID_TO_PROPERTY_NAME
+
+    if NEW_PROPERTY_IDS is not None:
+        if property_id in NEW_PROPERTY_IDS:
+            del KIM_PROPERTIES[property_id]
+            _name = PROPERTY_ID_TO_PROPERTY_NAME[property_id]
+            del PROPERTY_NAME_TO_PROPERTY_ID[_name]
+            del PROPERTY_ID_TO_PROPERTY_NAME[property_id]
+            NEW_PROPERTY_IDS.remove(property_id)
+            if len(NEW_PROPERTY_IDS) == 0:
+                NEW_PROPERTY_IDS = None
 
 
 def kim_property_create(instance_id, property_name, property_instances=None):
@@ -116,10 +117,10 @@ def kim_property_create(instance_id, property_name, property_instances=None):
         string -- serialized KIM-EDN formatted property instances.
 
     """
-    global kim_properties
-    global property_name_to_property_id
-    global property_id_to_property_name
-    global new_property_ids
+    global KIM_PROPERTIES
+    global PROPERTY_NAME_TO_PROPERTY_ID
+    global PROPERTY_ID_TO_PROPERTY_NAME
+    global NEW_PROPERTY_IDS
 
     if not isinstance(instance_id, int):
         msg = 'the "instance_id" is not an `int`.'
@@ -146,10 +147,10 @@ def kim_property_create(instance_id, property_name, property_instances=None):
                 raise KIMPropertyError(msg)
 
     # KIM property names.
-    kim_property_names = [k for k in property_name_to_property_id]
+    kim_property_names = list(PROPERTY_NAME_TO_PROPERTY_ID.keys())
 
     # KIM property full IDs.
-    kim_property_ids = [k for k in property_id_to_property_name]
+    kim_property_ids = list(PROPERTY_ID_TO_PROPERTY_NAME.keys())
 
     new_property_instance = {}
 
@@ -165,7 +166,7 @@ def kim_property_create(instance_id, property_name, property_instances=None):
         _property_id = pd["property-id"]
 
         # Check to make sure that this property does not exist in OpenKIM
-        if _property_id in kim_properties:
+        if _property_id in KIM_PROPERTIES:
             msg = 'the input property_name file contains a property ID:\n'
             msg += '"{}"\nwhich already '.format(_property_id)
             msg += 'exists in the KIM Property Definition list.\n'
@@ -176,28 +177,29 @@ def kim_property_create(instance_id, property_name, property_instances=None):
             msg += 'information.'
             raise KIMPropertyError(msg)
 
-        # Add the new property definition to kim_properties
-        kim_properties[_property_id] = pd
+        # Add the new property definition to KIM_PROPERTIES
+        KIM_PROPERTIES[_property_id] = pd
 
         # Get the property name
         _, _, _, _property_name = get_property_id_path(_property_id)
 
-        property_name_to_property_id[_property_name] = _property_id
-        property_id_to_property_name[_property_id] = _property_name
+        PROPERTY_NAME_TO_PROPERTY_ID[_property_name] = _property_id
+        PROPERTY_ID_TO_PROPERTY_NAME[_property_id] = _property_name
 
         kim_property_names.append(_property_name)
         kim_property_ids.append(_property_id)
 
         # Keep the record of a newly added properties
-        if new_property_ids is None:
-            new_property_ids = []
-        new_property_ids.append(_property_id)
+        if NEW_PROPERTY_IDS is None:
+            NEW_PROPERTY_IDS = []
+        NEW_PROPERTY_IDS.append(_property_id)
 
         # Set the new instance property ID
         new_property_instance["property-id"] = _property_id
     else:
         if property_name in kim_property_names:
-            new_property_instance["property-id"] = property_name_to_property_id[property_name]
+            new_property_instance["property-id"] = \
+                PROPERTY_NAME_TO_PROPERTY_ID[property_name]
         elif property_name in kim_property_ids:
             new_property_instance["property-id"] = property_name
         else:
@@ -216,7 +218,7 @@ def kim_property_create(instance_id, property_name, property_instances=None):
     kim_property_instances.append(new_property_instance)
 
     # If there are multiple keys sort them based on instance-id
-    if (len(kim_property_instances) > 1):
+    if len(kim_property_instances) > 1:
         kim_property_instances = sorted(
             kim_property_instances, key=lambda i: i["instance-id"])
 
