@@ -71,13 +71,13 @@ def check_key_present(k, s):
 
     """
     if isinstance(k, str) and isinstance(s, str):
-        if (s.find(k) == -1):
+        if s.find(k) == -1:
             msg = 'the required key "{}" is not found.'.format(k)
             raise KIMPropertyError(msg)
         return
-    else:
-        msg = 'input to the function is not a `str`.'
-        raise KIMPropertyError(msg)
+
+    msg = 'input to the function is not a `str`.'
+    raise KIMPropertyError(msg)
 
 
 # A string containing the unique ID of the property. The Property ID conforms
@@ -115,9 +115,9 @@ def check_property_id_format(s, _m=PROPERTY_ID.match):
             msg += 'in section 2.2 for more detailed information.'
             raise KIMPropertyError(msg)
         return
-    else:
-        msg = 'input to the function is not a `str`.'
-        raise KIMPropertyError(msg)
+
+    msg = 'input to the function is not a `str`.'
+    raise KIMPropertyError(msg)
 
 
 def check_property_title_format(s):
@@ -137,9 +137,9 @@ def check_property_title_format(s):
             msg += 'should not include an ending period.'
             raise KIMPropertyError(msg)
         return
-    else:
-        msg = 'input to the function is not a `str`.'
-        raise KIMPropertyError(msg)
+
+    msg = 'input to the function is not a `str`.'
+    raise KIMPropertyError(msg)
 
 
 def check_required_keys_present(s, rk=required_keys):
@@ -187,9 +187,9 @@ def check_key_format(s, _m=KEY_FORMAT.match):
             msg += 'alphanumeric characters and dashes.'
             raise KIMPropertyError(msg)
         return
-    else:
-        msg = 'input to the function is not a `str`.'
-        raise KIMPropertyError(msg)
+
+    msg = 'input to the function is not a `str`.'
+    raise KIMPropertyError(msg)
 
 
 def check_optional_key_type_format(s):
@@ -202,7 +202,7 @@ def check_optional_key_type_format(s):
     """
     if isinstance(s, str):
         str_type = ("string", "float", "int", "bool", "file")
-        if (s in str_type):
+        if s in str_type:
             return
         msg = 'input string defining the variable type is not '
         msg += 'valid. A string defining the variable type can be set to '
@@ -278,14 +278,15 @@ def check_optional_key_extent_scalar(s, _ws=WHITESPACE_EDN.sub):
     """
     if isinstance(s, str):
         e = _ws('', s)
-        return e == '[]' or e == '[1]'
-    elif isinstance(s, list):
+        return e in ('[]', '[1]')
+
+    if isinstance(s, list):
         if len(s) == 1:
             return s[0] == 1
         return len(s) == 0
-    else:
-        msg = 'input to the function is not a `list` or `str`.'
-        raise KIMPropertyError(msg)
+
+    msg = 'input to the function is not a `list` or `str`.'
+    raise KIMPropertyError(msg)
 
 
 def get_optional_key_extent_ndimensions(l):
@@ -306,9 +307,9 @@ def get_optional_key_extent_ndimensions(l):
         if len(l) == 1 and l[0] == 1:
             return 0
         return len(l)
-    else:
-        msg = 'input to the function is not a `list`.'
-        raise KIMPropertyError(msg)
+
+    msg = 'input to the function is not a `list`.'
+    raise KIMPropertyError(msg)
 
 
 def get_optional_key_extent_shape(l):
@@ -341,9 +342,9 @@ def get_optional_key_extent_shape(l):
                 msg += '"{}".'.format(d)
                 raise KIMPropertyError(msg)
         return s
-    else:
-        msg = 'input to the function is not a `list`.'
-        raise KIMPropertyError(msg)
+
+    msg = 'input to the function is not a `list`.'
+    raise KIMPropertyError(msg)
 
 
 def check_property_optional_key_standard_pairs_format(standard_pairs):
