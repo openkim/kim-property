@@ -44,9 +44,9 @@ STANDARD_KEYS_SCLAR_OR_WITH_EXTENT = (
     "uncert-lev-of-confid",
     "digits",
 )
-"""tuple: KIM property standard keys values of the uncertainty and 
-          digits keys must be either arrays of the same extent, or 
-          scalars in which case they are taken to apply equally to 
+"""tuple: KIM property standard keys values of the uncertainty and
+          digits keys must be either arrays of the same extent, or
+          scalars in which case they are taken to apply equally to
           all values in the source-value array."""
 
 
@@ -416,7 +416,7 @@ def kim_property_modify(property_instances, instance_id, *argv):
                         key_name_value = extend_full_array(
                             key_name_value, key_name_shape_new, '')
 
-                    del(key_name_shape_new)
+                    del key_name_shape_new
 
                     if _n > -1:
                         if i - 1 + _u - _l >= n_arguments:
@@ -1303,7 +1303,7 @@ def kim_property_modify(property_instances, instance_id, *argv):
                         key_name_value = create_full_array(
                             key_name_shape_new, '')
 
-                    del(key_name_shape_new)
+                    del key_name_shape_new
 
                     if _n > -1:
                         if i - 1 + _u - _l >= n_arguments:

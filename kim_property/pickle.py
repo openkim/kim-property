@@ -1,6 +1,5 @@
 """KIM properties object serialization."""
 
-import os
 from os.path import abspath, join, isdir, pardir, isfile, dirname
 from io import BytesIO
 import pickle
@@ -43,8 +42,8 @@ def pickle_kim_properties(properties=None,
         # KIM property files.
         kim_property_files = []
 
-        # KIM property files path
-        # An absolute path (or a valid relative path) to the KIM property files folder.
+        # KIM property files path. An absolute path (or a valid relative path)
+        # to the KIM property files folder.
         kim_property_files_path = join(dirname(abspath(__file__)),
                                        pardir,
                                        "external",
@@ -188,7 +187,7 @@ def pickle_kim_properties(properties=None,
                 msg += '"\ncan not be found!'
                 raise KIMPropertyError(msg)
 
-        del(kim_property_files_path)
+        del kim_property_files_path
 
         # KIM properties dictionary indexed by properties full IDs.
         kim_properties = {k: kim_edn.load(v) for k, v in zip(
@@ -202,8 +201,8 @@ def pickle_kim_properties(properties=None,
         property_id_to_property_name = {
             k: v for k, v in zip(kim_property_ids, kim_property_names)}
 
-        del(kim_property_names)
-        del(kim_property_ids)
+        del kim_property_names
+        del kim_property_ids
 
         kim_properties_list = [
             kim_properties,
@@ -234,8 +233,8 @@ def pickle_kim_properties(properties=None,
         id_to_property_name = {
             k: v for k, v in zip(property_ids, property_names)}
 
-        del(property_names)
-        del(property_ids)
+        del property_names
+        del property_ids
 
         kim_properties_list = [
             properties,

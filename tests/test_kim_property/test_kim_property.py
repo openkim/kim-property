@@ -338,7 +338,7 @@ class TestPropertyModule:
                           self.kim_property.kim_property_remove,
                           str_obj, {1}, "key", "a")
 
-        # Fails when the requested instance id doesn\'t match any 
+        # Fails when the requested instance id doesn\'t match any
         # of the property instances ids.
         self.assertRaises(self.KIMPropertyError,
                           self.kim_property.kim_property_remove,
@@ -363,8 +363,8 @@ class TestPropertyModule:
         kim_obj1 = kim_edn.load(str_obj1)[0]
 
         self.assertFalse("a" in kim_obj1)
-        del(str_obj1)
-        del(kim_obj1)
+        del str_obj1
+        del kim_obj1
 
         # Removing the internal key from the key-map pairs for key
         str_obj2 = self.kim_property.kim_property_remove(
@@ -373,8 +373,8 @@ class TestPropertyModule:
 
         self.assertTrue("a" in kim_obj2)
         self.assertFalse("source-value" in kim_obj2["a"])
-        del(str_obj2)
-        del(kim_obj2)
+        del str_obj2
+        del kim_obj2
 
         # Removing multiple keys
         str_obj3 = self.kim_property.kim_property_remove(

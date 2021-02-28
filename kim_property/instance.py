@@ -276,9 +276,9 @@ def check_instance_optional_key_standard_pairs_format(im, pm):
                     msg += '{}.'.format(property_ndims)
                     raise KIMPropertyError(msg)
 
-        del(l_i)
-        del(l_p)
-        del(t_p)
+        del l_i
+        del l_p
+        del t_p
 
         if pm["has-unit"]:
             if "source-unit" not in im:
@@ -430,8 +430,8 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
                     msg += join(fp_path, _property_name + ".edn")
                     msg += '"}'
                     raise KIMPropertyError(msg)
-                del(_path)
-                del(_property_name)
+                del _path
+                del _property_name
 
         if isinstance(fp, dict):
             # It is already in the KIM-EDN format
