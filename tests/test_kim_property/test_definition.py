@@ -4,7 +4,7 @@ import re
 
 import kim_edn
 
-from kim_property.create import property_id_to_property_name
+from kim_property.create import PROPERTY_ID_TO_PROPERTY_NAME
 from tests.test_kim_property import PyTest
 
 EXTENT_LIST = [
@@ -381,7 +381,7 @@ class TestPropertyDefinition:
         """Check the property definition."""
         kim_properties = self.kim_property.get_properties()
         for k, pd in kim_properties.items():
-            if property_id_to_property_name[k] in EXCEPTIONS:
+            if PROPERTY_ID_TO_PROPERTY_NAME[k] in EXCEPTIONS:
                 # Complete check on the property definition
                 self.kim_property.check_property_definition(
                     pd, _m=KEY_FORMAT.match)

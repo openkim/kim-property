@@ -2,7 +2,7 @@ import os
 from os.path import join, isfile
 
 from tests.test_kim_property import PyTest
-from kim_property.create import property_id_to_property_name
+from kim_property.create import PROPERTY_ID_TO_PROPERTY_NAME
 
 SOURCE_VALUE = [
     [0, 0, 0, 0, 0, 0, ],
@@ -63,7 +63,7 @@ class TestPropertyInstanceModuleComponents:
             _, _, _, _property_name = self.kim_property.get_property_id_path(
                 k)
 
-            property_name = property_id_to_property_name[k]
+            property_name = PROPERTY_ID_TO_PROPERTY_NAME[k]
             self.assertTrue(_property_name == property_name)
 
     def test_check_instance_id_format(self):
