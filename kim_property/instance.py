@@ -1,7 +1,6 @@
 
 """Instance validator."""
 
-import os
 from os.path import abspath, isabs, join, isdir, isfile
 import re
 
@@ -95,24 +94,26 @@ standard_keys = (
 FLAGS = re.VERBOSE | re.MULTILINE | re.DOTALL
 
 
-def get_property_id_path(s):
+def get_property_id_path(property_id):
     """Get the property id relative path.
 
     Arguments:
-        s {string} -- A string containing the unique ID of the property.
+        property_id {string} -- A string containing the unique ID of the
+            property.
 
     Returns:
         {string} -- relative path, email, date, and property name
 
     """
-    check_property_id_format(s)
+    check_property_id_format(property_id)
 
     _email = re.sub(r',$', '', re.sub(
-        r'tag:', '', re.findall(r'^tag:[^+^A-Z]*@[^+^A-Z]*,', s)[0]))
+        r'tag:', '', re.findall(r'^tag:[^+^A-Z]*@[^+^A-Z]*,', property_id)[0]))
     _date = re.sub(r':property$', '', re.sub(
-        r'^,', '', re.findall(r',\d{4}-\d{2}-\d{2}:property', s)[0]))
+        r'^,', '', re.findall(r',\d{4}-\d{2}-\d{2}:property', property_id)[0]))
     _property_name = re.sub(
-        r'^property/', '', re.findall(r'property/[a-z0-9\-]*$', s)[0])
+        r'^property/', '',
+        re.findall(r'property/[a-z0-9\-]*$', property_id)[0])
 
     _path = join(_property_name, _date + '-' + _email, _property_name + '.edn')
 
@@ -122,18 +123,18 @@ def get_property_id_path(s):
 INSTANCE_ID = re.compile(r'^[1-9][0-9]*$')
 
 
-def check_instance_id_format(s, _m=INSTANCE_ID.match):
-    """Check the instance id fomrat.
+def check_instance_id_format(instance_id, _m=INSTANCE_ID.match):
+    """Check the instance id format.
 
     Check the instance-id is a positive integer.
 
     Arguments:
-        s {int} -- A positive integer identifying the instance.
+        instance_id {int} -- A positive integer identifying the instance.
 
     """
-    if isinstance(s, int):
-        if _m(str(s)) is None:
-            msg = 'the "instance-id" = {}, '.format(s)
+    if isinstance(instance_id, int):
+        if _m(str(instance_id)) is None:
+            msg = 'the "instance-id" = {}, '.format(instance_id)
             msg += 'doesn\'t meet the format specification (an integer '
             msg += 'equal to or greater than 1).'
             raise KIMPropertyError(msg)
@@ -145,71 +146,83 @@ def check_instance_id_format(s, _m=INSTANCE_ID.match):
 
 # checks for optional keys
 
-def check_optional_key_source_value_scalar(l, s, _size=size):
+def check_optional_key_source_value_scalar(source_value_key,
+                                           value_type,
+                                           _size=size):
     """Check optional key "source-value" specifies a single item value.
 
     Arguments:
-        l {list or any of s type} -- input "source-value"-key value
-        s {string} -- value type, one of "string", "float", "int",
+        source_value_key {list or any of value_type type} -- input
+            "source-value"-key value
+        value_type {string} -- value type, one of "string", "float", "int",
             "bool", "file"
 
     Returns:
         bool -- True if the optional key "source_value" has scalar value
 
     """
-    if isinstance(l, list):
-        return _size(l) == 1
-    elif isinstance(l, str):
-        return s == "string" or s == "file"
-    elif isinstance(l, float):
-        return s == "float"
-    elif isinstance(l, int):
+    if isinstance(source_value_key, list):
+        return _size(source_value_key) == 1
+
+    if isinstance(source_value_key, str):
+        return value_type in ("string", "file")
+
+    if isinstance(source_value_key, float):
+        return value_type == "float"
+
+    if isinstance(source_value_key, int):
         # 0 and 1 are special cases
-        if l == 0 or l == 1:
-            return s == "int" or s == "float" or s == 'bool'
-        return s == "int" or s == "float"
-    elif isinstance(l, bool):
-        return s == "bool"
-    else:
-        msg = 'input to the function doesn\'t comply with '
-        msg += 'the defined variable type.\n'
-        msg += 'The variable type can be one of ::\n'
-        msg += '"string", "float", "int", "bool", or "file".'
-        raise KIMPropertyError(msg)
+        if source_value_key in (0, 1):
+            return value_type in ("int", "float", 'bool')
+        return value_type in ("int", "float")
+
+    if isinstance(source_value_key, bool):
+        return value_type == "bool"
+
+    msg = 'input to the function doesn\'t comply with '
+    msg += 'the defined variable type.\n'
+    msg += 'The variable type can be one of ::\n'
+    msg += '"string", "float", "int", "bool", or "file".'
+    raise KIMPropertyError(msg)
 
 
-def get_optional_key_source_value_ndimensions(l, _shape=shape):
+def get_optional_key_source_value_ndimensions(source_value_key, _shape=shape):
     """Get the number of dimensions specified by optional key "source-value".
 
     Arguments:
-        l {list or str or int or float or bool} -- input "source_value"-key
-        value
+        source_value_key {list or str or int or float or bool} -- input
+            "source_value"-key value
 
     Returns:
         int -- Number of dimensions
 
     """
-    if isinstance(l, list):
-        ndims = len(_shape(l))
+    if isinstance(source_value_key, list):
+        ndims = len(_shape(source_value_key))
         if ndims == 1:
-            if len(l) == 1:
+            if len(source_value_key) == 1:
                 return 0
         return ndims
-    elif isinstance(l, str):
+
+    if isinstance(source_value_key, str):
         return 0
-    elif isinstance(l, float):
+
+    if isinstance(source_value_key, float):
         return 0
-    elif isinstance(l, int):
+
+    if isinstance(source_value_key, int):
         return 0
-    elif isinstance(l, bool):
+
+    if isinstance(source_value_key, bool):
         return 0
-    else:
-        msg = 'input to the function is not any of:: \n'
-        msg += '`list`, `str`, `float`, `int`, `bool` types.'
-        raise KIMPropertyError(msg)
+
+    msg = 'input to the function is not any of:: \n'
+    msg += '`list`, `str`, `float`, `int`, `bool` types.'
+    raise KIMPropertyError(msg)
 
 
-def check_instance_optional_key_standard_pairs_format(im, pm):
+def check_instance_optional_key_standard_pairs_format(property_instance_map,
+                                                      property_definition_map):
     """Check the standard key-map pairs correctness and format.
 
     The required fields are followed by an unordered set of key-map pairs.
@@ -222,15 +235,17 @@ def check_instance_optional_key_standard_pairs_format(im, pm):
     "source-asym-expand-uncert-pos", "uncert-lev-of-confid", "digits"
 
     Arguments:
-        im {dict} -- property instance map (key-value pairs)
-        pm {dict} -- property definition map (key-value pairs)
+        property_instance_map {dict} -- property instance map
+            (key-value pairs)
+        property_definition_map {dict} -- property definition map
+            (key-value pairs)
 
     """
-    if not isinstance(im, dict):
+    if not isinstance(property_instance_map, dict):
         msg = 'property instance input to the function is not a `dict`.'
         raise KIMPropertyError(msg)
 
-    for k in im:
+    for k in property_instance_map:
         if not k in standard_keys:
             msg = 'wrong key.\nThe input "{}"-key is not part of '.format(k)
             msg += 'the standard key-value pairs definition.\n'
@@ -239,20 +254,21 @@ def check_instance_optional_key_standard_pairs_format(im, pm):
             msg += 'in section 3 for more detailed information.'
             raise KIMPropertyError(msg)
 
-    # Check the required fields in the instance property optional field key-value pairs
-    if "source-value" not in im:
+    # Check the required fields in the instance property optional field
+    # key-value pairs
+    if "source-value" not in property_instance_map:
         msg = '"source-value" is required, but it is not included in the '
         msg += 'current input property instance.'
         raise KIMPropertyError(msg)
 
-    if pm is not None:
-        if not isinstance(pm, dict):
+    if property_definition_map is not None:
+        if not isinstance(property_definition_map, dict):
             msg = 'property map input to the function is not a `dict`.'
             raise KIMPropertyError(msg)
 
-        l_i = im["source-value"]
-        l_p = pm["extent"]
-        t_p = pm["type"]
+        l_i = property_instance_map["source-value"]
+        l_p = property_definition_map["extent"]
+        t_p = property_definition_map["type"]
 
         if check_optional_key_extent_scalar(l_p):
             if not check_optional_key_source_value_scalar(l_i, t_p):
@@ -280,8 +296,8 @@ def check_instance_optional_key_standard_pairs_format(im, pm):
         del l_p
         del t_p
 
-        if pm["has-unit"]:
-            if "source-unit" not in im:
+        if property_definition_map["has-unit"]:
+            if "source-unit" not in property_instance_map:
                 msg = '"source-unit" is required, but it is not in the '
                 msg += 'property instance optional field "key-value" pairs.'
                 raise KIMPropertyError(msg)
@@ -293,27 +309,34 @@ def check_instance_optional_key_standard_pairs_format(im, pm):
 KEY_FORMAT = re.compile(r'^[a-z0-9\-].*$', FLAGS)
 
 
-def check_instnace_optional_key_map(k, m, pm=None, _m=KEY_FORMAT.match):
+def check_instnace_optional_key_map(property_instance_key,
+                                    property_instance_map,
+                                    property_definition_map=None,
+                                    _m=KEY_FORMAT.match):
     """Check inctances optional fields key-map pairs correctness and format.
 
     Optional fields must be an unordered set of key-map pairs.
 
     Arguments:
-        k {string} -- key, property instance keyword.
-        m {dict} -- map, property instance key-value pairs.
-        pm {dict} -- property definition key-value pairs. (default None)
+        property_instance_key {string} -- key, property instance keyword.
+        property_instance_map {dict} -- map, property instance key-value pairs.
+        property_definition_map {dict} -- property definition key-value pairs.
+            (default None)
 
     """
     try:
-        check_key_format(k, _m=_m)
-        check_instance_optional_key_standard_pairs_format(m, pm)
+        check_key_format(property_instance_key, _m=_m)
+        check_instance_optional_key_standard_pairs_format(
+            property_instance_map, property_definition_map)
     except KIMPropertyError:
-        msg = 'in property instance key = "{}"\n'.format(k)
+        msg = 'in property instance key = "{}"\n'.format(property_instance_key)
         msg += str(KIMPropertyError)
         raise KIMPropertyError(msg)
 
 
-def check_instance_optional_key_marked_required_are_present(pi, pd):
+def check_instance_optional_key_marked_required_are_present(
+        property_instance,
+        property_definition):
     """Check the optional variable marked required is present.
 
     In the property definition, a "required" key indicates whether the
@@ -322,14 +345,14 @@ def check_instance_optional_key_marked_required_are_present(pi, pd):
     property definition are present or not.
 
     Arguments:
-        pi {dict} -- property instance
-        pd {dict} -- property definition
+        property_instance {dict} -- property instance
+        property_definition {dict} -- property definition
 
     """
-    for k in pd:
+    for k in property_definition:
         if not k in def_required_keys:
-            if pd[k]["required"]:
-                if not k in pi:
+            if property_definition[k]["required"]:
+                if not k in property_instance:
                     msg = 'variable marked required, but it is not present.'
                     msg += '\nA "required" flag in the property definition '
                     msg += 'indicates the variable {} must be '.format(k)
@@ -373,30 +396,28 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
             msg = 'either the absolute path to the KIM properties '
             msg += 'or a KIM property definition should be provided.'
             raise KIMPropertyError(msg)
-        else:
-            if isinstance(fp_path, str):
-                # Check whether the provided path is an absolute path?
-                if not isabs(fp_path):
-                    # Loosen the check for the relative path which exists
-                    if isdir(fp_path):
-                        fp_path = abspath(fp_path)
-                    else:
-                        msg = 'the path KIM properties should be an '
-                        msg += 'absolute path name.'
-                        raise KIMPropertyError(msg)
-            else:
-                if not isinstance(fp_path, dict):
-                    msg = 'wrong KIM properties object.'
+
+        if isinstance(fp_path, str):
+            # Check whether the provided path is an absolute path?
+            if not isabs(fp_path):
+                # Loosen the check for the relative path which exists
+                if isdir(fp_path):
+                    fp_path = abspath(fp_path)
+                else:
+                    msg = 'the path KIM properties should be an '
+                    msg += 'absolute path name.'
                     raise KIMPropertyError(msg)
-    # Property definition file is provided
-    else:
-        if fp_path is not None:
-            msg = 'only the absolute path to the KIM properties '
-            msg += 'or a KIM property file should be provided (not both).'
+        elif not isinstance(fp_path, dict):
+            msg = 'wrong KIM properties object.'
             raise KIMPropertyError(msg)
+    # Property definition file is provided
+    elif fp_path is not None:
+        msg = 'only the absolute path to the KIM properties '
+        msg += 'or a KIM property file should be provided (not both).'
+        raise KIMPropertyError(msg)
 
     # Property instnace
-    if isinstance(fi, list) or isinstance(fi, dict):
+    if isinstance(fi, (list, dict)):
         pi = fi
     else:
         pi = kim_edn.load(fi)
