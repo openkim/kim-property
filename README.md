@@ -45,14 +45,14 @@ Creating property instances::
     >>> kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
     '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1}]'
 
-    >>> str = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
+    >>> property_inst = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
 
-    >>> kim_property_create(2, 'atomic-mass', str)
+    >>> kim_property_create(2, 'atomic-mass', property_inst)
     '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1} {"property-id" "tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass" "instance-id" 2}]'
 
-    >>> str = kim_property_create(2, 'atomic-mass', str)
-    >>> obj = kim_edn.loads(str)
-    >>> print(kim_edn.dumps(obj, indent=4))
+    >>> property_inst = kim_property_create(2, 'atomic-mass', property_inst)
+    >>> property_inst_obj = kim_edn.loads(property_inst)
+    >>> print(kim_edn.dumps(property_inst_obj, indent=4))
     [
         {
             "property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"
@@ -69,11 +69,11 @@ A property instance is stored in a subset of the KIM-EDN format as described
 in [KIM Property Instances](https://openkim.org/doc/schema/properties-framework).
 Each property instance must contain the `property-id` and `instance-id`.
 `kim-property` utility module can create a new property instance, using a KIM
-property ID. A KIM property ID is an identifier of a KIM Property Definition, 
+property ID. A KIM property ID is an identifier of a KIM Property Definition,
 which can be,
-(1) a property short name, 
-(2) the full unique ID of the property (including the contributor and date), 
-(3) a file name corresponding to a local property definition file. 
+(1) a property short name,
+(2) the full unique ID of the property (including the contributor and date),
+(3) a file name corresponding to a local property definition file.
 
 Examples of each of these cases are shown below:
 
@@ -92,8 +92,8 @@ Examples of each of these cases are shown below:
     >>> kim_property_create(2, '/home/mary/marys-kim-properties/dissociation-energy.edn')
 ````
 
-In the last example, “new-property.edn” and 
-“/home/mary/marys-kim-properties/dissociation-energy.edn” 
+In the last example, “new-property.edn” and
+“/home/mary/marys-kim-properties/dissociation-energy.edn”
 are the names of files that contain user-defined (local) property definitions.
 
 ## Destroy
@@ -101,14 +101,14 @@ are the names of files that contain user-defined (local) property definitions.
 Destroying property instances::
 
 ````py
-    >>> obj = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1}]'
+    >>> property_inst_obj = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1}]'
 
-    >>> kim_property_destroy(obj, 1)
+    >>> kim_property_destroy(property_inst_obj, 1)
     '[]'
 
-    >>> obj = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1} {"property-id" "tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass" "instance-id" 2}]'
+    >>> property_inst_obj = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1} {"property-id" "tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass" "instance-id" 2}]'
 
-    >>> kim_property_destroy(obj, 2)
+    >>> kim_property_destroy(property_inst_obj, 2)
     '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1}]'
 ````
 
@@ -116,20 +116,20 @@ Destroying property instances::
 
 Modifying (setting) property instances.
 
-Once a `kim_property_create` has been given to instantiate a property 
-instance, maps associated with the property’s keys can be edited using the 
-kim_property_modify. 
-In using this command, the special keyword “key” should be given, followed 
-by the property key name and the key-value pair in the map associated with 
-the key that is to be set. 
+Once a `kim_property_create` has been given to instantiate a property
+instance, maps associated with the property’s keys can be edited using the
+kim_property_modify.
+In using this command, the special keyword “key” should be given, followed
+by the property key name and the key-value pair in the map associated with
+the key that is to be set.
 
-For example, the `cohesive-energy-relation-cubic-crystal` property definition 
-consists of property keys named “short-name”, “species”, ...  
+For example, the `cohesive-energy-relation-cubic-crystal` property definition
+consists of property keys named “short-name”, “species”, ...
 An instance of this property could be created like so::
 
 ````py
-    >>> str = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
-    >>> str = kim_property_modify(str, 1,
+    >>> property_inst = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
+    >>> property_inst = kim_property_modify(property_inst, 1,
                 "key", "short-name",
                 "source-value", "1", "fcc",
                 "key", "species",
@@ -137,8 +137,8 @@ An instance of this property could be created like so::
                 "key", "a",
                 "source-value", "1:5", "3.9149", "4.0000", "4.032", "4.0817", "4.1602",
                 "source-unit", "angstrom", "digits", "5")
-    >>> obj = kim_edn.loads(str)
-    >>> print(kim_edn.dumps(obj, indent=4))
+    >>> property_inst_obj = kim_edn.loads(property_inst)
+    >>> print(kim_edn.dumps(property_inst_obj, indent=4))
     [
         {
             "property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"
@@ -176,8 +176,8 @@ computed one at a time, the `kim_property_modify` can be called multiple
 times and append values to a given key.
 
 ````py
-    >>> str = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
-    >>> str = kim_property_modify(str, 1,
+    >>> property_inst = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
+    >>> property_inst = kim_property_modify(property_inst, 1,
                 "key", "short-name",
                 "source-value", "1", "fcc",
                 "key", "species",
@@ -185,8 +185,8 @@ times and append values to a given key.
                 "key", "a",
                 "source-value", "1:5", "3.9149", "4.0000", "4.032", "4.0817", "4.1602",
                 "source-unit", "angstrom", "digits", "5")
-    >>> obj = kim_edn.loads(str)
-    >>> print(kim_edn.dumps(obj, indent=4))
+    >>> property_inst_obj = kim_edn.loads(property_inst)
+    >>> print(kim_edn.dumps(property_inst_obj, indent=4))
     [
         {
             "property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"
@@ -217,12 +217,12 @@ times and append values to a given key.
             }
         }
     ]
-    >>> str = kim_property_modify(str, 1,
+    >>> property_inst = kim_property_modify(property_inst, 1,
                 "key", "basis-atom-coordinates",
                 "source-value", "2", "1:2", "0.5", "0.5")
 
-    >>> obj = kim_edn.loads(str)
-    >>> print(kim_edn.dumps(obj, indent=4))
+    >>> property_inst_obj = kim_edn.loads(property_inst)
+    >>> print(kim_edn.dumps(property_inst_obj, indent=4))
     [
         {
             "property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"
@@ -267,14 +267,14 @@ times and append values to a given key.
             }
         }
     ]
-    >>> str = kim_property_modify(str, 1,
+    >>> property_inst = kim_property_modify(property_inst, 1,
                 "key", "basis-atom-coordinates",
                 "source-value", "3", "1:3", "0.5", "0.0", "0.5",
                 "key", "basis-atom-coordinates",
                 "source-value", "4", "2:3", "0.5", "0.5")
 
-    >>> obj = kim_edn.loads(str)
-    >>> print(kim_edn.dumps(obj, indent=4))
+    >>> property_inst_obj = kim_edn.loads(property_inst)
+    >>> print(kim_edn.dumps(property_inst_obj, indent=4))
     [
         {
             "property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"
@@ -330,15 +330,15 @@ times and append values to a given key.
         }
     ]
 
-    >>> str = kim_property_modify(str, 1,
+    >>> property_inst = kim_property_modify(property_inst, 1,
                 "key", "cohesive-potential-energy",
                 "source-value", "1:5", "3.324", "3.3576", "3.3600", "3.3550", "3.3260",
                 "source-std-uncert-value", "1:5", "0.002", "0.0001", "0.00001", "0.0012", "0.00015",
                 "source-unit", "eV",
                 "digits", "5")
 
-    >>> obj = kim_edn.loads(str)
-    >>> print(kim_edn.dumps(obj, indent=4))
+    >>> property_inst_obj = kim_edn.loads(property_inst)
+    >>> print(kim_edn.dumps(property_inst_obj, indent=4))
     [
         {
             "property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"
@@ -424,13 +424,13 @@ which are already set.
 For example:
 
 ````py
-    >>> str = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
-    >>> str = kim_property_modify(str, 1,
+    >>> property_inst = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
+    >>> property_inst = kim_property_modify(property_inst, 1,
                 "key", "space-group",
                 "source-value", "Immm")
 
-    >>> obj = kim_edn.loads(str)
-    >>> print(kim_edn.dumps(obj, indent=4))
+    >>> property_inst_obj = kim_edn.loads(property_inst)
+    >>> print(kim_edn.dumps(property_inst_obj, indent=4))
     [
         {
             "property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"
@@ -445,12 +445,12 @@ For example:
 Calling the `kim_property_modify` again set the scalar variable with a new value.
 
 ````py
-    >>> str = kim_property_modify(str, 1,
+    >>> property_inst = kim_property_modify(property_inst, 1,
                 "key", "space-group",
                 "source-value", "P6_3/mmc")
 
-    >>> obj = kim_edn.loads(str)
-    >>> print(kim_edn.dumps(obj, indent=4))
+    >>> property_inst_obj = kim_edn.loads(property_inst)
+    >>> print(kim_edn.dumps(property_inst_obj, indent=4))
     [
         {
             "property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"
@@ -496,13 +496,13 @@ In below example, the `a`-key source-value key’s value is an array, which mean
 1. The value of the `digits`-key is a scalar:
 
     ````py
-        >>> str = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
-        >>> str = kim_property_modify(str, 1,
+        >>> property_inst = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
+        >>> property_inst = kim_property_modify(property_inst, 1,
                     "key", "a",
                     "source-value", "1:5", "3.9149", "4.0000", "4.032", "4.0817", "4.1602",
                     "source-unit", "angstrom", "digits", "5")
-        >>> obj = kim_edn.loads(str)
-        >>> print(kim_edn.dumps(obj, indent=4))
+        >>> property_inst_obj = kim_edn.loads(property_inst)
+        >>> print(kim_edn.dumps(property_inst_obj, indent=4))
         [
             {
                 "property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"
@@ -525,13 +525,13 @@ In below example, the `a`-key source-value key’s value is an array, which mean
 2. The value of the `digits`-key is an array of the same extent:
 
     ````py
-        >>> str = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
-        >>> str = kim_property_modify(str, 1,
+        >>> property_inst = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
+        >>> property_inst = kim_property_modify(property_inst, 1,
                     "key", "a",
                     "source-value", "1:5", "3.9149", "4.0000", "4.032", "4.0817", "4.1602",
                     "source-unit", "angstrom", "digits", "1:5", "5", "5", "5", "5", "5")
-        >>> obj = kim_edn.loads(str)
-        >>> print(kim_edn.dumps(obj, indent=4))
+        >>> property_inst_obj = kim_edn.loads(property_inst)
+        >>> print(kim_edn.dumps(property_inst_obj, indent=4))
         [
             {
                 "property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"
@@ -539,7 +539,7 @@ In below example, the `a`-key source-value key’s value is an array, which mean
                 "a" {
                     "source-value" [
                         3.9149
-                        4.0 
+                        4.0
                         4.032
                         4.0817
                         4.1602
@@ -562,8 +562,8 @@ In below example, the `a`-key source-value key’s value is an array, which mean
 Removing (a) key(s) from a property instance::
 
 ````py
-    >>> str = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
-    >>> str = kim_property_modify(str, 1,
+    >>> property_inst = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
+    >>> property_inst = kim_property_modify(property_inst, 1,
                 "key", "short-name",
                 "source-value", "1", "fcc",
                 "key", "species",
@@ -583,11 +583,11 @@ Removing (a) key(s) from a property instance::
                 "source-unit", "eV",
                 "digits", "5")
 
-    >>> str = kim_property_remove(str, 1, "key", "a", "source-unit")
-    >>> str = kim_property_remove(str, 1, "key", "cohesive-potential-energy", "key", "basis-atom-coordinates")
+    >>> property_inst = kim_property_remove(property_inst, 1, "key", "a", "source-unit")
+    >>> property_inst = kim_property_remove(property_inst, 1, "key", "cohesive-potential-energy", "key", "basis-atom-coordinates")
 
-    >>> obj = kim_edn.loads(str)
-    >>> print(kim_edn.dumps(obj, indent=4))
+    >>> property_inst_obj = kim_edn.loads(property_inst)
+    >>> print(kim_edn.dumps(property_inst_obj, indent=4))
     [
         {
             "property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"
@@ -630,8 +630,8 @@ The validation makes sure all keys/arguments are legal and all required keys
 are provided.
 
 ````py
-    >>> str = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
-    >>> str = kim_property_modify(str, 1,
+    >>> property_inst = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
+    >>> property_inst = kim_property_modify(property_inst, 1,
                 "key", "short-name",
                 "source-value", "1", "fcc",
                 "key", "species",
@@ -650,14 +650,14 @@ are provided.
                 "source-std-uncert-value", "1:5", "0.002", "0.0001", "0.00001", "0.0012", "0.00015",
                 "source-unit", "eV",
                 "digits", "5")
-    >>> kim_property_dump(str, "results.edn")
+    >>> kim_property_dump(property_inst, "results.edn")
 ````
 
 or
 
 ````py
-    >>> str = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
-    >>> str = kim_property_modify(str, 1,
+    >>> property_inst = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
+    >>> property_inst = kim_property_modify(property_inst, 1,
                 "key", "short-name",
                 "source-value", "1", "fcc",
                 "key", "species",
@@ -676,15 +676,15 @@ or
                 "source-std-uncert-value", "1:5", "0.002", "0.0001", "0.00001", "0.0012", "0.00015",
                 "source-unit", "eV",
                 "digits", "5")
-    >>> obj = kim_edn.loads(str)
-    >>> kim_property_dump(obj, "results.edn")
+    >>> property_inst_obj = kim_edn.loads(property_inst)
+    >>> kim_property_dump(property_inst_obj, "results.edn")
 ````
 
 or
 
 ````py
-    >>> str = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
-    >>> str = kim_property_modify(str, 1,
+    >>> property_inst = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
+    >>> property_inst = kim_property_modify(property_inst, 1,
                 "key", "short-name",
                 "source-value", "1", "fcc",
                 "key", "species",
@@ -704,7 +704,39 @@ or
                 "source-unit", "eV",
                 "digits", "5")
     >>> with open("results.edn", 'w') as fp:
-            kim_property_dump(str, fp)
+            kim_property_dump(property_inst, fp)
+````
+
+An example with two property instances,
+
+````py
+    >>> property_inst = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
+    >>> property_inst = kim_property_modify(property_inst, 1,
+                "key", "short-name",
+                "source-value", "1", "fcc",
+                "key", "species",
+                "source-value", "1:4", "Al", "Al", "Al", "Al",
+                "key", "a",
+                "source-value", "1:5", "3.9149", "4.0000", "4.032", "4.0817", "4.1602",
+                "source-unit", "angstrom", "digits", "5",
+                "key", "basis-atom-coordinates",
+                "source-value", "2", "1:2", "0.5", "0.5",
+                "key", "basis-atom-coordinates",
+                "source-value", "3", "1:3", "0.5", "0.0", "0.5",
+                "key", "basis-atom-coordinates",
+                "source-value", "4", "2:3", "0.5", "0.5",
+                "key", "cohesive-potential-energy",
+                "source-value", "1:5", "3.324", "3.3576", "3.3600", "3.3550", "3.3260",
+                "source-std-uncert-value", "1:5", "0.002", "0.0001", "0.00001", "0.0012", "0.00015",
+                "source-unit", "eV",
+                "digits", "5")
+    >>> property_inst = kim_property_create(2, 'atomic-mass', property_inst)
+    >>> property_inst = kim_property_modify(property_inst, 2,
+                "key", "mass",
+                "source-value", "1.434e-19", "source-unit", "si",
+                "key", "species",
+                "source-value", "Al")
+    >>> kim_property_dump(property_inst, "results.edn")
 ````
 
 ## Installing kim-property
