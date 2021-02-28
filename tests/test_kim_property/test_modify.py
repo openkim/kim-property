@@ -662,20 +662,20 @@ class TestModifyModule:
 
         str_obj = self.kim_property.kim_property_modify(
             str_obj, 1,
-            "key", "core-energy",
+            "key", "core-energy-nonsingular",
             "source-value", "1:9", *E_core_nonsingular_avg,
             "source-asym-std-uncert-neg", "1:9", *E_core_nonsingular_min)
 
         str_obj = self.kim_property.kim_property_modify(
             str_obj, 1,
-            "key", "core-energy",
+            "key", "core-energy-nonsingular",
             "source-asym-std-uncert-pos", "1:9", *E_core_nonsingular_max)
 
         kim_obj = kim_edn.load(str_obj)
         for i in range(9):
-            self.assertTrue(kim_obj[0]["core-energy"]
+            self.assertTrue(kim_obj[0]["core-energy-nonsingular"]
                             ["source-asym-std-uncert-neg"][i] == E_core_nonsingular_min[i])
-            self.assertTrue(kim_obj[0]["core-energy"]
+            self.assertTrue(kim_obj[0]["core-energy-nonsingular"]
                             ["source-asym-std-uncert-pos"][i] == E_core_nonsingular_max[i])
 
 
