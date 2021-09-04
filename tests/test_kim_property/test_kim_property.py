@@ -471,6 +471,11 @@ class TestPropertyModule:
         str_obj = self.kim_property.kim_property_create(
             2, 'atomic-mass', str_obj)
 
+        str_obj = self.kim_property.kim_property_modify(
+            str_obj, 2,
+            "key", "species", "source-value", "Al",
+            "key", "mass", "source-value", 26.98, "source-unit", "grams/mole")
+
         self.kim_property.kim_property_dump(str_obj, sio, indent=0)
 
 
