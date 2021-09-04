@@ -390,7 +390,7 @@ from .instance import \
     check_optional_key_source_value_scalar, \
     get_optional_key_source_value_ndimensions, \
     check_instance_optional_key_standard_pairs_format, \
-    check_instnace_optional_key_map, \
+    check_instance_optional_key_map, \
     check_instance_optional_key_marked_required_are_present, \
     check_property_instances
 from .create import get_properties, kim_property_create, unset_property_id
@@ -419,7 +419,7 @@ __all__ = [
     "check_optional_key_source_value_scalar",
     "get_optional_key_source_value_ndimensions",
     "check_instance_optional_key_standard_pairs_format",
-    "check_instnace_optional_key_map",
+    "check_instance_optional_key_map",
     "check_instance_optional_key_marked_required_are_present",
     "check_property_instances",
     "get_properties",

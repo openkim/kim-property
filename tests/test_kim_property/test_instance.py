@@ -258,11 +258,11 @@ class TestPropertyInstanceModuleComponents:
                           self.kim_property.check_instance_optional_key_standard_pairs_format,
                           {"source-value": [3.9149], "source-unit": "angstrom", "unknown": 5}, None)
 
-    def test_check_instnace_optional_key_map(self):
+    def test_check_instance_optional_key_map(self):
         """Test the inctances optional fields key-map pairs correctness."""
         # the key format is not correct
         self.assertRaises(self.KIMPropertyError,
-                          self.kim_property.check_instnace_optional_key_map,
+                          self.kim_property.check_instance_optional_key_map,
                           "A", {"source-unit": "angstrom", "digits": 5})
 
     def test_check_instance_optional_key_marked_required_are_present(self):
