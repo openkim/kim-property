@@ -24,7 +24,7 @@ __all__ = [
     "check_optional_key_source_value_scalar",
     "get_optional_key_source_value_ndimensions",
     "check_instance_optional_key_standard_pairs_format",
-    "check_instnace_optional_key_map",
+    "check_instance_optional_key_map",
     "check_instance_optional_key_marked_required_are_present",
     "check_property_instances",
 ]
@@ -309,7 +309,7 @@ def check_instance_optional_key_standard_pairs_format(property_instance_map,
 KEY_FORMAT = re.compile(r'^[a-z0-9\-].*$', FLAGS)
 
 
-def check_instnace_optional_key_map(property_instance_key,
+def check_instance_optional_key_map(property_instance_key,
                                     property_instance_map,
                                     property_definition_map=None,
                                     _m=KEY_FORMAT.match):
@@ -416,7 +416,7 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
         msg += 'or a KIM property file should be provided (not both).'
         raise KIMPropertyError(msg)
 
-    # Property instnace
+    # Property instance
     if isinstance(fi, (list, dict)):
         pi = fi
     else:
@@ -480,9 +480,9 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
         for k in pi:
             if k not in required_keys:
                 if k in pd:
-                    check_instnace_optional_key_map(k, pi[k], pd[k], _m=_m)
+                    check_instance_optional_key_map(k, pi[k], pd[k], _m=_m)
                 else:
-                    check_instnace_optional_key_map(k, pi[k], _m=_m)
+                    check_instance_optional_key_map(k, pi[k], _m=_m)
 
     elif isinstance(pi, list):
         instance_id = []
@@ -555,10 +555,10 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
             for k in pi_:
                 if k not in required_keys:
                     if k in pd:
-                        check_instnace_optional_key_map(
+                        check_instance_optional_key_map(
                             k, pi_[k], pd[k], _m=_m)
                     else:
-                        check_instnace_optional_key_map(k, pi_[k], _m=_m)
+                        check_instance_optional_key_map(k, pi_[k], _m=_m)
     else:
         msg = 'input to the function does not have a correct KIM-EDN format.'
         raise KIMPropertyError(msg)
