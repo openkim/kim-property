@@ -349,14 +349,24 @@ def check_instance_optional_key_marked_required_are_present(
         property_definition {dict} -- property definition
 
     """
+    if not isinstance(property_instance, dict):
+        msg = 'property instance is not a dict.'
+        raise KIMPropertyError(msg)
+
+    if not isinstance(property_definition, dict):
+        msg = 'property definition is not a dict.'
+        raise KIMPropertyError(msg)
+
     for k in property_definition:
         if not k in def_required_keys:
             if property_definition[k]["required"]:
                 if not k in property_instance:
-                    msg = 'variable marked required, but it is not present.'
-                    msg += '\nA "required" flag in the property definition '
-                    msg += 'indicates the variable {} must be '.format(k)
-                    msg += 'in the property-instance of the property.'
+                    msg = 'variable "{}" is marked required in the '.format(k)
+                    msg += 'property definition, but it is not present in '
+                    msg += 'the property instance.\nA "required" flag in the '
+                    msg += 'property definition indicates the variable '
+                    msg += '"{}" must be in the property-instance '.format(k)
+                    msg += 'of the property.'
                     raise KIMPropertyError(msg)
 
 
@@ -484,6 +494,9 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
                 else:
                     check_instance_optional_key_map(k, pi[k], _m=_m)
 
+        # Check optional variables marked required are present in the instance.
+        check_instance_optional_key_marked_required_are_present(pi, pd)
+
     elif isinstance(pi, list):
         instance_id = []
         for pi_ in pi:
@@ -559,6 +572,11 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
                             k, pi_[k], pd[k], _m=_m)
                     else:
                         check_instance_optional_key_map(k, pi_[k], _m=_m)
+
+            # Check optional variables marked required
+            # are present in the instance.
+            check_instance_optional_key_marked_required_are_present(pi_, pd)
+
     else:
         msg = 'input to the function does not have a correct KIM-EDN format.'
         raise KIMPropertyError(msg)
