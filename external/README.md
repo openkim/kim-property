@@ -1,6 +1,8 @@
 # External
 
-External contains `openkim-properties` used in `kim-property`.
+External contains
+[`openkim-properties`](https://github.com/openkim/openkim-properties.git) used
+in `kim-property`.
 
 ## Contents
 
@@ -49,10 +51,12 @@ git submodule update --remote
 ## Updating the properties from the latest changes in openkim-properties
 
 Once you cloned the repository with external submodule and fetch all the latest
-changes from `openkim-properties`. In the package main directory,
+changes from
+[`openkim-properties`](https://github.com/openkim/openkim-properties.git). In
+the package main directory,
 
 ```sh
-├── LICENSE.CDDL
+├── LICENSE
 ├── MANIFEST.in
 ├── README.md
 ├── external
@@ -71,7 +75,17 @@ python
 >>> kim_property.pickle.pickle_kim_properties()
 ```
 
-Now, you have the latest update from `openkim-properties`.
+Now, you have the latest update from
+[`openkim-properties`](https://github.com/openkim/openkim-properties.git).
+
+**NOTE:**
+
+Suppose you are a developer with write access to the `kim-property` repository
+and would like to update the property definition with the new updates. In that
+case, you should commit and publish your changes to the repository and make a
+new release. This release will update the binary distribution of the package
+with the latest changes.
+
 Please install the `kim-property` package using pip in the package main
 directory,
 
