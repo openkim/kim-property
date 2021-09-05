@@ -1,4 +1,3 @@
-import os
 from os.path import join, isfile
 from io import BytesIO, StringIO
 import pickle
