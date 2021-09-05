@@ -1,6 +1,5 @@
 # KIM-PROPERTY utility module
 
-[![Build Status](https://travis-ci.org/openkim/kim-property.svg?branch=master)](https://travis-ci.org/openkim/kim-property)
 [![Python package](https://github.com/openkim/kim-property/workflows/Python%20package/badge.svg)](https://github.com/openkim/kim-property/actions)
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/iu5se53hqyaigiur?svg=true)](https://ci.appveyor.com/project/yafshar/kim-property)
 [![codecov](https://codecov.io/gh/openkim/kim-property/branch/master/graph/badge.svg)](https://codecov.io/gh/openkim/kim-property)
@@ -65,8 +64,8 @@ Creating property instances::
     ]
 ````
 
-A property instance is stored in a subset of the KIM-EDN format as described
-in [KIM Property Instances](https://openkim.org/doc/schema/properties-framework).
+A property instance is stored in a subset of the KIM-EDN format as described in
+[KIM Property Instances](https://openkim.org/doc/schema/properties-framework).
 Each property instance must contain the `property-id` and `instance-id`.
 `kim-property` utility module can create a new property instance, using a KIM
 property ID. A KIM property ID is an identifier of a KIM Property Definition,
@@ -92,8 +91,8 @@ Examples of each of these cases are shown below:
     >>> kim_property_create(2, '/home/mary/marys-kim-properties/dissociation-energy.edn')
 ````
 
-In the last example, “new-property.edn” and
-“/home/mary/marys-kim-properties/dissociation-energy.edn”
+In the last example, "new-property.edn" and
+"/home/mary/marys-kim-properties/dissociation-energy.edn"
 are the names of files that contain user-defined (local) property definitions.
 
 ## Destroy
@@ -117,14 +116,14 @@ Destroying property instances::
 Modifying (setting) property instances.
 
 Once a `kim_property_create` has been given to instantiate a property
-instance, maps associated with the property’s keys can be edited using the
+instance, maps associated with the property's keys can be edited using the
 kim_property_modify.
-In using this command, the special keyword “key” should be given, followed
+In using this command, the special keyword "key" should be given, followed
 by the property key name and the key-value pair in the map associated with
 the key that is to be set.
 
 For example, the `cohesive-energy-relation-cubic-crystal` property definition
-consists of property keys named “short-name”, “species”, ...
+consists of property keys named "short-name", "species", ...
 An instance of this property could be created like so::
 
 ````py
@@ -442,7 +441,8 @@ For example:
     ]
 ````
 
-Calling the `kim_property_modify` again set the scalar variable with a new value.
+Calling the `kim_property_modify` again set the scalar variable with a new
+value.
 
 ````py
     >>> property_inst = kim_property_modify(property_inst, 1,
@@ -465,20 +465,24 @@ Calling the `kim_property_modify` again set the scalar variable with a new value
 
 **Note:**
 
-If the source-value key is a scalar, the values of the uncertainty and digits keys must be scalars.
-Thus, calling the `kim_property_modify` with a non-scalar key where the source-value key is a scalar
-fails.
+If the source-value key is a scalar, the values of the uncertainty and digits
+keys must be scalars. Thus, calling the `kim_property_modify` with a non-scalar
+key where the source-value key is a scalar fails.
 
 **Note:**
 
-If the source-value key’s value is an array (EDN vector), the values of the uncertainty and digits
-keys must be either arrays of the same extent, or scalars in which case they are taken to apply
-equally to all values in the source-value array. The keys associated with uncertainty and precision
-conform to the [ISO Guide to the Expression of Uncertainty in Measurement](https://www.iso.org/standard/50461.html)
-and the [ThermoML standard notation](https://www.degruyter.com/view/journals/ci/28/3/article-p22.xml).
+If the source-value key's value is an array (EDN vector), the values of the
+uncertainty and digits keys must be either arrays of the same extent, or
+scalars in which case they are taken to apply equally to all values in the
+source-value array. The keys associated with uncertainty and precision conform
+to the
+[ISO Guide to the Expression of Uncertainty in Measurement](https://www.iso.org/standard/50461.html)
+and the
+[ThermoML standard notation](https://www.degruyter.com/view/journals/ci/28/3/article-p22.xml).
 
 The keys associated with uncertainty and precision of the
-[KIM Property Instances](https://openkim.org/doc/schema/properties-framework) are:
+[KIM Property Instances](https://openkim.org/doc/schema/properties-framework)
+are:
 
 - source-std-uncert-value
 - source-expand-uncert-value
@@ -490,8 +494,9 @@ The keys associated with uncertainty and precision of the
 - uncert-lev-of-confid
 - digits
 
-In below example, the `a`-key source-value key’s value is an array, which means the value of the
-`digits`-key must be either an array of the same extent, or a scalar.
+In below example, the `a`-key source-value key's value is an array, which means
+the value of the `digits`-key must be either an array of the same extent, or a
+scalar.
 
 1. The value of the `digits`-key is a scalar:
 
@@ -784,7 +789,8 @@ python3 -m pip install kim-property
 pip install git+https://github.com/openkim/kim-property.git
 ```
 
-For more information and examples, see the [pip install](https://pip.pypa.io/en/stable/reference/pip_install/#id18) reference.
+For more information and examples, see the
+[pip install](https://pip.pypa.io/en/stable/reference/pip_install/#id18) reference.
 
 ### Using conda
 
