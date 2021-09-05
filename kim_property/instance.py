@@ -301,6 +301,12 @@ def check_instance_optional_key_standard_pairs_format(property_instance_map,
                 msg = '"source-unit" is required, but it is not in the '
                 msg += 'property instance optional field "key-value" pairs.'
                 raise KIMPropertyError(msg)
+        else:
+            if "source-unit" in property_instance_map:
+                msg = '"source-unit" is wrongly provided.\nThe corresponding '
+                msg += '"has-unit" key in the property definition has '
+                msg += 'a `False` value.'
+                raise KIMPropertyError(msg)
 
 
 # A key is a string. Key names can only include lower-case alphanumeric
