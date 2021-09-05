@@ -6,7 +6,7 @@
 [![codecov](https://codecov.io/gh/openkim/kim-property/branch/master/graph/badge.svg)](https://codecov.io/gh/openkim/kim-property)
 [![Anaconda-Server Badge](https://img.shields.io/conda/vn/conda-forge/kim-property.svg)](https://anaconda.org/conda-forge/kim-property)
 [![PyPI](https://img.shields.io/pypi/v/kim-property.svg)](https://pypi.python.org/pypi/kim-property)
-[![License](https://img.shields.io/badge/license-CDDL--1.0-blue)](LICENSE.CDDL)
+[![License](https://img.shields.io/badge/license-LGPLv2.1+-blue)](LICENSE)
 
 The objective is to make it as easy as possible to convert a script (for
 example a [LAMMPS](https://lammps.sandia.gov/) script) that computes a
@@ -813,7 +813,7 @@ conda search kim-property --channel conda-forge
 
 ## Copyright
 
-Copyright (c) 2020, Regents of the University of Minnesota.\
+Copyright (c) 2020-2021, Regents of the University of Minnesota.\
 All Rights Reserved
 
 ## Contributing
