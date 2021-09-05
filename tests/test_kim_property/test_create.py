@@ -1,7 +1,4 @@
-import os
 from os.path import join, isfile
-
-import kim_edn
 
 from tests.test_kim_property import PyTest
 
@@ -86,7 +83,6 @@ class TestCreateModule:
         # Fails if the property instance already exists in OpenKIM
         self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_create,
                           1, join("tests", "fixtures", "atomic-mass.edn"))
-
 
 
 class TestPyTestCreateModule(TestCreateModule, PyTest):
