@@ -1,6 +1,8 @@
 import os
 from os.path import join, isfile
 
+import kim_edn
+
 from tests.test_kim_property import PyTest
 from kim_property.create import PROPERTY_ID_TO_PROPERTY_NAME
 
@@ -333,6 +335,30 @@ class TestPropertyInstance:
 
             self.kim_property.check_property_instances(
                 fi, fp_path=kim_properties)
+
+    def test_invalid_instance(self):
+        """Check failing the invalid property instance."""
+        pi_str = self.kim_property.kim_property_create(1, 'atomic-mass')
+        pi = kim_edn.loads(pi_str)[0]
+
+        kim_properties = self.kim_property.get_properties()
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_property_instances,
+                          fi=pi, fp_path=kim_properties)
+
+        pd = kim_properties[pi["property-id"]]
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_property_instances,
+                          fi=pi, fp=pd)
+
+        pi = {"property-id": "tag:tadmor@noreply.openkim.org,2017-02-01:property/verification-check",
+              "instance-id": 1}
+        pd = kim_properties[pi["property-id"]]
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_property_instances,
+                          fi=pi, fp=pd)
 
 
 class TestPyTestPropertyInstanceModuleComponents(TestPropertyInstanceModuleComponents, PyTest):
