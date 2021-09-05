@@ -359,6 +359,31 @@ class TestPropertyInstance:
                           self.kim_property.check_property_instances,
                           fi=pi, fp=pd)
 
+        pi = {
+            "property-id": "tag:tadmor@noreply.openkim.org,2017-02-01:property/verification-check",
+            "instance-id": 1,
+            "vc-name": {
+                "source-value": "vc-periodicity-support"
+            },
+            "vc-description": {
+                "source-value": "..."
+            },
+            "vc-category": {
+                "source-value": "mandatory"
+            },
+            "vc-grade-basis": {
+                "source-value": "passfail"
+            },
+            "vc-grade": {
+                "source-value": "P",
+                "source-unit": "ATTENTION: Key 'vc-grade' is not supposed to have any units"
+            }
+        }
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_property_instances,
+                          fi=pi, fp=pd)
+
 
 class TestPyTestPropertyInstanceModuleComponents(TestPropertyInstanceModuleComponents, PyTest):
     pass
