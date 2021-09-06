@@ -8,6 +8,7 @@ from kim_property.create import PROPERTY_ID_TO_PROPERTY_NAME
 SOURCE_VALUE = [
     [0, 0, 0, 0, 0, 0, ],
     "P-1",
+    ["P-1"],
     0,
     8.00524023,
     96.73127369,
@@ -20,6 +21,7 @@ SOURCE_VALUE = [
 SOURCE_VALUE_TYPE = [
     "float",  # [0, 0, 0, 0, 0, 0, ],
     "string",  # "P-1",
+    "string",  # ["P-1"],
     "float",  # 0,
     "float",  # 8.00524023,
     "float",  # 96.73127369,
@@ -32,6 +34,7 @@ SOURCE_VALUE_TYPE = [
 SOURCE_VALUE_SCLAR = [
     False,  # [0, 0, 0, 0, 0, 0, ],
     True,  # "P-1",
+    False,  # ["P-1"],
     True,  # 0,
     True,  # 8.00524023,
     True,  # 96.73127369,
@@ -44,6 +47,7 @@ SOURCE_VALUE_SCLAR = [
 SOURCE_VALUE_NDIMS = [
     1,  # [0, 0, 0, 0, 0, 0, ],
     0,  # "P-1",
+    1,  # ["P-1"],
     0,  # 0,
     0,  # 8.00524023,
     0,  # 96.73127369,
@@ -378,6 +382,28 @@ class TestPropertyInstance:
                 "source-value": "P",
                 "source-unit": "ATTENTION: Key 'vc-grade' is not supposed to have any units"
             }
+        }
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_property_instances,
+                          fi=pi, fp=pd)
+
+        pi["vc-grade"] = {
+            "source-value": "P"
+        }
+
+        pi["vc-files"] = {
+            "source-value": "ATTN: This is supposed to be an array but it's not"
+        }
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_property_instances,
+                          fi=pi, fp=pd)
+
+        del pi["vc-files"]
+
+        pi["vc-grade"] = {
+            "source-value": ["P"]
         }
 
         self.assertRaises(self.KIMPropertyError,
