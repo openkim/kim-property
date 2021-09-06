@@ -1,7 +1,7 @@
 # KIM-PROPERTY utility module
 
 [![Python package](https://github.com/openkim/kim-property/workflows/Python%20package/badge.svg)](https://github.com/openkim/kim-property/actions)
-[![Windows Build status](https://ci.appveyor.com/api/projects/status/iu5se53hqyaigiur?svg=true)](https://ci.appveyor.com/project/yafshar/kim-property)
+[![Windows Build status](https://ci.appveyor.com/api/projects/status/5860x3twnmpwwmsa?svg=true)](https://ci.appveyor.com/project/yafshar/kim-property)
 [![codecov](https://codecov.io/gh/openkim/kim-property/branch/master/graph/badge.svg)](https://codecov.io/gh/openkim/kim-property)
 [![Anaconda-Server Badge](https://img.shields.io/conda/vn/conda-forge/kim-property.svg)](https://anaconda.org/conda-forge/kim-property)
 [![PyPI](https://img.shields.io/pypi/v/kim-property.svg)](https://pypi.python.org/pypi/kim-property)
