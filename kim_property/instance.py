@@ -146,9 +146,7 @@ def check_instance_id_format(instance_id, _m=INSTANCE_ID.match):
 
 # checks for optional keys
 
-def check_optional_key_source_value_scalar(source_value_key,
-                                           value_type,
-                                           _size=size):
+def check_optional_key_source_value_scalar(source_value_key, value_type):
     """Check optional key "source-value" specifies a single item value.
 
     Arguments:
@@ -162,7 +160,7 @@ def check_optional_key_source_value_scalar(source_value_key,
 
     """
     if isinstance(source_value_key, list):
-        return _size(source_value_key) == 1
+        return False
 
     if isinstance(source_value_key, str):
         return value_type in ("string", "file")
@@ -198,11 +196,7 @@ def get_optional_key_source_value_ndimensions(source_value_key, _shape=shape):
 
     """
     if isinstance(source_value_key, list):
-        ndims = len(_shape(source_value_key))
-        if ndims == 1:
-            if len(source_value_key) == 1:
-                return 0
-        return ndims
+        return len(_shape(source_value_key))
 
     if isinstance(source_value_key, str):
         return 0
@@ -280,17 +274,11 @@ def check_instance_optional_key_standard_pairs_format(property_instance_map,
             property_ndims = get_optional_key_extent_ndimensions(l_p)
 
             if instance_ndims != property_ndims:
-                # handle special cases
-                if instance_ndims == 0 and \
-                    property_ndims == 1 and \
-                        l_p[0] == ':':
-                    pass
-                else:
-                    msg = '"source-value"-value number of dimensions = '
-                    msg += '{}, doesn\'t match '.format(instance_ndims)
-                    msg += 'the "extent"-value number of dimensions = '
-                    msg += '{}.'.format(property_ndims)
-                    raise KIMPropertyError(msg)
+                msg = '"source-value"-value number of dimensions = '
+                msg += '{}, doesn\'t match '.format(instance_ndims)
+                msg += 'the "extent"-value number of dimensions = '
+                msg += '{}.'.format(property_ndims)
+                raise KIMPropertyError(msg)
 
         del l_i
         del l_p
