@@ -30,7 +30,9 @@ jobs:
     - name: Test with unittest
       run: |
         python -m tests
-        python -m coverage run -m tests
+        coverage run -m tests
     - name: Post Coverage
-      uses: codecov/codecov-action@v2
+      uses: codecov/codecov-action@v1
       if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
+      with:
+        verbose: true
