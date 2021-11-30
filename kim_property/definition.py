@@ -278,11 +278,9 @@ def check_optional_key_extent_scalar(s, _ws=WHITESPACE_EDN.sub):
     """
     if isinstance(s, str):
         e = _ws('', s)
-        return e in ('[]', '[1]')
+        return e == '[]'
 
     if isinstance(s, list):
-        if len(s) == 1:
-            return s[0] == 1
         return len(s) == 0
 
     msg = 'input to the function is not a `list` or `str`.'
@@ -304,8 +302,6 @@ def get_optional_key_extent_ndimensions(l):
 
     """
     if isinstance(l, list):
-        if len(l) == 1 and l[0] == 1:
-            return 0
         return len(l)
 
     msg = 'input to the function is not a `list`.'
@@ -329,9 +325,6 @@ def get_optional_key_extent_shape(l):
     """
     if isinstance(l, list):
         s = []
-        if len(l) == 1 and l[0] == 1:
-            return s
-
         for d in l:
             if isinstance(d, int):
                 s.append(d)
