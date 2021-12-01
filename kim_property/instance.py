@@ -461,12 +461,12 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
         if isinstance(fp, dict):
             # It is already in the KIM-EDN format
             pd = fp
-
-            # We have to check if required keys are there
-            check_required_keys_present(pd, rk=def_required_keys)
         else:
             # property definition
             pd = kim_edn.load(fp)
+
+        # We have to check if required keys are there
+        check_required_keys_present(pd, rk=def_required_keys)
 
         if pd["property-id"] != pi["property-id"]:
             msg = 'wrong property definition is provided.\n'
@@ -534,11 +534,12 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
                 if isinstance(fp, dict):
                     # It is already in the KIM-EDN format
                     pd = fp
-                    # We have to check if required keys are there
-                    check_required_keys_present(pd, rk=def_required_keys)
                 else:
                     # property definition
                     pd = kim_edn.load(fp)
+
+                # We have to check if required keys are there
+                check_required_keys_present(pd, rk=def_required_keys)
 
             if pd["property-id"] != pi_["property-id"]:
                 msg = 'wrong property definition is provided.\n'
