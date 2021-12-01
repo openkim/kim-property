@@ -131,6 +131,8 @@ class TestPropertyInstanceModuleComponents:
             self.kim_property.check_optional_key_source_value_scalar(1.0, "string"))
         self.assertFalse(
             self.kim_property.check_optional_key_source_value_scalar(1.0, "file"))
+        self.assertFalse(
+            self.kim_property.check_optional_key_source_value_scalar(1.0, "unknown"))
 
         # input is int but type is float, or bool or different
         self.assertTrue(
@@ -147,6 +149,8 @@ class TestPropertyInstanceModuleComponents:
             self.kim_property.check_optional_key_source_value_scalar(1, "string"))
         self.assertFalse(
             self.kim_property.check_optional_key_source_value_scalar(1, "file"))
+        self.assertFalse(
+            self.kim_property.check_optional_key_source_value_scalar(1, "unknown"))
 
         # input is str but type file or is different
         self.assertTrue(
@@ -161,13 +165,15 @@ class TestPropertyInstanceModuleComponents:
             self.kim_property.check_optional_key_source_value_scalar("Al", "list"))
         self.assertFalse(
             self.kim_property.check_optional_key_source_value_scalar("Al", "bool"))
+        self.assertFalse(
+            self.kim_property.check_optional_key_source_value_scalar("Al", "unknown"))
 
         # input is bool but type is different
         self.assertTrue(
             self.kim_property.check_optional_key_source_value_scalar(True, "bool"))
-        self.assertTrue(
+        self.assertFalse(
             self.kim_property.check_optional_key_source_value_scalar(True, "int"))
-        self.assertTrue(
+        self.assertFalse(
             self.kim_property.check_optional_key_source_value_scalar(True, "float"))
         self.assertFalse(
             self.kim_property.check_optional_key_source_value_scalar(True, "file"))
@@ -175,6 +181,8 @@ class TestPropertyInstanceModuleComponents:
             self.kim_property.check_optional_key_source_value_scalar(True, "string"))
         self.assertFalse(
             self.kim_property.check_optional_key_source_value_scalar(True, "list"))
+        self.assertFalse(
+            self.kim_property.check_optional_key_source_value_scalar(True, "unknown"))
 
     def test_get_optional_key_source_value_ndimensions(self):
         """Test the source-value ndimensions component."""
