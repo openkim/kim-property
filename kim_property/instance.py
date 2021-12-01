@@ -165,6 +165,9 @@ def check_optional_key_source_value_scalar(source_value_key, value_type):
     if isinstance(source_value_key, str):
         return value_type in ("string", "file")
 
+    if isinstance(source_value_key, bool):
+        return value_type == "bool"
+
     if isinstance(source_value_key, float):
         return value_type == "float"
 
@@ -173,9 +176,6 @@ def check_optional_key_source_value_scalar(source_value_key, value_type):
         if source_value_key in (0, 1):
             return value_type in ("int", "float", 'bool')
         return value_type in ("int", "float")
-
-    if isinstance(source_value_key, bool):
-        return value_type == "bool"
 
     msg = 'input to the function doesn\'t comply with '
     msg += 'the defined variable type.\n'
