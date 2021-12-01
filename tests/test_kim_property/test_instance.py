@@ -9,8 +9,8 @@ SOURCE_VALUE = [
     [0, 0, 0, 0, 0, 0, ],
     "P-1",
     ["P-1"],
-    [ "fcc", ],
-    [ "Cu" ],
+    ["fcc", ],
+    ["Cu"],
     0,
     8.00524023,
     96.73127369,
@@ -281,10 +281,24 @@ class TestPropertyInstanceModuleComponents:
     def test_check_instance_optional_key_marked_required_are_present(self):
         """Test the inctances optional presence of the keys marked as required."""
         import kim_edn
+        # property instance is not a dict
+        pi = ["property-id"]
+        pd = kim_edn.load(
+            join("tests", "fixtures", "cohesive-energy-relation-cubic-crystal.edn"))
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_instance_optional_key_marked_required_are_present,
+                          pi, pd)
+
+        # property definition is not a dict
+        pi = {"property-id": "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal", "instance-id": 1}
+        pd = ["property-id"]
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.check_instance_optional_key_marked_required_are_present,
+                          pi, pd)
+
         pi = {"property-id": "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal", "instance-id": 1}
         pd = kim_edn.load(
             join("tests", "fixtures", "cohesive-energy-relation-cubic-crystal.edn"))
-
         self.assertRaises(self.KIMPropertyError,
                           self.kim_property.check_instance_optional_key_marked_required_are_present,
                           pi, pd)
@@ -324,6 +338,26 @@ class TestPropertyInstanceModuleComponents:
         # Fails if both fp and fpath exists
         self.assertRaises(self.KIMPropertyError, self.kim_property.check_property_instances,
                           pi, fp=pd, fp_path="cohesive-energy-relation-cubic-crystal.edn")
+
+        # Fails if unable to find a KIM property definitio
+        pi = {"property-id": "tag:staff@noreply.openkim.org,2014-05-21:property/surface-energy-broken-bond-fit-cubic-bravais-crystal-npt",
+              "instance-id": 1}
+        self.assertRaises(self.KIMPropertyError, self.kim_property.check_property_instances,
+                          pi, fp=None, fp_path=join("tests", "fixtures"))
+
+        fp = '{"property-id" "tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass" "property-title" "Atomic mass" "property-description" "The atomic mass of the element" "species" {"type" "string" "has-unit" false "extent" [] "required" true "description" "Element symbol of the species"} "mass" {"type" "float" "has-unit" true "extent" [] "required" true "description" "Mass of a single atom of the species"}}'
+        pi = '[{"property-id" "tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass" "instance-id" 1 "species" {"source-value" "Ar"} "mass" {"source-value" 39.948 "source-unit" "grams/mole"}}]'
+        try:
+            self.kim_property.check_property_instances(pi, fp=fp)
+            passed = True
+        except:
+            passed = False
+        self.assertTrue(passed)
+
+        # check if required keys are there
+        fp = '{"property-id" "tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass"}'
+        self.assertRaises(self.KIMPropertyError, self.kim_property.check_property_instances,
+                          pi, fp=fp)
 
 
 property_instance_names = [
