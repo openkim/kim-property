@@ -462,6 +462,42 @@ class TestModifyModule:
             "key", "a",
             "digits", "1:5", 5, 5, 5, 5, 5)
 
+        # Fails with wrong indices range
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify, str_obj, 1,
+                          "key", "a",
+                          "digits", "5:1", 5, 5, 5, 5, 5)
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify, str_obj, 1,
+                          "key", "a",
+                          "digits", "2:1", 5, 5)
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify, str_obj, 1,
+                          "key", "basis-atom-coordinates",
+                          "source-value", "1", "0:2", 0.5, 0.5, 0.5)
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify, str_obj, 1,
+                          "key", "basis-atom-coordinates",
+                          "source-value", "1", "2:4", 0.5, 0.5, 0.5)
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify, str_obj, 1,
+                          "key", "basis-atom-coordinates",
+                          "source-value", "0:2", "1", 0.5, 0.5, 0.5)
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify, str_obj, 1,
+                          "key", "basis-atom-coordinates",
+                          "source-value", "1:3", "0", 0.5, 0.5, 0.5)
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify, str_obj, 1,
+                          "key", "basis-atom-coordinates",
+                          "source-value", "1:3", "4", 0.5, 0.5, 0.5)
+
         # Fails when not enough input
         self.assertRaises(self.KIMPropertyError,
                           self.kim_property.kim_property_modify, str_obj, 1,
