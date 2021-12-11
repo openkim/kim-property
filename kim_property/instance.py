@@ -198,16 +198,7 @@ def get_optional_key_source_value_ndimensions(source_value_key, _shape=shape):
     if isinstance(source_value_key, list):
         return len(_shape(source_value_key))
 
-    if isinstance(source_value_key, str):
-        return 0
-
-    if isinstance(source_value_key, float):
-        return 0
-
-    if isinstance(source_value_key, int):
-        return 0
-
-    if isinstance(source_value_key, bool):
+    if isinstance(source_value_key, (str, bool, float, int)):
         return 0
 
     msg = 'input to the function is not any of:: \n'
