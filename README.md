@@ -819,7 +819,7 @@ conda search kim-property --channel conda-forge
 
 ## Copyright
 
-Copyright (c) 2020-2021, Regents of the University of Minnesota.\
+Copyright (c) 2020-2023, Regents of the University of Minnesota.\
 All Rights Reserved
 
 ## Contributing
