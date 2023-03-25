@@ -116,7 +116,8 @@ def pickle_kim_properties(properties=None,
             "unstable-twinning-fault-relaxed-energy-fcc-crystal-npt",
             "verification-check",
             "cohesive-potential-energy-crystal",
-            "crystal-structure-npt"
+            "crystal-structure-npt",
+            "binding-energy-crystal"
         ]
 
         # KIM property full IDs.
@@ -179,7 +180,8 @@ def pickle_kim_properties(properties=None,
             "tag:staff@noreply.openkim.org,2015-05-26:property/unstable-twinning-fault-relaxed-energy-fcc-crystal-npt",
             "tag:tadmor@noreply.openkim.org,2017-02-01:property/verification-check",
             "tag:staff@noreply.openkim.org,2023-02-21:property/cohesive-potential-energy-crystal",
-            "tag:staff@noreply.openkim.org,2023-02-21:property/crystal-structure-npt"
+            "tag:staff@noreply.openkim.org,2023-02-21:property/crystal-structure-npt",
+            "tag:staff@noreply.openkim.org,2023-02-21:property/binding-energy-crystal"
         ]
 
         for _id in kim_property_ids:

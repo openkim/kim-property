@@ -52,8 +52,7 @@ git submodule update --remote
 
 Once you cloned the repository with external submodule and fetch all the latest
 changes from
-[`openkim-properties`](https://github.com/openkim/openkim-properties.git). In
-the package main directory,
+[`openkim-properties`](https://github.com/openkim/openkim-properties.git). First, if properties have been added or removed, update the lists ``kim_property_names`` and ``kim_property_ids`` in ``kim_property/pickle.py``. Then, in the package main directory,
 
 ```sh
 ├── LICENSE
