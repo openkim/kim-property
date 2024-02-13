@@ -22,13 +22,15 @@ setup(
         'Topic :: Scientific/Engineering',
         'Operating System :: OS Independent',
         'License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9'
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12'
     ],
     install_requires=['kim-edn'],
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     include_package_data=True,
     keywords='kim-property',
     packages=find_packages(),
