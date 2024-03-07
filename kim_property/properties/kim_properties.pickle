@@ -12394,7 +12394,8 @@ sg4259
 I00
 sg4260
 (lp4292
-sg4262
+g40
+asg4262
 I00
 sg4263
 VCommonly used name associated with the 'library-prototype-label' key according to the AFLOW prototype library (e.g. 'Face-Centered Cubic' or 'Molybdenite').
@@ -12567,7 +12568,8 @@ sg4321
 I00
 sg4322
 (lp4354
-sg4324
+g40
+asg4324
 I00
 sg4325
 VCommonly used name associated with the 'library-prototype-label' key according to the AFLOW prototype library (e.g. 'Face-Centered Cubic' or 'Molybdenite').
