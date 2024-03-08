@@ -1,14 +1,13 @@
 """Setuptools based setup module."""
 
 from setuptools import setup, find_packages
-import versioneer
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
     name='kim-property',
-    version=versioneer.get_version(),
+    version="2.5.8",
     description='kim-property - KIM-PROPERTY utility module.',
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -34,5 +33,4 @@ setup(
     include_package_data=True,
     keywords='kim-property',
     packages=find_packages(),
-    cmdclass=versioneer.get_cmdclass(),
 )
