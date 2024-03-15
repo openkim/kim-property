@@ -50,8 +50,8 @@ def get_config() -> VersioneerConfig:
     # _version.py
     cfg = VersioneerConfig()
     cfg.VCS = "git"
-    cfg.style = "pep440"
-    cfg.tag_prefix = ""
+    cfg.style = ""
+    cfg.tag_prefix = "kim_property-"
     cfg.parentdir_prefix = "kim_property-"
     cfg.versionfile_source = "kim_property/_version.py"
     cfg.verbose = False

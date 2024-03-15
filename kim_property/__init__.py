@@ -367,8 +367,6 @@ Removing (a) key(s) from a property instance::
 
 """
 
-from . import _version
-
 from .err import KIMPropertyError
 from .definition import \
     check_key_present, \
@@ -433,5 +431,5 @@ __all__ = [
 
 __author__ = 'Yaser Afshar <yafshar@umn.edu>'
 
+from . import _version  # noqa: E402
 __version__ = _version.get_versions()['version']
-
