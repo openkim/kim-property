@@ -27,7 +27,7 @@ def is_array_first_dimension_uniform(arr):
         u = True
         s = type(arr[0])
         for i in range(1, len(arr)):
-            u = u and s == type(arr[i])
+            u = u and isinstance(arr[i], s)
         if not u:
             return False
         if type(arr[0]) in (list, tuple):
@@ -105,7 +105,7 @@ def is_array_uniform(arr):
         u = True
         s = type(arr[0])
         for i in range(1, len(arr)):
-            u = u and s == type(arr[i])
+            u = u and isinstance(arr[i], s)
         if not u:
             return False
         if type(arr[0]) in (list, tuple):
@@ -223,9 +223,9 @@ def extend_full_array(full_array, array_shape, fill_value=None, _shape=shape):
         for i in range(d0):
             for j in range(d1):
                 for k in range(d2):
-                    for l in range(d3):
-                        new_array[i][j][k][l][0:d4] = \
-                            full_array[i][j][k][l][0:d4]
+                    for m in range(d3):
+                        new_array[i][j][k][m][0:d4] = \
+                            full_array[i][j][k][m][0:d4]
         return new_array
 
     if full_array_ndims == 6:
@@ -233,10 +233,10 @@ def extend_full_array(full_array, array_shape, fill_value=None, _shape=shape):
         for i in range(d0):
             for j in range(d1):
                 for k in range(d2):
-                    for l in range(d3):
-                        for m in range(d4):
-                            new_array[i][j][k][l][m][0:d5] = \
-                                full_array[i][j][k][l][m][0:d5]
+                    for m in range(d3):
+                        for n in range(d4):
+                            new_array[i][j][k][m][n][0:d5] = \
+                                full_array[i][j][k][m][n][0:d5]
         return new_array
 
     msg = 'maximum number of 6 dimensions is supported while '
