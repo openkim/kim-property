@@ -50,7 +50,7 @@ STANDARD_KEYS_SCLAR_OR_WITH_EXTENT = (
           all values in the source-value array."""
 
 
-def kim_property_modify(property_instances, instance_id, *argv):
+def kim_property_modify(property_instances, instance_id, *argv):  # noqa: C901
     """Build the property instance by receiving keys with associated arguments.
 
     Incrementally builds the property instance by receiving keys with
@@ -189,7 +189,7 @@ def kim_property_modify(property_instances, instance_id, *argv):
         key_name_key = arg
         i += 1
 
-        if not key_name_key in standard_keys:
+        if key_name_key not in standard_keys:
             msg = 'wrong key. The input "{}"-key is '.format(key_name_key)
             msg += 'not part of the standard key-value pairs definition.\n'
             msg += 'See KIM standard key-value pairs at '
@@ -223,7 +223,7 @@ def kim_property_modify(property_instances, instance_id, *argv):
                             try:
                                 float(argv[i])
                                 key_name_value_is_scalar = True
-                            except:
+                            except (ValueError, TypeError, IndexError):
                                 pass
 
                         if key_name_value_is_scalar:
@@ -1099,7 +1099,7 @@ def kim_property_modify(property_instances, instance_id, *argv):
                     # see https://github.com/openkim/kim-property/issues/1
                     if i < n_arguments:
                         arg = argv[i]
-                        if arg != 'key' and not arg in standard_keys:
+                        if arg != 'key' and arg not in standard_keys:
                             msg = 'two arguments are provided for a scalar '
                             msg += 'key. For "{}" in '.format(key_name)
                             msg += 'property-definition, the '
@@ -1123,7 +1123,7 @@ def kim_property_modify(property_instances, instance_id, *argv):
                             try:
                                 float(argv[i])
                                 key_name_value_is_scalar = True
-                            except:
+                            except (ValueError, TypeError, IndexError):
                                 pass
 
                         if key_name_value_is_scalar:
@@ -1986,7 +1986,7 @@ def kim_property_modify(property_instances, instance_id, *argv):
                     # see https://github.com/openkim/kim-property/issues/1
                     if i < n_arguments:
                         arg = argv[i]
-                        if arg != 'key' and not arg in standard_keys:
+                        if arg != 'key' and arg not in standard_keys:
                             msg = 'two arguments are provided for a scalar '
                             msg += 'key. For "{}" in '.format(key_name)
                             msg += 'property-definition, the '
@@ -2017,7 +2017,7 @@ def kim_property_modify(property_instances, instance_id, *argv):
             # see https://github.com/openkim/kim-property/issues/1
             if i < n_arguments:
                 arg = argv[i]
-                if arg != 'key' and not arg in standard_keys:
+                if arg != 'key' and arg not in standard_keys:
                     msg = 'two arguments are provided for a key with no '
                     msg += 'extent. For "{}" in '.format(key_name)
                     msg += 'property-definition, the'
