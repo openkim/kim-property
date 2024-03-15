@@ -287,7 +287,7 @@ def check_optional_key_extent_scalar(s, _ws=WHITESPACE_EDN.sub):
     raise KIMPropertyError(msg)
 
 
-def get_optional_key_extent_ndimensions(l):
+def get_optional_key_extent_ndimensions(extent_key):
     """Get the number of dimensions specified by optional key "extent".
 
     Get the number of dimensions specified by optional key "extent", where
@@ -295,20 +295,20 @@ def get_optional_key_extent_ndimensions(l):
     scalar or an array.
 
     Arguments:
-        l {list} -- input "extent"-key value
+        extent_key {list} -- input "extent"-key value
 
     Returns:
         int -- Number of dimensions
 
     """
-    if isinstance(l, list):
-        return len(l)
+    if isinstance(extent_key, list):
+        return len(extent_key)
 
     msg = 'input to the function is not a `list`.'
     raise KIMPropertyError(msg)
 
 
-def get_optional_key_extent_shape(l):
+def get_optional_key_extent_shape(extent_key):
     """Get the shape or dimensions specified by optional key "extent".
 
     Get the shape or dimensions specified by optional key "extent", where
@@ -317,22 +317,21 @@ def get_optional_key_extent_shape(l):
     a colon character, ":" would be considered as 1.
 
     Arguments:
-        l {list} -- input "extent"-key value
+        extent_key {list} -- input "extent"-key value
 
     Returns:
         list -- shape or dimensions as list of integers
 
     """
-    if isinstance(l, list):
+    if isinstance(extent_key, list):
         s = []
-        for d in l:
+        for d in extent_key:
             if isinstance(d, int):
                 s.append(d)
             elif d == ':':
                 s.append(1)
             else:
-                msg = 'list contains non-standard value '
-                msg += '"{}".'.format(d)
+                msg = f'list contains non-standard value "{d}".'
                 raise KIMPropertyError(msg)
         return s
 
@@ -357,7 +356,7 @@ def check_property_optional_key_standard_pairs_format(standard_pairs):
         raise KIMPropertyError(msg)
 
     for k in standard_pairs:
-        if not k in standard_keys:
+        if k not in standard_keys:
             msg = 'wrong key.\n'
             msg += 'The input "{}"-key is not '.format(k)
             msg += 'part of the standard key-value pairs.\n'
