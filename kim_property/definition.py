@@ -72,7 +72,7 @@ def check_key_present(k, s):
     """
     if isinstance(k, str) and isinstance(s, str):
         if s.find(k) == -1:
-            msg = 'the required key "{}" is not found.'.format(k)
+            msg = f'the required key "{k}" is not found.'
             raise KIMPropertyError(msg)
         return
 
@@ -107,8 +107,7 @@ def check_property_id_format(s, _m=PROPERTY_ID.match):
     """
     if isinstance(s, str):
         if _m(s) is None:
-            msg = 'the "property-id" value :\n'
-            msg += '{} \n'.format(s)
+            msg = f'the "property-id" value :\n{s}\n'
             msg += 'doesn\'t meet the format specification.\n'
             msg += 'See KIM "property-id" format specification at '
             msg += 'https://openkim.org/doc/schema/properties-framework/ '
@@ -132,8 +131,7 @@ def check_property_title_format(s):
     """
     if isinstance(s, str):
         if s.endswith('.'):
-            msg = 'the "property-title" value :\n'
-            msg += '{}\n'.format(s)
+            msg = f'the "property-title" value :\n{s}\n'
             msg += 'should not include an ending period.'
             raise KIMPropertyError(msg)
         return
@@ -156,7 +154,7 @@ def check_required_keys_present(s, rk=required_keys):
     elif isinstance(s, dict):
         for r in rk:
             if r not in s:
-                msg = 'the required key "{}" is not found.'.format(r)
+                msg = f'the required key "{r}" is not found.'
                 raise KIMPropertyError(msg)
     else:
         msg = 'input to the function is not a `str` '
@@ -182,7 +180,7 @@ def check_key_format(s, _m=KEY_FORMAT.match):
     """
     if isinstance(s, str):
         if _m(s) is None:
-            msg = '"{}" is an invalid optional key. '.format(s)
+            msg = f'"{s}" is an invalid optional key. '
             msg += 'A key is a string which only includes lower-case '
             msg += 'alphanumeric characters and dashes.'
             raise KIMPropertyError(msg)
@@ -240,22 +238,18 @@ def check_optional_key_extent_format(s, _m=EXTENT_KEY.match, _ws=WHITESPACE.sub)
     if isinstance(s, str):
         e = _ws('', s)
         if _m(e) is None:
-            msg = 'the specified extent :\n'
-            msg += '{}\n'.format(s)
-            msg += 'contains invalid character.'
+            msg = f'the specified extent :\n{s}\ncontains invalid character.'
             raise KIMPropertyError(msg)
     elif isinstance(s, list):
         for s_ in s:
             if isinstance(s_, str):
                 if s_ != ':':
-                    msg = 'the specified extent contains '
-                    msg += 'invalid input "{}".'.format(s_)
+                    msg = f'the specified extent contains invalid input "{s_}".'
                     raise KIMPropertyError(msg)
             elif isinstance(s_, int):
                 continue
             else:
-                msg = 'the specified extent contains '
-                msg += 'invalid input "{}".'.format(s_)
+                msg = f'the specified extent contains invalid input "{s_}".'
                 raise KIMPropertyError(msg)
 
     else:
@@ -357,8 +351,7 @@ def check_property_optional_key_standard_pairs_format(standard_pairs):
 
     for k in standard_pairs:
         if k not in standard_keys:
-            msg = 'wrong key.\n'
-            msg += 'The input "{}"-key is not '.format(k)
+            msg = f'wrong key.\nThe input "{k}"-key is not '
             msg += 'part of the standard key-value pairs.\n'
             msg += 'See KIM standard key-value pairs at '
             msg += 'https://openkim.org/doc/schema/properties-framework/ '
@@ -369,7 +362,7 @@ def check_property_optional_key_standard_pairs_format(standard_pairs):
 
     if not isinstance(standard_pairs["has-unit"], bool):
         msg = 'invalid value.\n'
-        msg += 'The input "{}" value '.format(standard_pairs["has-unit"])
+        msg += f'The input "{standard_pairs["has-unit"]}" value '
         msg += 'should be a boolean that indicates '
         msg += 'whether the variable value is physically-dimensioned '
         msg += 'and therefore has a physical unit or not.'
@@ -378,9 +371,8 @@ def check_property_optional_key_standard_pairs_format(standard_pairs):
     check_optional_key_extent_format(standard_pairs["extent"])
 
     if not isinstance(standard_pairs["required"], bool):
-        msg = 'invalid value.\n'
-        msg += 'The input "{}" value '.format(standard_pairs["required"])
-        msg += 'should be a boolean that indicates '
+        msg = f'invalid value.\nThe input "{standard_pairs["required"]}" '
+        msg += 'value should be a boolean that indicates '
         msg += 'whether the variable must be reported in every '
         msg += 'property-instance of the property or not.'
         raise KIMPropertyError(msg)
@@ -439,11 +431,9 @@ def check_property_definition(fp, _m=KEY_FORMAT.match):
                 if k not in required_keys:
                     check_property_optional_key_map(k, pd[k], _m=_m)
         except KIMPropertyError:
-            msg = '{} \n'.format(fp)
-            msg += str(KIMPropertyError)
+            msg = f'{fp} \n' + str(KIMPropertyError)
             raise KIMPropertyError(msg)
     else:
-        msg = 'input to the function :\n'
-        msg += '{}\n'.format(fp)
+        msg = f'input to the function :\n{fp}\n'
         msg += 'is not a correct KIM-EDN type.'
         raise KIMPropertyError(msg)
