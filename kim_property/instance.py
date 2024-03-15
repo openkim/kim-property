@@ -14,7 +14,7 @@ from .definition import \
     check_key_format, \
     check_optional_key_extent_scalar, \
     get_optional_key_extent_ndimensions
-from .numeric import shape, size
+from .numeric import shape
 
 __all__ = [
     "required_keys",
@@ -231,7 +231,7 @@ def check_instance_optional_key_standard_pairs_format(property_instance_map,
         raise KIMPropertyError(msg)
 
     for k in property_instance_map:
-        if not k in standard_keys:
+        if k not in standard_keys:
             msg = 'wrong key.\nThe input "{}"-key is not part of '.format(k)
             msg += 'the standard key-value pairs definition.\n'
             msg += 'See KIM standard key-value pairs at '
@@ -343,9 +343,9 @@ def check_instance_optional_key_marked_required_are_present(
         raise KIMPropertyError(msg)
 
     for k in property_definition:
-        if not k in def_required_keys:
+        if k not in def_required_keys:
             if property_definition[k]["required"]:
-                if not k in property_instance:
+                if k not in property_instance:
                     msg = 'variable "{}" is marked required in the '.format(k)
                     msg += 'property definition, but it is not present in '
                     msg += 'the property instance.\nA "required" flag in the '
