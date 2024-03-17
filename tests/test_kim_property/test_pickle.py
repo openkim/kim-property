@@ -49,7 +49,7 @@ class TestPickle:
         """Test pickling the KIM Error module."""
         obj = pickle.dumps(self.KIMPropertyError(
             "Test pickling the KIM Error module."))
-        self.assertTrue(obj != None)
+        self.assertTrue(obj is not None)
 
     def test_unpickle_kim_properties(self):
         """Test unpickling the KIM properties."""
