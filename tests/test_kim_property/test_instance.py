@@ -2,8 +2,10 @@ from os.path import join, isfile
 
 import kim_edn
 
-from tests.test_kim_property import PyTest
+from kim_property import KIMPropertyError
 from kim_property.create import PROPERTY_ID_TO_PROPERTY_NAME
+
+from tests.test_kim_property import PyTest
 
 SOURCE_VALUE = [
     [0, 0, 0, 0, 0, 0, ],
@@ -358,7 +360,7 @@ class TestPropertyInstanceModuleComponents:
         try:
             self.kim_property.check_property_instances(pi, fp=fp)
             passed = True
-        except:
+        except KIMPropertyError:
             passed = False
         self.assertTrue(passed)
 
