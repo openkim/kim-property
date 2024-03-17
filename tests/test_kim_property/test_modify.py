@@ -1,5 +1,3 @@
-from os.path import join, isfile
-
 import kim_edn
 
 from tests.test_kim_property import PyTest
