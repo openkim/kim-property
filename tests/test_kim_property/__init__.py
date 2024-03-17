@@ -1,10 +1,6 @@
-import doctest
 import unittest
 
-try:
-    import kim_property
-except:
-    raise Exception('Failed to import `kim_property` utility module')
+import kim_property
 
 
 class PyTest(unittest.TestCase):
