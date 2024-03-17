@@ -252,7 +252,7 @@ def pickle_kim_properties(properties=None,
     else:
         try:
             pickle.dump(kim_properties_list, fp, protocol=protocol)
-        except:
+        except TypeError:
             msg = 'wrong input. ("fp" should refer to a bytes-like object.)'
             raise KIMPropertyError(msg)
 
@@ -290,6 +290,6 @@ def unpickle_kim_properties(fp=join(kim_properties_path,
     try:
         f = BytesIO(fp)
         return pickle.load(f)
-    except:
+    except (TypeError, EOFError):
         msg = 'wrong input. Neither can open nor load the input.'
         raise KIMPropertyError(msg)
