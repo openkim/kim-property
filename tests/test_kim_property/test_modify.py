@@ -212,12 +212,9 @@ class TestModifyModule:
                           str_obj, 1,
                           "key", "short-name", "source-value", "fcc")
 
-        msg = 'input value '
-        msg += '"{}" doesn\'t meet the '.format("fcc")
-        msg += 'format specification. An integer '
-        msg += 'equal to or greater than 1 '
-        msg += 'or integer indices range of '
-        msg += '"start:stop".'
+        msg = 'input value "fcc" doesn\'t meet the format specification. '
+        msg += 'An integer equal to or greater than 1 or integer '
+        msg += 'indices range of "start:stop".'
 
         self.assertRaisesRegex(self.KIMPropertyError, msg,
                                self.kim_property.kim_property_modify,
