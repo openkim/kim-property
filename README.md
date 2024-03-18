@@ -1,7 +1,6 @@
 # KIM-PROPERTY utility module
 
 [![Python package](https://github.com/openkim/kim-property/workflows/Python%20package/badge.svg)](https://github.com/openkim/kim-property/actions)
-[![Windows Build status](https://ci.appveyor.com/api/projects/status/5860x3twnmpwwmsa?svg=true)](https://ci.appveyor.com/project/yafshar/kim-property)
 [![codecov](https://codecov.io/gh/openkim/kim-property/branch/master/graph/badge.svg)](https://codecov.io/gh/openkim/kim-property)
 [![Anaconda-Server Badge](https://img.shields.io/conda/vn/conda-forge/kim-property.svg)](https://anaconda.org/conda-forge/kim-property)
 [![PyPI](https://img.shields.io/pypi/v/kim-property.svg)](https://pypi.python.org/pypi/kim-property)
@@ -796,30 +795,56 @@ For more information and examples, see the
 
 **conda** is the package management tool for Anaconda Python installations.
 
-Installing `kim-property` from the `conda-forge` channel can be achieved by
-adding `conda-forge` to your channels with:
+Installing `kim-property` from the `conda-forge` channel can be achieved
+by adding `conda-forge` to your channels with:
 
-```sh
+```
 conda config --add channels conda-forge
+conda config --set channel_priority strict
 ```
 
 Once the `conda-forge` channel has been enabled, `kim-property` can be
-installed with:
+installed with `conda`:
 
-```sh
+```
 conda install kim-property
 ```
 
-It is possible to list all of the versions of `kim-property` available on
-your platform with:
+or with `mamba`:
 
-```sh
+```
+mamba install kim-property
+```
+
+It is possible to list all of the versions of `kim-property` available on
+your platform with `conda`:
+
+```
 conda search kim-property --channel conda-forge
+```
+
+or with `mamba`:
+
+```
+mamba search kim-property --channel conda-forge
+```
+
+Alternatively, `mamba repoquery` may provide more information:
+
+```
+# Search all versions available on your platform:
+mamba repoquery search kim-property --channel conda-forge
+
+# List packages depending on `kim-property`:
+mamba repoquery whoneeds kim-property --channel conda-forge
+
+# List dependencies of `kim-property`:
+mamba repoquery depends kim-property --channel conda-forge
 ```
 
 ## Copyright
 
-Copyright (c) 2020-2023, Regents of the University of Minnesota.\
+Copyright (c) 2020-2024, Regents of the University of Minnesota.\
 All Rights Reserved
 
 ## Contributing
