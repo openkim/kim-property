@@ -48,6 +48,11 @@ class TestPickle:
         self.assertRaises(self.KIMPropertyError, pickle_kim_properties,
                           properties, sio)
 
+        self.assertRaises(self.KIMPropertyError, pickle_kim_properties,
+                          None, sio) 
+        self.assertRaisesRegex(self.KIMPropertyError, 'property files can not be found.*',
+                               pickle_kim_properties, None, sio) 
+
     def test_pickle_err_class(self):
         """Test pickling the KIM Error module."""
         obj = pickle.dumps(self.KIMPropertyError(
