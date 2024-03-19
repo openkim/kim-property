@@ -62,6 +62,9 @@ class TestCreateModule:
         self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_create,
                           1, 'atomic-mass', str1)
 
+        self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_create,
+                          '3', 'cohesive-energy-relation-cubic-crystal')
+
     def test_create_from_a_file(self):
         """Test the create functionality for a new file as input."""
         # Correct object
@@ -83,6 +86,10 @@ class TestCreateModule:
         # Fails if the property instance already exists in OpenKIM
         self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_create,
                           1, join("tests", "fixtures", "atomic-mass.edn"))
+
+        emsg = 'the input property_name file contains a property ID:\n"tag:brunnels.*mass"\nwhich.*\nUse the KIM.*file.\nSee.*'
+        self.assertRaisesRegex(self.KIMPropertyError, emsg, self.kim_property.kim_property_create,
+                               1, join("tests", "fixtures", "atomic-mass.edn"))
 
 
 class TestPyTestCreateModule(TestCreateModule, PyTest):
