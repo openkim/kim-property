@@ -8,7 +8,8 @@ class TestDestroyModule:
 
     def test_destroy(self):
         """Test the destroy functionality."""
-        str_obj = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1}]'
+        str_obj = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/' \
+                  'cohesive-energy-relation-cubic-crystal" "instance-id" 1}]'
 
         # Destroy the property instance
         str1 = self.kim_property.kim_property_destroy(str_obj, 1)
@@ -19,7 +20,9 @@ class TestDestroyModule:
         self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_destroy,
                           str_obj, 1.0)
 
-        str_obj2 = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1} {"property-id" "tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass" "instance-id" 2}]'
+        str_obj2 = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/' \
+                   'cohesive-energy-relation-cubic-crystal" "instance-id" 1} {"property-id"' \
+                   ' "tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass" "instance-id" 2}]'
 
         # Destroy one of the property instance
         str2 = self.kim_property.kim_property_destroy(str_obj2, 2)

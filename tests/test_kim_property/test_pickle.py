@@ -24,13 +24,16 @@ class TestPickle:
         self.assertTrue(isfile(edn_file2))
 
         properties = {"tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass": kim_edn.load(edn_file1),
-                      "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal": kim_edn.load(edn_file2)}
+                      "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal":
+                      kim_edn.load(edn_file2)}
 
         name_to_id = {"atomic-mass": "tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass",
-                      "cohesive-energy-relation-cubic-crystal": "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"}
+                      "cohesive-energy-relation-cubic-crystal":
+                      "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"}
 
         id_to_name = {"tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass": "atomic-mass",
-                      "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal": "cohesive-energy-relation-cubic-crystal"}
+                      "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal":
+                      "cohesive-energy-relation-cubic-crystal"}
 
         bio = BytesIO()
         pickle_kim_properties(properties, bio)
@@ -68,7 +71,8 @@ class TestPickle:
         self.assertTrue(isfile(edn_file2))
 
         properties = {"tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass": kim_edn.load(edn_file1),
-                      "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal": kim_edn.load(edn_file2)}
+                      "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal":
+                      kim_edn.load(edn_file2)}
 
         bio = BytesIO()
         pickle_kim_properties(properties, bio)
@@ -78,10 +82,12 @@ class TestPickle:
             bio.getvalue())
 
         name_to_id = {"atomic-mass": "tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass",
-                      "cohesive-energy-relation-cubic-crystal": "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"}
+                      "cohesive-energy-relation-cubic-crystal":
+                      "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"}
 
         id_to_name = {"tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass": "atomic-mass",
-                      "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal": "cohesive-energy-relation-cubic-crystal"}
+                      "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal":
+                      "cohesive-energy-relation-cubic-crystal"}
 
         self.assertTrue(_properties == properties)
         self.assertTrue(_name_to_id == name_to_id)

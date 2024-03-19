@@ -260,17 +260,20 @@ class TestPropertyInstanceModuleComponents:
         # "extent" specifies single item
         self.assertRaises(self.KIMPropertyError,
                           self.kim_property.check_instance_optional_key_standard_pairs_format,
-                          {"source-value": [3.9149, 3.149], "source-unit": "angstrom", "digits": 5}, {"type": "float", "has-unit": True, "extent": [], "required": True})
+                          {"source-value": [3.9149, 3.149], "source-unit": "angstrom", "digits": 5},
+                          {"type": "float", "has-unit": True, "extent": [], "required": True})
 
         # "extent" dimension does not match with "source-unit" dimension
         self.assertRaises(self.KIMPropertyError,
                           self.kim_property.check_instance_optional_key_standard_pairs_format,
-                          {"source-value": [3.9149], "digits": 5}, {"type": "float", "has-unit": True, "extent": [2], "required": True})
+                          {"source-value": [3.9149], "digits": 5},
+                          {"type": "float", "has-unit": True, "extent": [2], "required": True})
 
         # "source-unit" is required but is not there
         self.assertRaises(self.KIMPropertyError,
                           self.kim_property.check_instance_optional_key_standard_pairs_format,
-                          {"source-value": [3.9149, 3.149], "digits": 5}, {"type": "float", "has-unit": True, "extent": [2], "required": True})
+                          {"source-value": [3.9149, 3.149], "digits": 5},
+                          {"type": "float", "has-unit": True, "extent": [2], "required": True})
 
         # Fail for a wrong key in standard key-value pairs
         self.assertRaises(self.KIMPropertyError,
@@ -300,13 +303,15 @@ class TestPropertyInstanceModuleComponents:
                           pi, pd)
 
         # property definition is not a dict
-        pi = {"property-id": "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal", "instance-id": 1}
+        pi = {"property-id": "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal",
+              "instance-id": 1}
         pd = ["property-id"]
         self.assertRaises(self.KIMPropertyError,
                           self.kim_property.check_instance_optional_key_marked_required_are_present,
                           pi, pd)
 
-        pi = {"property-id": "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal", "instance-id": 1}
+        pi = {"property-id": "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal",
+              "instance-id": 1}
         pd = kim_edn.load(
             join("tests", "fixtures", "cohesive-energy-relation-cubic-crystal.edn"))
         self.assertRaises(self.KIMPropertyError,
@@ -320,7 +325,8 @@ class TestPropertyInstanceModuleComponents:
                           self.kim_property.check_property_instances,
                           None, None)
 
-        pi = {"property-id": "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal", "instance-id": 1}
+        pi = {"property-id": "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal",
+              "instance-id": 1}
 
         self.assertRaises(self.KIMPropertyError, self.kim_property.check_property_instances,
                           pi, fp=None, fp_path=join("tests", "fixtures", "cohesive-energy-relation-cubic-crystal.edn"))
@@ -343,20 +349,27 @@ class TestPropertyInstanceModuleComponents:
 
         pd = {"property-id": "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal",
               "property-title": "Cohesive energy versus lattice constant relation for a cubic crystal",
-              "property-description": "Cohesive energy versus lattice constant relation for a cubic crystal at zero absolute temperature."}
+              "property-description":
+              "Cohesive energy versus lattice constant relation for a cubic crystal at zero absolute temperature."}
 
         # Fails if both fp and fpath exists
         self.assertRaises(self.KIMPropertyError, self.kim_property.check_property_instances,
                           pi, fp=pd, fp_path="cohesive-energy-relation-cubic-crystal.edn")
 
         # Fails if unable to find a KIM property definitio
-        pi = {"property-id": "tag:staff@noreply.openkim.org,2014-05-21:property/surface-energy-broken-bond-fit-cubic-bravais-crystal-npt",
+        pi = {"property-id":
+              "tag:staff@noreply.openkim.org,2014-05-21:property/surface-energy-broken-bond-fit-cubic-bravais-crystal-npt",
               "instance-id": 1}
         self.assertRaises(self.KIMPropertyError, self.kim_property.check_property_instances,
                           pi, fp=None, fp_path=join("tests", "fixtures"))
 
-        fp = '{"property-id" "tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass" "property-title" "Atomic mass" "property-description" "The atomic mass of the element" "species" {"type" "string" "has-unit" false "extent" [] "required" true "description" "Element symbol of the species"} "mass" {"type" "float" "has-unit" true "extent" [] "required" true "description" "Mass of a single atom of the species"}}'
-        pi = '[{"property-id" "tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass" "instance-id" 1 "species" {"source-value" "Ar"} "mass" {"source-value" 39.948 "source-unit" "grams/mole"}}]'
+        fp = '{"property-id" "tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass" "property-title" ' \
+             '"Atomic mass" "property-description" "The atomic mass of the element" "species" {"type" "string" ' \
+             '"has-unit" false "extent" [] "required" true "description" "Element symbol of the species"} "mass" ' \
+             '{"type" "float" "has-unit" true "extent" [] "required" true "description" "Mass of a single atom of ' \
+             'the species"}}'
+        pi = '[{"property-id" "tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass" "instance-id" 1 ' \
+             '"species" {"source-value" "Ar"} "mass" {"source-value" 39.948 "source-unit" "grams/mole"}}]'
         try:
             self.kim_property.check_property_instances(pi, fp=fp)
             passed = True

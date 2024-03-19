@@ -11,7 +11,8 @@ class TestPropertyModule:
     def test_create(self):
         """Test the create functionality."""
         # Correct object
-        str_obj = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1}]'
+        str_obj = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/' \
+                  'cohesive-energy-relation-cubic-crystal" "instance-id" 1}]'
 
         # Create the property instance with the property name
         str1 = self.kim_property.kim_property_create(
@@ -43,7 +44,9 @@ class TestPropertyModule:
         self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_create,
                           10, 'new-name')
 
-        str_obj2 = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1} {"property-id" "tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass" "instance-id" 2}]'
+        str_obj2 = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/' \
+                   'cohesive-energy-relation-cubic-crystal" "instance-id" 1} {"property-id" ' \
+                   '"tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass" "instance-id" 2}]'
 
         # Create the property instance with the property name to the already created instance
         str3 = self.kim_property.kim_property_create(
@@ -76,7 +79,8 @@ class TestPropertyModule:
 
     def test_destroy(self):
         """Test the destroy functionality."""
-        str_obj = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1}]'
+        str_obj = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/' \
+                  'cohesive-energy-relation-cubic-crystal" "instance-id" 1}]'
 
         # Destroy the property instance
         str1 = self.kim_property.kim_property_destroy(str_obj, 1)
@@ -87,7 +91,9 @@ class TestPropertyModule:
         self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_destroy,
                           str_obj, 1.0)
 
-        str_obj2 = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1} {"property-id" "tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass" "instance-id" 2}]'
+        str_obj2 = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/' \
+                   'cohesive-energy-relation-cubic-crystal" "instance-id" 1} {"property-id"' \
+                   ' "tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass" "instance-id" 2}]'
 
         # Destroy one of the property instance
         str2 = self.kim_property.kim_property_destroy(str_obj2, 2)
@@ -108,12 +114,14 @@ class TestPropertyModule:
                               self.kim_property.kim_property_modify, str_obj, 1)
 
         # Fails when there is a different instance id
-        str_obj = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1}]'
+        str_obj = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/' \
+                  'cohesive-energy-relation-cubic-crystal" "instance-id" 1}]'
         self.assertRaises(self.KIMPropertyError,
                           self.kim_property.kim_property_modify, str_obj, 2)
 
         # Fails when not having the instance id
-        str_obj = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"}]'
+        str_obj = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/' \
+                  'cohesive-energy-relation-cubic-crystal"}]'
         self.assertRaises(self.KIMPropertyError,
                           self.kim_property.kim_property_modify, str_obj, 1)
 
@@ -153,7 +161,14 @@ class TestPropertyModule:
 
         kim_obj = kim_edn.load(str_obj)[0]
 
-        Property_Instance = '{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1 "short-name" {"source-value" ["fcc"]} "species" {"source-value" ["Al" "Al" "Al" "Al"]} "a" {"source-value" [3.9149 4.0 4.032 4.0817 4.1602] "source-unit" "angstrom" "digits" 5} "basis-atom-coordinates" {"source-value" [[0.0 0.0 0.0] [0.5 0.5 0.0] [0.5 0.0 0.5] [0.0 0.5 0.5]]} "cohesive-potential-energy" {"source-value" [3.324 3.3576 3.36 3.355 3.326] "source-std-uncert-value" [0.002 0.0001 1e-05 0.0012 0.00015] "source-unit" "eV" "digits" 5}}'
+        Property_Instance = '{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/' \
+                            'cohesive-energy-relation-cubic-crystal" "instance-id" 1 "short-name" ' \
+                            '{"source-value" ["fcc"]} "species" {"source-value" ["Al" "Al" "Al" "Al"]} ' \
+                            '"a" {"source-value" [3.9149 4.0 4.032 4.0817 4.1602] "source-unit" ' \
+                            '"angstrom" "digits" 5} "basis-atom-coordinates" {"source-value" ' \
+                            '[[0.0 0.0 0.0] [0.5 0.5 0.0] [0.5 0.0 0.5] [0.0 0.5 0.5]]} ' \
+                            '"cohesive-potential-energy" {"source-value" [3.324 3.3576 3.36 3.355 3.326] ' \
+                            '"source-std-uncert-value" [0.002 0.0001 1e-05 0.0012 0.00015] "source-unit" "eV" "digits" 5}}'
 
         self.assertTrue(Property_Instance == kim_edn.dumps(kim_obj))
 
