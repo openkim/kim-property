@@ -365,7 +365,7 @@ Removing (a) key(s) from a property instance::
         }
     ]
 
-"""
+"""  # noqa: E501
 
 from .err import KIMPropertyError
 from .definition import \
