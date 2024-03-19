@@ -36,7 +36,7 @@ def kim_property_destroy(property_instances, instance_id):
     Returns:
         string -- serialized KIM-EDN formatted property instances.
 
-    """
+    """  # noqa: E501
     if not isinstance(instance_id, int):
         msg = 'the "instance_id" is not an `int`.'
         raise KIMPropertyError(msg)
