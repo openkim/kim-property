@@ -117,6 +117,15 @@ class TestModifyModule:
         # Test for scalar values
         str_obj = self.kim_property.kim_property_modify(
             str_obj, 1,
+            "key", "cohesive-potential-energy",
+            "source-asym-std-uncert-neg", "2.3")
+
+        kim_obj = kim_edn.load(str_obj)[0]
+
+        self.assertTrue(kim_obj["cohesive-potential-energy"]["source-asym-std-uncert-neg"] == 2.3)
+
+        str_obj = self.kim_property.kim_property_modify(
+            str_obj, 1,
             "key", "space-group",
             "source-value", "Immm")
 
