@@ -116,7 +116,7 @@ def kim_property_create(instance_id, property_name, property_instances=None):
     Returns:
         string -- serialized KIM-EDN formatted property instances.
 
-    """
+    """  # noqa: E501
     global KIM_PROPERTIES
     global PROPERTY_NAME_TO_PROPERTY_ID
     global PROPERTY_ID_TO_PROPERTY_NAME
