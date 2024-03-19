@@ -53,7 +53,7 @@ def pickle_kim_properties(properties=None,
         if isdir(abspath(kim_property_files_path)):
             kim_property_files_path = abspath(kim_property_files_path)
         else:
-            msg = 'property files can not be found!'
+            msg = f'property files can not be found at\n{kim_property_files_path}'
             raise KIMPropertyError(msg)
 
         # KIM property names.
