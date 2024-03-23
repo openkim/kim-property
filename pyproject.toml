@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "versioneer[toml]", "kim-edn"]
+requires = ["setuptools", "versioneer[toml]==0.29", "kim-edn>1.4.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -8,7 +8,6 @@ authors = [{ name = "Yaser Afshar", email = "ya.afshar@gmail.com" }]
 maintainers = [{ name = "Yaser Afshar", email = "ya.afshar@gmail.com" }]
 description = "kim-property - KIM-PROPERTY utility module."
 readme = { file = "README.md", content-type = "text/markdown" }
-license = { file = "LICENSE" }
 requires-python = ">=3.8"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -25,9 +24,16 @@ keywords = [ "kim-property" ]
 Homepage = "https://github.com/openkim/kim-property"
 Issues = "https://github.com/openkim/kim-property/issues"
 
+[tool.setuptools.packages.find]
+include = [ "kim_property*" ]
+
+[tool.setuptools.dynamic]
+version = { attr = "kim_property.__version__" }
+
 [tool.versioneer]
 VCS = "git"
+style = "pep440"
 versionfile_source = "kim_property/_version.py"
 versionfile_build = "kim_property/_version.py"
-tag_prefix = "kim_property-"
+tag_prefix = "v-"
 parentdir_prefix = "kim_property-"
