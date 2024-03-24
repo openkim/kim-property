@@ -12,23 +12,23 @@ example a [LAMMPS](https://lammps.sandia.gov/) script) that computes a
 
 This utility module has 5 modes:
 
-1- **[Create](#Create)**\
+1- **[Create](#create)**\
     Take as input the property instance ID and property definition name and
     create initial property instance data structure. It checks and indicates
     whether the property definition exists in [OpenKIM](https://openkim.org/).
 
-2- **[Destroy](#Destroy)**\
+2- **[Destroy](#destroy)**\
     Delete a previously created property instance ID.
 
-3- **[Modify](#Modify)**\
+3- **[Modify](#modify)**\
     Incrementally build the property instance by receiving keys with
     associated arguments. It can "append" and add to a key's existing array
     argument.
 
-4- **[Remove](#Remove)**\
+4- **[Remove](#remove)**\
     Remove a key.
 
-5- **[Dump](#Dump)**\
+5- **[Dump](#dump)**\
     Take as input the generated instance and a filename, validate each
     instance against the property definition and either issues an error or
     writes the instance out to file in edn format. Final validation should
@@ -798,7 +798,7 @@ For more information and examples, see the
 Installing `kim-property` from the `conda-forge` channel can be achieved
 by adding `conda-forge` to your channels with:
 
-```
+```sh
 conda config --add channels conda-forge
 conda config --set channel_priority strict
 ```
@@ -806,32 +806,32 @@ conda config --set channel_priority strict
 Once the `conda-forge` channel has been enabled, `kim-property` can be
 installed with `conda`:
 
-```
+```sh
 conda install kim-property
 ```
 
 or with `mamba`:
 
-```
+```sh
 mamba install kim-property
 ```
 
 It is possible to list all of the versions of `kim-property` available on
 your platform with `conda`:
 
-```
+```sh
 conda search kim-property --channel conda-forge
 ```
 
 or with `mamba`:
 
-```
+```sh
 mamba search kim-property --channel conda-forge
 ```
 
 Alternatively, `mamba repoquery` may provide more information:
 
-```
+```sh
 # Search all versions available on your platform:
 mamba repoquery search kim-property --channel conda-forge
 
