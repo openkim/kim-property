@@ -33,7 +33,7 @@ NEW_PROPERTY_IDS = None
 
 
 def get_properties():
-    """Get the kim properties object hierarchy from the pickled object.
+    """Get the kim properties object hierarchy from the edn object.
 
     Returns:
         dict -- KIM_PROPERTIES.

@@ -1,4 +1,4 @@
-"""KIM properties object serialization."""
+"""KIM properties object serialization/de-serialization."""
 
 from os.path import abspath, join, isdir, pardir, isfile, dirname
 from io import IOBase
