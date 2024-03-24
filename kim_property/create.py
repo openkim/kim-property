@@ -7,7 +7,7 @@ import kim_edn
 from .err import KIMPropertyError
 from .definition import check_property_definition
 from .instance import get_property_id_path, check_instance_id_format
-from .pickle import unpickle_kim_properties
+from .ednify import unednify_kim_properties
 
 __all__ = [
     "get_properties",
@@ -26,7 +26,7 @@ PROPERTY_ID_TO_PROPERTY_NAME = None
 
 # Get the standard KIM properties
 KIM_PROPERTIES, PROPERTY_NAME_TO_PROPERTY_ID, \
-    PROPERTY_ID_TO_PROPERTY_NAME = unpickle_kim_properties()
+    PROPERTY_ID_TO_PROPERTY_NAME = unednify_kim_properties()
 
 NEW_PROPERTY_IDS = None
 """list: Newly added property IDs """
