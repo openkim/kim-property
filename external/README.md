@@ -88,5 +88,5 @@ case, you should commit and publish your changes to the repository and make a
 new release. This release will update the binary distribution of the package
 with the latest changes.
 
-Please install the `kim-property` package using the
-[installation Instructions](../README.md#installing-kim-property),
+To get started, you'll need to install the `kim-property` package. Please refer
+to the [installation instructions](../README.md#installing-kim-property).

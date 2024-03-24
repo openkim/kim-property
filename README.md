@@ -35,6 +35,9 @@ This utility module has 5 modes:
     make sure all keys/arguments are legal and all required keys are
     provided.
 
+To get started, you'll need to install the `kim-property` package. Please refer
+to the [installation instructions](#installing-kim-property).
+
 ## Create
 
 Creating property instances::
