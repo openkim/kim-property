@@ -54,7 +54,7 @@ Once you cloned the repository with external submodule and fetch all the latest
 changes from
 [`openkim-properties`](https://github.com/openkim/openkim-properties.git).
 First, if properties have been added or removed, update the lists
-``kim_property_names`` and ``kim_property_ids`` in ``kim_property/pickle.py``.
+``kim_property_names`` and ``kim_property_ids`` in ``kim_property/ednify.py``.
 Then, in the package main directory,
 
 ```sh
@@ -63,10 +63,9 @@ Then, in the package main directory,
 ├── README.md
 ├── external
 ├── kim_property
-├── setup.cfg
+├── pyproject.toml
 ├── setup.py
-├── tests
-└── versioneer.py
+└── tests
 ```
 
 please run python and do as,
