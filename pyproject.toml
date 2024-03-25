@@ -4,6 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "kim-property"
+dependencies = ["kim-edn>1.4.0"]
 authors = [{ name = "Yaser Afshar", email = "ya.afshar@gmail.com" }]
 maintainers = [{ name = "Yaser Afshar", email = "ya.afshar@gmail.com" }]
 description = "kim-property - KIM-PROPERTY utility module."
