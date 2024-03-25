@@ -7,7 +7,7 @@ import kim_edn
 from .err import KIMPropertyError
 from .definition import check_property_definition
 from .instance import get_property_id_path, check_instance_id_format
-from .pickle import unpickle_kim_properties
+from .ednify import unednify_kim_properties
 
 __all__ = [
     "get_properties",
@@ -26,14 +26,14 @@ PROPERTY_ID_TO_PROPERTY_NAME = None
 
 # Get the standard KIM properties
 KIM_PROPERTIES, PROPERTY_NAME_TO_PROPERTY_ID, \
-    PROPERTY_ID_TO_PROPERTY_NAME = unpickle_kim_properties()
+    PROPERTY_ID_TO_PROPERTY_NAME = unednify_kim_properties()
 
 NEW_PROPERTY_IDS = None
 """list: Newly added property IDs """
 
 
 def get_properties():
-    """Get the kim properties object hierarchy from the pickled object.
+    """Get the kim properties object hierarchy from the edn object.
 
     Returns:
         dict -- KIM_PROPERTIES.
@@ -116,7 +116,7 @@ def kim_property_create(instance_id, property_name, property_instances=None):
     Returns:
         string -- serialized KIM-EDN formatted property instances.
 
-    """
+    """  # noqa: E501
     global KIM_PROPERTIES
     global PROPERTY_NAME_TO_PROPERTY_ID
     global PROPERTY_ID_TO_PROPERTY_NAME
@@ -168,13 +168,11 @@ def kim_property_create(instance_id, property_name, property_instances=None):
         # Check to make sure that this property does not exist in OpenKIM
         if _property_id in KIM_PROPERTIES:
             msg = 'the input property_name file contains a property ID:\n'
-            msg += '"{}"\nwhich already '.format(_property_id)
-            msg += 'exists in the KIM Property Definition list.\n'
-            msg += 'Use the KIM Property Definition or update the ID in the'
-            msg += 'property_name file.\n'
-            msg += 'See the KIM Property Definitions at '
-            msg += 'https://openkim.org/properties for more detailed '
-            msg += 'information.'
+            msg += f'"{_property_id}"\nwhich already exists in the KIM '
+            msg += 'Property Definition list.\nUse the KIM Property '
+            msg += 'Definition or update the ID in the property_name '
+            msg += 'file.\nSee the KIM Property Definitions at https://'
+            msg += 'openkim.org/properties for more detailed information.'
             raise KIMPropertyError(msg)
 
         # Add the new property definition to KIM_PROPERTIES
@@ -203,13 +201,10 @@ def kim_property_create(instance_id, property_name, property_instances=None):
         elif property_name in kim_property_ids:
             new_property_instance["property-id"] = property_name
         else:
-            msg = 'the requested "property_name" :\n'
-            msg += '"{}"\n'.format(property_name)
-            msg += 'is not a valid KIM property name nor '
-            msg += 'a path-like object to a file.\n'
-            msg += 'See the KIM Property Definitions at '
-            msg += 'https://openkim.org/properties for more detailed '
-            msg += 'information.'
+            msg = f'the requested "property_name" :\n"{property_name}"\nis not'
+            msg += ' a valid KIM property property name nor a path-like object'
+            msg += ' to a file.\nSee the KIM Property Definitions at https://'
+            msg += 'openkim.org/properties for more detailed information.'
             raise KIMPropertyError(msg)
 
     new_property_instance["instance-id"] = instance_id

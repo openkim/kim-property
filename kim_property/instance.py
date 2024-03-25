@@ -14,7 +14,7 @@ from .definition import \
     check_key_format, \
     check_optional_key_extent_scalar, \
     get_optional_key_extent_ndimensions
-from .numeric import shape, size
+from .numeric import shape
 
 __all__ = [
     "required_keys",
@@ -134,9 +134,9 @@ def check_instance_id_format(instance_id, _m=INSTANCE_ID.match):
     """
     if isinstance(instance_id, int):
         if _m(str(instance_id)) is None:
-            msg = 'the "instance-id" = {}, '.format(instance_id)
-            msg += 'doesn\'t meet the format specification (an integer '
-            msg += 'equal to or greater than 1).'
+            msg = f'the "instance-id" = {instance_id}, doesn\'t meet the '
+            msg += 'format specification (an integer equal to or '
+            msg += 'greater than 1).'
             raise KIMPropertyError(msg)
     else:
         msg = 'the "instance-id" value is not an `int` '
@@ -231,8 +231,8 @@ def check_instance_optional_key_standard_pairs_format(property_instance_map,
         raise KIMPropertyError(msg)
 
     for k in property_instance_map:
-        if not k in standard_keys:
-            msg = 'wrong key.\nThe input "{}"-key is not part of '.format(k)
+        if k not in standard_keys:
+            msg = f'wrong key.\nThe input "{k}"-key is not part of '
             msg += 'the standard key-value pairs definition.\n'
             msg += 'See KIM standard key-value pairs at '
             msg += 'https://openkim.org/doc/schema/properties-framework/ '
@@ -266,9 +266,9 @@ def check_instance_optional_key_standard_pairs_format(property_instance_map,
 
             if instance_ndims != property_ndims:
                 msg = '"source-value"-value number of dimensions = '
-                msg += '{}, doesn\'t match '.format(instance_ndims)
+                msg += f'{instance_ndims}, doesn\'t match '
                 msg += 'the "extent"-value number of dimensions = '
-                msg += '{}.'.format(property_ndims)
+                msg += f'{property_ndims}.'
                 raise KIMPropertyError(msg)
 
         del l_i
@@ -314,7 +314,7 @@ def check_instance_optional_key_map(property_instance_key,
         check_instance_optional_key_standard_pairs_format(
             property_instance_map, property_definition_map)
     except KIMPropertyError:
-        msg = 'in property instance key = "{}"\n'.format(property_instance_key)
+        msg = f'in property instance key = "{property_instance_key}"\n'
         msg += str(KIMPropertyError)
         raise KIMPropertyError(msg)
 
@@ -343,14 +343,14 @@ def check_instance_optional_key_marked_required_are_present(
         raise KIMPropertyError(msg)
 
     for k in property_definition:
-        if not k in def_required_keys:
+        if k not in def_required_keys:
             if property_definition[k]["required"]:
-                if not k in property_instance:
-                    msg = 'variable "{}" is marked required in the '.format(k)
+                if k not in property_instance:
+                    msg = f'variable "{k}" is marked required in the '
                     msg += 'property definition, but it is not present in '
                     msg += 'the property instance.\nA "required" flag in the '
                     msg += 'property definition indicates the variable '
-                    msg += '"{}" must be in the property-instance '.format(k)
+                    msg += f'"{k}" must be in the property-instance '
                     msg += 'of the property.'
                     raise KIMPropertyError(msg)
 
@@ -461,11 +461,9 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
 
         if pd["property-id"] != pi["property-id"]:
             msg = 'wrong property definition is provided.\n'
-            msg += 'Property id :\n'
-            msg += '{}\n'.format(pd["property-id"])
+            msg += f'Property id :\n{pd["property-id"]}\n'
             msg += 'read from the property definition file is different '
-            msg += 'from the property id :\n'
-            msg += '{}\n'.format(pi["property-id"])
+            msg += f'from the property id :\n{pi["property-id"]}\n'
             msg += 'read from the property instance file.'
             raise KIMPropertyError(msg)
 
@@ -534,11 +532,9 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
 
             if pd["property-id"] != pi_["property-id"]:
                 msg = 'wrong property definition is provided.\n'
-                msg += 'Property id :\n'
-                msg += '{}\n'.format(pd["property-id"])
+                msg += f'Property id :\n{pd["property-id"]}\n'
                 msg += 'read from the property definition file is different '
-                msg += 'from the property id :\n'
-                msg += '{}\n'.format(pi_["property-id"])
+                msg += f'from the property id :\n{pi_["property-id"]}\n'
                 msg += 'read from the property instance file.'
                 raise KIMPropertyError(msg)
 

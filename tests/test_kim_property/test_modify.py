@@ -1,5 +1,3 @@
-from os.path import join, isfile
-
 import kim_edn
 
 from tests.test_kim_property import PyTest
@@ -40,7 +38,15 @@ class TestModifyModule:
 
         kim_obj = kim_edn.load(str_obj)[0]
 
-        Property_Instance = '{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1 "short-name" {"source-value" ["fcc"]} "species" {"source-value" ["Al" "Al" "Al" "Al"]} "a" {"source-value" [3.9149 4.0 4.032 4.0817 4.1602] "source-unit" "angstrom" "digits" 5} "basis-atom-coordinates" {"source-value" [[0.0 0.0 0.0] [0.5 0.5 0.0] [0.5 0.0 0.5] [0.0 0.5 0.5]]} "cohesive-potential-energy" {"source-value" [3.324 3.3576 3.36 3.355 3.326] "source-std-uncert-value" [0.002 0.0001 1e-05 0.0012 0.00015] "source-unit" "eV" "digits" 5}}'
+        Property_Instance = '{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/' \
+                            'cohesive-energy-relation-cubic-crystal" "instance-id" 1 "short-name" ' \
+                            '{"source-value" ["fcc"]} "species" {"source-value" ["Al" "Al" "Al" "Al"]} ' \
+                            '"a" {"source-value" [3.9149 4.0 4.032 4.0817 4.1602] "source-unit" ' \
+                            '"angstrom" "digits" 5} "basis-atom-coordinates" {"source-value" ' \
+                            '[[0.0 0.0 0.0] [0.5 0.5 0.0] [0.5 0.0 0.5] [0.0 0.5 0.5]]} ' \
+                            '"cohesive-potential-energy" {"source-value" [3.324 3.3576 3.36 3.355 3.326] ' \
+                            '"source-std-uncert-value" [0.002 0.0001 1e-05 0.0012 0.00015] "source-unit" ' \
+                            '"eV" "digits" 5}}'
 
         self.assertTrue(Property_Instance == kim_edn.dumps(kim_obj))
 
@@ -111,6 +117,15 @@ class TestModifyModule:
         # Test for scalar values
         str_obj = self.kim_property.kim_property_modify(
             str_obj, 1,
+            "key", "cohesive-potential-energy",
+            "source-asym-std-uncert-neg", "2.3")
+
+        kim_obj = kim_edn.load(str_obj)[0]
+
+        self.assertTrue(kim_obj["cohesive-potential-energy"]["source-asym-std-uncert-neg"] == 2.3)
+
+        str_obj = self.kim_property.kim_property_modify(
+            str_obj, 1,
             "key", "space-group",
             "source-value", "Immm")
 
@@ -156,12 +171,14 @@ class TestModifyModule:
                               self.kim_property.kim_property_modify, str_obj, 1)
 
         # Fails when there is a different instance id
-        str_obj = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1}]'
+        str_obj = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/' \
+                  'cohesive-energy-relation-cubic-crystal" "instance-id" 1}]'
         self.assertRaises(self.KIMPropertyError,
                           self.kim_property.kim_property_modify, str_obj, 2)
 
         # Fails when not having the instance id
-        str_obj = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"}]'
+        str_obj = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/' \
+                  'cohesive-energy-relation-cubic-crystal"}]'
         self.assertRaises(self.KIMPropertyError,
                           self.kim_property.kim_property_modify, str_obj, 1)
 
@@ -214,12 +231,9 @@ class TestModifyModule:
                           str_obj, 1,
                           "key", "short-name", "source-value", "fcc")
 
-        msg = 'input value '
-        msg += '"{}" doesn\'t meet the '.format("fcc")
-        msg += 'format specification. An integer '
-        msg += 'equal to or greater than 1 '
-        msg += 'or integer indices range of '
-        msg += '"start:stop".'
+        msg = 'input value "fcc" doesn\'t meet the format specification. '
+        msg += 'An integer equal to or greater than 1 or integer '
+        msg += 'indices range of "start:stop".'
 
         self.assertRaisesRegex(self.KIMPropertyError, msg,
                                self.kim_property.kim_property_modify,

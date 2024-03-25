@@ -73,16 +73,19 @@ class TestPropertyDefinitionModuleComponents:
     def test_check_key_present(self):
         """Test if a key is present."""
         # key is not an string
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_key_present,
-                          1, '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1}]')
+        self.assertRaises(self.KIMPropertyError, self.kim_property.check_key_present, 1,
+                          '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/'
+                          'cohesive-energy-relation-cubic-crystal" "instance-id" 1}]')
 
         # key does not exist
-        self.assertRaises(self.KIMPropertyError, self.kim_property.check_key_present,
-                          "short-name", '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1}]')
+        self.assertRaises(self.KIMPropertyError, self.kim_property.check_key_present, "short-name",
+                          '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/'
+                          'cohesive-energy-relation-cubic-crystal" "instance-id" 1}]')
 
         # key exists
-        self.kim_property.check_key_present(
-            "instance-id", '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1}]')
+        self.kim_property.check_key_present("instance-id",
+                                            '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/'
+                                            'cohesive-energy-relation-cubic-crystal" "instance-id" 1}]')
 
     def test_check_property_id_format(self):
         """Test if the property id fomrat is correct."""
@@ -125,10 +128,21 @@ class TestPropertyDefinitionModuleComponents:
 
     def test_check_required_keys_present(self):
         """Test if the required property keys are present."""
-        str1 = '{"property-id" "tag:staff@noreply.openkim.org,2015-05-26:property/cohesive-energy-lattice-invariant-shear-unrelaxed-path-cubic-crystal" "property-title" "Cohesive energy for an unrelaxed lattice-invariant shear path deformation of a cubic crystal" "property-description" "Unrelaxed cohesive energy versus shear relation along a lattice-invariant deformation path of a cubic crystal at zero absolute temperature. The lattice-invariant shear path is defined by a shearing direction and shear plane normal relative to the reference conventional crystal coordinate system.  Unit cell atomic shifts are NOT minimized for each value of the shear parameter."}'
+        str1 = '{"property-id" "tag:staff@noreply.openkim.org,2015-05-26:property/' \
+               'cohesive-energy-lattice-invariant-shear-unrelaxed-path-cubic-crystal" ' \
+               '"property-title" "Cohesive energy for an unrelaxed lattice-invariant ' \
+               'shear path deformation of a cubic crystal" "property-description" ' \
+               '"Unrelaxed cohesive energy versus shear relation along a lattice-invariant ' \
+               'deformation path of a cubic crystal at zero absolute temperature. The ' \
+               'lattice-invariant shear path is defined by a shearing direction and shear ' \
+               'plane normal relative to the reference conventional crystal coordinate system.  ' \
+               'Unit cell atomic shifts are NOT minimized for each value of the shear parameter."}'
 
-        obj1 = {"property-id": "tag:staff@noreply.openkim.org,2015-05-26:property/cohesive-energy-lattice-invariant-shear-unrelaxed-path-cubic-crystal",
-                "property-title": "Cohesive energy for an unrelaxed lattice-invariant shear path deformation of a cubic crystal"}
+        obj1 = {"property-id":
+                "tag:staff@noreply.openkim.org,2015-05-26:property/"
+                "cohesive-energy-lattice-invariant-shear-unrelaxed-path-cubic-crystal",
+                "property-title":
+                "Cohesive energy for an unrelaxed lattice-invariant shear path deformation of a cubic crystal"}
 
         self.kim_property.check_required_keys_present(str1)
 

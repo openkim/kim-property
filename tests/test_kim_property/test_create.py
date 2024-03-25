@@ -9,7 +9,8 @@ class TestCreateModule:
     def test_create(self):
         """Test the create functionality."""
         # Correct object
-        str_obj = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1}]'
+        str_obj = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/' \
+                  'cohesive-energy-relation-cubic-crystal" "instance-id" 1}]'
 
         # Create the property instance with the property name
         str1 = self.kim_property.kim_property_create(
@@ -50,7 +51,9 @@ class TestCreateModule:
         self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_create,
                           10, 'new-name')
 
-        str_obj2 = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1} {"property-id" "tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass" "instance-id" 2}]'
+        str_obj2 = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/' \
+                   'cohesive-energy-relation-cubic-crystal" "instance-id" 1} {"property-id" ' \
+                   '"tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass" "instance-id" 2}]'
 
         # Create the property instance with the property name to the already created instance
         str3 = self.kim_property.kim_property_create(
@@ -61,6 +64,9 @@ class TestCreateModule:
         # It will fail if the property instance already exists
         self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_create,
                           1, 'atomic-mass', str1)
+
+        self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_create,
+                          '3', 'cohesive-energy-relation-cubic-crystal')
 
     def test_create_from_a_file(self):
         """Test the create functionality for a new file as input."""
@@ -83,6 +89,11 @@ class TestCreateModule:
         # Fails if the property instance already exists in OpenKIM
         self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_create,
                           1, join("tests", "fixtures", "atomic-mass.edn"))
+
+        emsg = 'the input property_name file contains a property ID:\n' \
+               '"tag:brunnels.*mass"\nwhich.*\nUse the KIM.*file.\nSee.*'
+        self.assertRaisesRegex(self.KIMPropertyError, emsg, self.kim_property.kim_property_create,
+                               1, join("tests", "fixtures", "atomic-mass.edn"))
 
 
 class TestPyTestCreateModule(TestCreateModule, PyTest):

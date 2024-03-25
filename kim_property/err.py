@@ -16,7 +16,7 @@ class KIMPropertyError(Exception):
 
     """
 
-    def __init__(self, msg):
+    def __init__(self, msg: str):
         """Constuctor."""
         _msg = '\nERROR(@' + \
             inspect.currentframe().f_back.f_code.co_name + '): ' + msg

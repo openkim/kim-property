@@ -52,7 +52,10 @@ git submodule update --remote
 
 Once you cloned the repository with external submodule and fetch all the latest
 changes from
-[`openkim-properties`](https://github.com/openkim/openkim-properties.git). First, if properties have been added or removed, update the lists ``kim_property_names`` and ``kim_property_ids`` in ``kim_property/pickle.py``. Then, in the package main directory,
+[`openkim-properties`](https://github.com/openkim/openkim-properties.git).
+First, if properties have been added or removed, update the lists
+``kim_property_names`` and ``kim_property_ids`` in ``kim_property/ednify.py``.
+Then, in the package main directory,
 
 ```sh
 ├── LICENSE
@@ -60,10 +63,9 @@ changes from
 ├── README.md
 ├── external
 ├── kim_property
-├── setup.cfg
+├── pyproject.toml
 ├── setup.py
-├── tests
-└── versioneer.py
+└── tests
 ```
 
 please run python and do as,
@@ -71,7 +73,7 @@ please run python and do as,
 ```sh
 python
 >>> import kim_property
->>> kim_property.pickle.pickle_kim_properties()
+>>> kim_property.ednify.ednify_kim_properties()
 ```
 
 Now, you have the latest update from
@@ -79,15 +81,11 @@ Now, you have the latest update from
 
 **NOTE:**
 
-Suppose you are a developer with write access to the `kim-property` repository
+If you are a developer with a write access to the `kim-property` repository
 and would like to update the property definition with the new updates. In that
 case, you should commit and publish your changes to the repository and make a
 new release. This release will update the binary distribution of the package
 with the latest changes.
 
-Please install the `kim-property` package using pip in the package main
-directory,
-
-```sh
-pip install .
-```
+To get started, you'll need to install the `kim-property` package. Please refer
+to the [installation instructions](../README.md#installing-kim-property).

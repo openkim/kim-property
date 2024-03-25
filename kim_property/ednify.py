@@ -1,8 +1,8 @@
-"""KIM properties object serialization."""
+"""KIM properties object serialization/de-serialization."""
 
 from os.path import abspath, join, isdir, pardir, isfile, dirname
-from io import BytesIO
-import pickle
+from io import IOBase
+from typing import Dict, Optional, Union
 
 import kim_edn
 
@@ -10,19 +10,21 @@ from .err import KIMPropertyError
 from .instance import get_property_id_path
 
 __all__ = [
-    "pickle_kim_properties",
-    "unpickle_kim_properties",
+    "ednify_kim_properties",
+    "unednify_kim_properties",
 ]
 
 
-kim_properties_path = join(dirname(abspath(__file__)), "properties")
-"""str: Absolute path to the KIM properties folder."""
+kim_properties_path: str = join(dirname(abspath(__file__)), "properties")
+"""Absolute path to the KIM properties folder."""
 
 
-def pickle_kim_properties(properties=None,
-                          fp=join(kim_properties_path,
-                                  'kim_properties.pickle'),
-                          protocol=0):
+def ednify_kim_properties(
+    properties: Optional[Dict] = None,
+    fp: Union[str, bytes, bytearray, IOBase] = join(
+        kim_properties_path, "kim_properties.edn"
+    ),
+):
     """Serialize KIM properties.
 
     Keyword Arguments:
@@ -31,11 +33,9 @@ def pickle_kim_properties(properties=None,
         fp {string, or a ``.write()``-supporting bytes-like object} -- fp is a
             file name string to open it or a ``.write()``-supporting
             bytes-like object.
-        protocol {int} -- protocol which can be used for pickling.
-            (default: {0})
 
     """
-    # List of KIM properties to be pickled
+    # List of KIM properties to be ednified
     kim_properties_list = []
 
     if properties is None:
@@ -44,16 +44,18 @@ def pickle_kim_properties(properties=None,
 
         # KIM property files path. An absolute path (or a valid relative path)
         # to the KIM property files folder.
-        kim_property_files_path = join(dirname(abspath(__file__)),
-                                       pardir,
-                                       "external",
-                                       "openkim-properties",
-                                       "properties")
+        kim_property_files_path = join(
+            dirname(abspath(__file__)),
+            pardir,
+            "external",
+            "openkim-properties",
+            "properties",
+        )
 
         if isdir(abspath(kim_property_files_path)):
             kim_property_files_path = abspath(kim_property_files_path)
         else:
-            msg = 'property files can not be found!'
+            msg = f"property files can not be found at\n{kim_property_files_path}"
             raise KIMPropertyError(msg)
 
         # KIM property names.
@@ -116,7 +118,7 @@ def pickle_kim_properties(properties=None,
             "unstable-twinning-fault-relaxed-energy-fcc-crystal-npt",
             "verification-check",
             "crystal-structure-npt",
-            "binding-energy-crystal"
+            "binding-energy-crystal",
         ]
 
         # KIM property full IDs.
@@ -125,7 +127,7 @@ def pickle_kim_properties(properties=None,
             "tag:staff@noreply.openkim.org,2014-04-15:property/bulk-modulus-isothermal-cubic-crystal-npt",
             "tag:staff@noreply.openkim.org,2014-04-15:property/bulk-modulus-isothermal-hexagonal-crystal-npt",
             "tag:staff@noreply.openkim.org,2015-05-26:property/cohesive-energy-lattice-invariant-shear-path-cubic-crystal",
-            "tag:staff@noreply.openkim.org,2015-05-26:property/cohesive-energy-lattice-invariant-shear-unrelaxed-path-cubic-crystal",
+            "tag:staff@noreply.openkim.org,2015-05-26:property/cohesive-energy-lattice-invariant-shear-unrelaxed-path-cubic-crystal",  # noqa: E501
             "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal",
             "tag:staff@noreply.openkim.org,2015-05-26:property/cohesive-energy-shear-stress-path-cubic-crystal",
             "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-free-energy-cubic-crystal",
@@ -135,22 +137,22 @@ def pickle_kim_properties(properties=None,
             "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-potential-energy-hexagonal-crystal",
             "tag:staff@noreply.openkim.org,2014-04-15:property/configuration-cluster-fixed",
             "tag:staff@noreply.openkim.org,2014-04-15:property/configuration-cluster-relaxed",
-            "tag:staff@noreply.openkim.org,2014-04-15:property/configuration-nonorthogonal-periodic-3d-cell-fixed-particles-fixed",
-            "tag:staff@noreply.openkim.org,2014-04-15:property/configuration-nonorthogonal-periodic-3d-cell-fixed-particles-relaxed",
-            "tag:staff@noreply.openkim.org,2014-04-15:property/configuration-nonorthogonal-periodic-3d-cell-relaxed-particles-fixed",
-            "tag:staff@noreply.openkim.org,2014-04-15:property/configuration-nonorthogonal-periodic-3d-cell-relaxed-particles-relaxed",
+            "tag:staff@noreply.openkim.org,2014-04-15:property/configuration-nonorthogonal-periodic-3d-cell-fixed-particles-fixed",  # noqa: E501
+            "tag:staff@noreply.openkim.org,2014-04-15:property/configuration-nonorthogonal-periodic-3d-cell-fixed-particles-relaxed",  # noqa: E501
+            "tag:staff@noreply.openkim.org,2014-04-15:property/configuration-nonorthogonal-periodic-3d-cell-relaxed-particles-fixed",  # noqa: E501
+            "tag:staff@noreply.openkim.org,2014-04-15:property/configuration-nonorthogonal-periodic-3d-cell-relaxed-particles-relaxed",  # noqa: E501
             "tag:staff@noreply.openkim.org,2015-10-12:property/configuration-periodic-2d-cell-fixed-particles-fixed",
             "tag:staff@noreply.openkim.org,2021-02-24:property/dislocation-core-energy-cubic-crystal-npt",
-            "tag:staff@noreply.openkim.org,2016-05-24:property/elastic-constants-first-strain-gradient-isothermal-cubic-crystal-npt",
-            "tag:staff@noreply.openkim.org,2016-05-24:property/elastic-constants-first-strain-gradient-isothermal-monoatomic-hexagonal-crystal-npt",
+            "tag:staff@noreply.openkim.org,2016-05-24:property/elastic-constants-first-strain-gradient-isothermal-cubic-crystal-npt",  # noqa: E501
+            "tag:staff@noreply.openkim.org,2016-05-24:property/elastic-constants-first-strain-gradient-isothermal-monoatomic-hexagonal-crystal-npt",  # noqa: E501
             "tag:staff@noreply.openkim.org,2014-05-21:property/elastic-constants-isothermal-cubic-crystal-npt",
-            "tag:staff@noreply.openkim.org,2017-07-31:property/enthalpy-of-mixing-curve-substitutional-binary-cubic-crystal-npt",
-            "tag:staff@noreply.openkim.org,2017-07-31:property/enthalpy-of-mixing-curve-substitutional-binary-cubic-crystal-nvt",
+            "tag:staff@noreply.openkim.org,2017-07-31:property/enthalpy-of-mixing-curve-substitutional-binary-cubic-crystal-npt",  # noqa: E501
+            "tag:staff@noreply.openkim.org,2017-07-31:property/enthalpy-of-mixing-curve-substitutional-binary-cubic-crystal-nvt",  # noqa: E501
             "tag:staff@noreply.openkim.org,2015-05-26:property/extrinsic-stacking-fault-relaxed-energy-fcc-crystal-npt",
             "tag:staff@noreply.openkim.org,2015-05-26:property/gamma-surface-relaxed-fcc-crystal-npt",
             "tag:brunnels@noreply.openkim.org,2016-01-23:property/grain-boundary-symmetric-tilt-energy-ideal-cubic-crystal",
             "tag:brunnels@noreply.openkim.org,2016-01-23:property/grain-boundary-symmetric-tilt-energy-relaxed-cubic-crystal",
-            "tag:brunnels@noreply.openkim.org,2016-02-18:property/grain-boundary-symmetric-tilt-energy-relaxed-relation-cubic-crystal",
+            "tag:brunnels@noreply.openkim.org,2016-02-18:property/grain-boundary-symmetric-tilt-energy-relaxed-relation-cubic-crystal",  # noqa: E501
             "tag:staff@noreply.openkim.org,2015-05-26:property/intrinsic-stacking-fault-relaxed-energy-fcc-crystal-npt",
             "tag:staff@noreply.openkim.org,2015-07-30:property/linear-thermal-expansion-coefficient-cubic-crystal-npt",
             "tag:staff@noreply.openkim.org,2014-08-21:property/melting-temperature-constant-pressure-cubic-crystal",
@@ -158,8 +160,8 @@ def pickle_kim_properties(properties=None,
             "tag:staff@noreply.openkim.org,2015-07-28:property/monovacancy-neutral-formation-free-energy-crystal-npt",
             "tag:staff@noreply.openkim.org,2015-09-16:property/monovacancy-neutral-migration-energy-crystal-npt",
             "tag:staff@noreply.openkim.org,2015-07-28:property/monovacancy-neutral-relaxation-volume-crystal-npt",
-            "tag:staff@noreply.openkim.org,2015-07-28:property/monovacancy-neutral-relaxed-formation-potential-energy-crystal-npt",
-            "tag:staff@noreply.openkim.org,2015-07-28:property/monovacancy-neutral-unrelaxed-formation-potential-energy-crystal-npt",
+            "tag:staff@noreply.openkim.org,2015-07-28:property/monovacancy-neutral-relaxed-formation-potential-energy-crystal-npt",  # noqa: E501
+            "tag:staff@noreply.openkim.org,2015-07-28:property/monovacancy-neutral-unrelaxed-formation-potential-energy-crystal-npt",  # noqa: E501
             "tag:staff@noreply.openkim.org,2014-05-21:property/phonon-dispersion-dos-cubic-crystal-npt",
             "tag:staff@noreply.openkim.org,2014-05-21:property/phonon-dispersion-relation-cubic-crystal-npt",
             "tag:staff@noreply.openkim.org,2015-05-26:property/shear-stress-path-cubic-crystal",
@@ -179,7 +181,7 @@ def pickle_kim_properties(properties=None,
             "tag:staff@noreply.openkim.org,2015-05-26:property/unstable-twinning-fault-relaxed-energy-fcc-crystal-npt",
             "tag:tadmor@noreply.openkim.org,2017-02-01:property/verification-check",
             "tag:staff@noreply.openkim.org,2023-02-21:property/crystal-structure-npt",
-            "tag:staff@noreply.openkim.org,2023-02-21:property/binding-energy-crystal"
+            "tag:staff@noreply.openkim.org,2023-02-21:property/binding-energy-crystal",
         ]
 
         for _id in kim_property_ids:
@@ -194,16 +196,15 @@ def pickle_kim_properties(properties=None,
         del kim_property_files_path
 
         # KIM properties dictionary indexed by properties full IDs.
-        kim_properties = {k: kim_edn.load(v) for k, v in zip(
-            kim_property_ids, kim_property_files)}
+        kim_properties = {
+            k: kim_edn.load(v) for k, v in zip(kim_property_ids, kim_property_files)
+        }
 
         # KIM properties name to full ID dictionary.
-        property_name_to_property_id = \
-            dict(zip(kim_property_names, kim_property_ids))
+        property_name_to_property_id = dict(zip(kim_property_names, kim_property_ids))
 
         # KIM properties full ID to name dictionary.
-        property_id_to_property_name = \
-            dict(zip(kim_property_ids, kim_property_names))
+        property_id_to_property_name = dict(zip(kim_property_ids, kim_property_names))
 
         del kim_property_names
         del kim_property_ids
@@ -244,28 +245,21 @@ def pickle_kim_properties(properties=None,
             id_to_property_name,
         ]
 
-    if isinstance(fp, str):
-        # See if this is a file name
-        with open(fp, 'wb') as f:
-            # Pickle the kim_properties
-            pickle.dump(kim_properties_list, f, protocol=protocol)
-    else:
-        try:
-            pickle.dump(kim_properties_list, fp, protocol=protocol)
-        except:
-            msg = 'wrong input. ("fp" should refer to a bytes-like object.)'
-            raise KIMPropertyError(msg)
+    kim_edn.dump(kim_properties_list, fp)
 
 
-def unpickle_kim_properties(fp=join(kim_properties_path,
-                                    'kim_properties.pickle')):
+def unednify_kim_properties(
+    fp: Union[str, bytes, bytearray, IOBase] = join(
+        kim_properties_path, "kim_properties.edn"
+    )
+):
     """Deserialize KIM properties.
 
-    Return reconstituted object hierarchy from the pickled object. Read the
-    pickled representation of an object from the "name" file and return the
-    reconstituted object hierarchy specified therein. By default, it returns
+    Return reconstituted object hierarchy from the edn object. Read the
+    edn representation of an object from the "name" file and return the
+    reconstituted object hierarchy specified therein. By default, it
     the "kim_properties", "property_name_to_property_id", and
-    "property_id_to_property_name" objects.
+    returns "property_id_to_property_name" objects.
 
     Keyword Arguments:
         fp {string or a ``.read()``-supporting bytes-like object} -- fp is a
@@ -276,20 +270,4 @@ def unpickle_kim_properties(fp=join(kim_properties_path,
         Deserialized KIM properties
 
     """
-    if isinstance(fp, str):
-        if isfile(fp):
-            # See if this is a file name
-            with open(fp, 'rb') as f:
-                return pickle.load(f)
-
-        msg = 'wrong input. Can\'t load pickle from unicode string.\n'
-        msg += 'If "fp" refers to a file name, make sure it exists in PATH '
-        msg += 'or provide the file name with its absolute PATH.'
-        raise KIMPropertyError(msg)
-
-    try:
-        f = BytesIO(fp)
-        return pickle.load(f)
-    except:
-        msg = 'wrong input. Neither can open nor load the input.'
-        raise KIMPropertyError(msg)
+    return kim_edn.load(fp)
