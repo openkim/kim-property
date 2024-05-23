@@ -9,7 +9,7 @@ from .numeric import shape, create_full_array, extend_full_array
 from .definition import \
     get_optional_key_extent_ndimensions, \
     get_optional_key_extent_shape
-from .instance import standard_keys
+from .instance import standard_keys, check_instance_id_format
 from .create import get_properties
 
 __all__ = [
@@ -85,9 +85,9 @@ def kim_property_modify(property_instances, instance_id, *argv):  # noqa: C901
 
     Arguments:
         property_instances {string} -- A string containing the serialized
-        KIM-EDN formatted property instances.
+            KIM-EDN formatted property instances.
         instance_id {int} -- A positive integer identifying the property
-        instance.
+            instance.
 
     Returns:
         string -- serialized KIM-EDN formatted property instances.
@@ -97,9 +97,7 @@ def kim_property_modify(property_instances, instance_id, *argv):  # noqa: C901
         msg = 'there is no property instance to modify the content.'
         raise KIMPropertyError(msg)
 
-    if not isinstance(instance_id, int):
-        msg = 'the "instance_id" is not an `int`.'
-        raise KIMPropertyError(msg)
+    check_instance_id_format(instance_id)
 
     # Deserialize the KIM property instances.
     kim_property_instances = kim_edn.loads(property_instances)

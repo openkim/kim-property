@@ -1,12 +1,15 @@
 """Create module."""
 
 from os.path import isfile
+from typing import Optional
 
 import kim_edn
 
 from .err import KIMPropertyError
 from .definition import check_property_definition
-from .instance import get_property_id_path, check_instance_id_format
+from .instance import get_property_id_path, \
+    check_instance_id_format, \
+    check_disclaimer_format
 from .ednify import unednify_kim_properties
 
 __all__ = [
@@ -68,7 +71,11 @@ def unset_property_id(property_id):
                 NEW_PROPERTY_IDS = None
 
 
-def kim_property_create(instance_id, property_name, property_instances=None):
+def kim_property_create(
+    instance_id: int,
+    property_name: str,
+    property_instances: Optional[str] = None,
+    property_disclaimer: Optional[str] = None):
     """Create a new kim property instance.
 
     It takes as input the property instance ID and property definition name
@@ -112,6 +119,9 @@ def kim_property_create(instance_id, property_name, property_instances=None):
               the current working directory) of the file to be opened
         property_instances {string} -- A string containing the serialized
             KIM-EDN formatted property instances. (default: {None})
+        property_disclaimer {string} -- A string containing an optional
+            statement of applicability of the data contained in this property
+            instance. (default: {None})
 
     Returns:
         string -- serialized KIM-EDN formatted property instances.
@@ -145,6 +155,9 @@ def kim_property_create(instance_id, property_name, property_instances=None):
                 msg += 'In the case where there are multiple property '
                 msg += 'instances, the instance-id’s cannot repeat.'
                 raise KIMPropertyError(msg)
+
+    if property_disclaimer is not None:
+        check_disclaimer_format(property_disclaimer)
 
     # KIM property names.
     kim_property_names = list(PROPERTY_NAME_TO_PROPERTY_ID.keys())
@@ -208,6 +221,9 @@ def kim_property_create(instance_id, property_name, property_instances=None):
             raise KIMPropertyError(msg)
 
     new_property_instance["instance-id"] = instance_id
+
+    if property_disclaimer is not None:
+        new_property_instance["disclaimer"] = property_disclaimer
 
     # Add the newly created property instance to the collection
     kim_property_instances.append(new_property_instance)

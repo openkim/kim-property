@@ -18,9 +18,11 @@ from .numeric import shape
 
 __all__ = [
     "required_keys",
+    "optional_keys",
     "standard_keys",
     "get_property_id_path",
     "check_instance_id_format",
+    "check_disclaimer_format",
     "check_optional_key_source_value_scalar",
     "get_optional_key_source_value_ndimensions",
     "check_instance_optional_key_standard_pairs_format",
@@ -32,6 +34,15 @@ __all__ = [
 
 # A Property Instance must contain the following required key-value pairs:
 required_keys = ("property-id", "instance-id")
+
+# A Property Instance may contain the following optional key-value pairs:
+optional_keys = (
+    # A string containing an optional statement of applicability of the data
+    # contained in this Property Instance. For a Prediction, this can be
+    # provided by the Test, while for an item of Reference Data, this can be
+    # provided by the contributor.
+    "disclaimer",
+)
 
 # The required fields list above are followed by an unordered set of
 # key-map pairs. Each key is associated with a map which must contain
@@ -142,6 +153,23 @@ def check_instance_id_format(instance_id, _m=INSTANCE_ID.match):
         msg = 'the "instance-id" value is not an `int` '
         msg += 'and doesn\'t meet the format specification.'
         raise KIMPropertyError(msg)
+
+
+def check_disclaimer_format(s: str):
+    """Check the disclaimer have an ending period.
+
+    Arguments:
+        s {string} -- A string
+
+    """
+    if isinstance(s, str):
+        if not s.endswith('.'):
+            msg = f'the "disclaimer" :\n{s}\nshould include an ending period.'
+            raise KIMPropertyError(msg)
+        return
+
+    msg = 'input to the function is not a `str`.'
+    raise KIMPropertyError(msg)
 
 
 # checks for optional keys
@@ -469,9 +497,12 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
 
         check_instance_id_format(pi["instance-id"])
 
+        if pi.get("disclaimer", default=None) is not None:
+            check_disclaimer_format(pi["disclaimer"])
+
         # Check optional fields.
         for k in pi:
-            if k not in required_keys:
+            if k not in required_keys + optional_keys:
                 if k in pd:
                     check_instance_optional_key_map(k, pi[k], pd[k], _m=_m)
                 else:
@@ -546,9 +577,12 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
 
             instance_id.append(pi_["instance-id"])
 
+            if pi_.get("disclaimer", default=None) is not None:
+                check_disclaimer_format(pi_["disclaimer"])
+
             # Check optional fields.
             for k in pi_:
-                if k not in required_keys:
+                if k not in required_keys + optional_keys:
                     if k in pd:
                         check_instance_optional_key_map(
                             k, pi_[k], pd[k], _m=_m)
