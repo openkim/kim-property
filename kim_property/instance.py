@@ -497,7 +497,7 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
 
         check_instance_id_format(pi["instance-id"])
 
-        if pi.get("disclaimer", default=None) is not None:
+        if pi.get("disclaimer", None) is not None:
             check_disclaimer_format(pi["disclaimer"])
 
         # Check optional fields.
@@ -577,7 +577,7 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
 
             instance_id.append(pi_["instance-id"])
 
-            if pi_.get("disclaimer", default=None) is not None:
+            if pi_.get("disclaimer", None) is not None:
                 check_disclaimer_format(pi_["disclaimer"])
 
             # Check optional fields.
