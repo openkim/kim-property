@@ -385,7 +385,6 @@ from .definition import \
 from .instance import \
     get_property_id_path, \
     check_instance_id_format, \
-    check_disclaimer_format, \
     check_optional_key_source_value_scalar, \
     get_optional_key_source_value_ndimensions, \
     check_instance_optional_key_standard_pairs_format, \
@@ -415,7 +414,6 @@ __all__ = [
     "check_property_definition",
     "get_property_id_path",
     "check_instance_id_format",
-    "check_disclaimer_format",
     "check_optional_key_source_value_scalar",
     "get_optional_key_source_value_ndimensions",
     "check_instance_optional_key_standard_pairs_format",

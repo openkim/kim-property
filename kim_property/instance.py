@@ -22,7 +22,6 @@ __all__ = [
     "standard_keys",
     "get_property_id_path",
     "check_instance_id_format",
-    "check_disclaimer_format",
     "check_optional_key_source_value_scalar",
     "get_optional_key_source_value_ndimensions",
     "check_instance_optional_key_standard_pairs_format",
@@ -153,25 +152,6 @@ def check_instance_id_format(instance_id, _m=INSTANCE_ID.match):
 
     msg = 'the "instance-id" value is not an `int` and doesn\'t meet the '
     msg += 'format specification.'
-    raise KIMPropertyError(msg)
-
-
-def check_disclaimer_format(s: str):
-    """Check the disclaimer have an ending period.
-
-    Arguments:
-        s {string} -- A string
-
-    """
-    if isinstance(s, str):
-        if not s.endswith('.'):
-            msg = f'the optional key-value pair,\n"disclaimer": "{s}"\n'
-            msg += 'doesn\'t meet the format specification (string value with '
-            msg += 'an ending period).'
-            raise KIMPropertyError(msg)
-        return
-
-    msg = 'input to the function is not a `str`.'
     raise KIMPropertyError(msg)
 
 
@@ -500,9 +480,6 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
 
         check_instance_id_format(pi["instance-id"])
 
-        if pi.get("disclaimer", None) is not None:
-            check_disclaimer_format(pi["disclaimer"])
-
         # Check optional fields.
         for k in pi:
             if k not in required_keys + optional_keys:
@@ -579,9 +556,6 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
                 raise KIMPropertyError(msg)
 
             instance_id.append(pi_["instance-id"])
-
-            if pi_.get("disclaimer", None) is not None:
-                check_disclaimer_format(pi_["disclaimer"])
 
             # Check optional fields.
             for k in pi_:

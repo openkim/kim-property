@@ -183,11 +183,6 @@ class TestModifyModule:
         self.assertRaises(self.KIMPropertyError,
                           self.kim_property.kim_property_modify,
                           str_obj, 1,
-                          "disclaimer", "This is an example disclaimer")
-
-        self.assertRaises(self.KIMPropertyError,
-                          self.kim_property.kim_property_modify,
-                          str_obj, 1,
                           "disclaimer")
 
         str_obj = self.kim_property.kim_property_modify(
@@ -204,13 +199,6 @@ class TestModifyModule:
                             '"short-name" {"source-value" ["fcc"]}}'
 
         self.assertTrue(Property_Instance == kim_edn.dumps(kim_obj))
-
-        self.assertRaises(self.KIMPropertyError,
-                          self.kim_property.kim_property_modify,
-                          str_obj, 1,
-                          "key", "short-name",
-                          "source-value", "1", "fcc",
-                          "disclaimer", "This is an example disclaimer")
 
         # Create the property instance with the property name
         str_obj = self.kim_property.kim_property_create(

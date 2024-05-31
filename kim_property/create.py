@@ -7,9 +7,7 @@ import kim_edn
 
 from .err import KIMPropertyError
 from .definition import check_property_definition
-from .instance import get_property_id_path, \
-    check_instance_id_format, \
-    check_disclaimer_format
+from .instance import get_property_id_path, check_instance_id_format
 from .ednify import unednify_kim_properties
 
 __all__ = [
@@ -155,9 +153,6 @@ def kim_property_create(
                 msg += 'In the case where there are multiple property '
                 msg += 'instances, the instance-id’s cannot repeat.'
                 raise KIMPropertyError(msg)
-
-    if property_disclaimer is not None:
-        check_disclaimer_format(property_disclaimer)
 
     # KIM property names.
     kim_property_names = list(PROPERTY_NAME_TO_PROPERTY_ID.keys())

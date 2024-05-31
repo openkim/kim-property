@@ -9,9 +9,7 @@ from .numeric import shape, create_full_array, extend_full_array
 from .definition import \
     get_optional_key_extent_ndimensions, \
     get_optional_key_extent_shape
-from .instance import standard_keys, \
-    check_instance_id_format, \
-    check_disclaimer_format
+from .instance import standard_keys, check_instance_id_format
 from .create import get_properties
 
 __all__ = [
@@ -170,10 +168,7 @@ def kim_property_modify(property_instances, instance_id, *argv):  # noqa: C901
                 raise KIMPropertyError(msg)
 
             i += 1
-            check_disclaimer_format(argv[i])
-
             a_property_instance[arg] = argv[i]
-
             i += 1
             continue
 

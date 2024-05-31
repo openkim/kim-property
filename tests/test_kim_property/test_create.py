@@ -100,11 +100,6 @@ class TestCreateModule:
 
         self.assertTrue(str4 == str_obj2)
 
-        self.assertRaises(self.KIMPropertyError,
-                          self.kim_property.kim_property_create,
-                          2, 'atomic-mass', str1,
-                          'This is another example disclaimer')
-
         import kim_edn
         self.assertRaises(kim_edn.decoder.KIMEDNDecodeError,
                           self.kim_property.kim_property_create,
