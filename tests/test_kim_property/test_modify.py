@@ -163,6 +163,89 @@ class TestModifyModule:
             "key", "cohesive-potential-energy",
             "si-unit", "eV-test")
 
+    def test_modify_with_optional_keys(self):
+        """Test the modify functionality with optional keys."""
+        # Create the property instance with the property name
+        str_obj = self.kim_property.kim_property_create(
+            1, 'cohesive-energy-relation-cubic-crystal')
+
+        str_obj = self.kim_property.kim_property_modify(
+            str_obj, 1, "disclaimer", "This is an example disclaimer.")
+
+        kim_obj = kim_edn.load(str_obj)[0]
+
+        Property_Instance = '{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/' \
+                            'cohesive-energy-relation-cubic-crystal" "instance-id" 1 ' \
+                            '"disclaimer" "This is an example disclaimer."}'
+
+        self.assertTrue(Property_Instance == kim_edn.dumps(kim_obj))
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify,
+                          str_obj, 1,
+                          "disclaimer", "This is an example disclaimer")
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify,
+                          str_obj, 1,
+                          "disclaimer")
+
+        str_obj = self.kim_property.kim_property_modify(
+            str_obj, 1,
+            "key", "short-name",
+            "source-value", "1", "fcc",
+            "disclaimer", "This is a new example disclaimer.")
+
+        kim_obj = kim_edn.load(str_obj)[0]
+
+        Property_Instance = '{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/' \
+                            'cohesive-energy-relation-cubic-crystal" "instance-id" 1 ' \
+                            '"disclaimer" "This is a new example disclaimer." ' \
+                            '"short-name" {"source-value" ["fcc"]}}'
+
+        self.assertTrue(Property_Instance == kim_edn.dumps(kim_obj))
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify,
+                          str_obj, 1,
+                          "key", "short-name",
+                          "source-value", "1", "fcc",
+                          "disclaimer", "This is an example disclaimer")
+
+        # Create the property instance with the property name
+        str_obj = self.kim_property.kim_property_create(
+            1, 'cohesive-energy-relation-cubic-crystal')
+
+        # Create the property instance with the property name
+        str_obj = self.kim_property.kim_property_create(
+            2, 'atomic-mass', property_instances=str_obj,
+            property_disclaimer="This is an example disclaimer for atomic-mass.")
+
+        str_obj = self.kim_property.kim_property_modify(
+            str_obj, 1,
+            "disclaimer", "This is an example disclaimer for cohesive-energy.")
+
+        kim_obj = kim_edn.load(str_obj)
+
+        self.assertTrue(
+            kim_obj[0]["disclaimer"] == "This is an example disclaimer for cohesive-energy.")
+
+        self.assertTrue(
+            kim_obj[1]["disclaimer"] == "This is an example disclaimer for atomic-mass.")
+
+        # Create the property instance with the property name
+        str_obj = self.kim_property.kim_property_create(
+            1, 'cohesive-energy-relation-cubic-crystal')
+
+        self.assertRaises(self.KIMPropertyError,
+                          self.kim_property.kim_property_modify,
+                          str_obj, 1,
+                          "key", "short-name",
+                          "source-value", "1", "fcc",
+                          "key", "species",
+                          "disclaimer", "This is an example disclaimer.",
+                          "source-value", "1:4", "Al", "Al", "Al", "Al")
+
     def test_modify_exception(self):
         """Test the modify functionality on exceptions."""
         # Fails when the input is none or not created

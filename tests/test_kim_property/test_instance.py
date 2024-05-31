@@ -103,6 +103,23 @@ class TestPropertyInstanceModuleComponents:
                           self.kim_property.check_instance_id_format,
                           False)
 
+    def test_check_disclaimer_format(self):
+        """Test if the disclaimer format is correct."""
+        self.assertRaisesRegex(self.KIMPropertyError,
+                               "input to the function is not a `str`.",
+                               self.kim_property.check_disclaimer_format,
+                               1)
+
+        self.assertRaisesRegex(self.KIMPropertyError,
+                               "input to the function is not a `str`.",
+                               self.kim_property.check_disclaimer_format,
+                               True)
+
+        self.assertRaisesRegex(self.KIMPropertyError,
+                               'the optional key-value pair,\n"disclaimer":.*\n.*',
+                               self.kim_property.check_disclaimer_format,
+                               "value")
+
     def test_check_optional_key_source_value_scalar(self):
         """Test the source-value checking scalar component."""
         for i, e in enumerate(SOURCE_VALUE):
