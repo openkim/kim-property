@@ -149,10 +149,11 @@ def check_instance_id_format(instance_id, _m=INSTANCE_ID.match):
             msg += 'format specification (an integer equal to or '
             msg += 'greater than 1).'
             raise KIMPropertyError(msg)
-    else:
-        msg = 'the "instance-id" value is not an `int` '
-        msg += 'and doesn\'t meet the format specification.'
-        raise KIMPropertyError(msg)
+        return
+
+    msg = 'the "instance-id" value is not an `int` and doesn\'t meet the '
+    msg += 'format specification.'
+    raise KIMPropertyError(msg)
 
 
 def check_disclaimer_format(s: str):
@@ -210,7 +211,7 @@ def check_optional_key_source_value_scalar(source_value_key, value_type):
     msg = 'input to the function doesn\'t comply with '
     msg += 'the defined variable type.\n'
     msg += 'The variable type can be one of ::\n'
-    msg += '"string", "float", "int", "bool", or "file".'
+    msg += '`string`, `float`, `int`, `bool`, or `file`.'
     raise KIMPropertyError(msg)
 
 
