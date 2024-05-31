@@ -164,7 +164,9 @@ def check_disclaimer_format(s: str):
     """
     if isinstance(s, str):
         if not s.endswith('.'):
-            msg = f'the "disclaimer" :\n{s}\nshould include an ending period.'
+            msg = f'the optional key-value pair,\n"disclaimer": "{s}"\n'
+            msg += 'doesn\'t meet the format specification (string value with '
+            msg += 'an ending period).'
             raise KIMPropertyError(msg)
         return
 
