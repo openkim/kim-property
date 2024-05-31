@@ -9,7 +9,9 @@ from .numeric import shape, create_full_array, extend_full_array
 from .definition import \
     get_optional_key_extent_ndimensions, \
     get_optional_key_extent_shape
-from .instance import standard_keys, check_instance_id_format
+from .instance import standard_keys, \
+    check_instance_id_format, \
+    check_disclaimer_format
 from .create import get_properties
 
 __all__ = [
@@ -82,6 +84,14 @@ def kim_property_modify(property_instances, instance_id, *argv):  # noqa: C901
                 "source-std-uncert-value", "1:5", "0.002", "0.0001", "0.00001", "0.0012", "0.00015",
                 "source-unit", "eV",
                 "digits", "5")
+    >>> str = kim_property_modify(str, 1,
+                "disclaimer", "This is an example disclaimer.")
+    >>> str = kim_property_modify(str, 1,
+                "key", "basis-atom-coordinates",
+                "source-value", "3", "1:3", "0.5", "0.0", "0.5",
+                "disclaimer", "This is an example disclaimer."
+                "key", "basis-atom-coordinates",
+                "source-value", "4", "2:3", "0.5", "0.5")
 
     Arguments:
         property_instances {string} -- A string containing the serialized
@@ -147,6 +157,26 @@ def kim_property_modify(property_instances, instance_id, *argv):  # noqa: C901
     while i < n_arguments:
         arg = argv[i]
 
+        if arg == 'disclaimer':
+            # key keyword
+            key = False
+            # new keyword
+            key_name = None
+            key_name_map = {}
+
+            if i + 1 >= n_arguments:
+                msg = f'there is not enough input arguments to use.\nProcessing '
+                msg += 'the "disclaimer" optional key-value pair failed.'
+                raise KIMPropertyError(msg)
+
+            i += 1
+            check_disclaimer_format(argv[i])
+
+            a_property_instance[arg] = argv[i]
+
+            i += 1
+            continue
+
         if arg == 'key':
             key = True
             i += 1
@@ -182,6 +212,13 @@ def kim_property_modify(property_instances, instance_id, *argv):  # noqa: C901
 
             i += 1
             continue
+
+        if key_name is None:
+            msg = f'"key name" is undefined. The input "{arg}" is a wrong '
+            msg += 'input or the order needs to be corrected. First, the '
+            msg += 'special keyword "key" should be given, followed by the '
+            msg += 'property "key name".'
+            raise KIMPropertyError(msg)
 
         key_name_key = arg
         i += 1
