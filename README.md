@@ -64,6 +64,14 @@ Creating property instances::
             "instance-id" 2
         }
     ]
+
+    >>> kim_property_create(1, 'cohesive-energy-relation-cubic-crystal', property_disclaimer="This is an example disclaimer.")
+    '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1 "disclaimer" "This is an example disclaimer."}]'
+
+    >>> property_inst = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
+
+    >>> kim_property_create(2, 'atomic-mass', property_inst, "This is an example disclaimer for atomic-mass.")
+    '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal" "instance-id" 1} {"property-id" "tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass" "instance-id" 2 "disclaimer" "This is an example disclaimer for atomic-mass."}]'
 ````
 
 A property instance is stored in a subset of the KIM-EDN format as described in
@@ -167,6 +175,26 @@ An instance of this property could be created like so::
                 ]
                 "source-unit" "angstrom"
                 "digits" 5
+            }
+        }
+    ]
+
+    >>> property_inst = kim_property_create(1, 'cohesive-energy-relation-cubic-crystal')
+    >>> property_inst = kim_property_modify(property_inst, 1,
+                "disclaimer", "This is an example disclaimer.",
+                "key", "short-name",
+                "source-value", "1", "fcc")
+    >>> property_inst_obj = kim_edn.loads(property_inst)
+    >>> print(kim_edn.dumps(property_inst_obj, indent=4))
+    [
+        {
+            "property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal"
+            "instance-id" 1
+            "disclaimer" "This is an example disclaimer."
+            "short-name" {
+                "source-value" [
+                    "fcc"
+                ]
             }
         }
     ]
