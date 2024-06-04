@@ -18,6 +18,7 @@ from .numeric import shape
 
 __all__ = [
     "required_keys",
+    "optional_keys",
     "standard_keys",
     "get_property_id_path",
     "check_instance_id_format",
@@ -32,6 +33,15 @@ __all__ = [
 
 # A Property Instance must contain the following required key-value pairs:
 required_keys = ("property-id", "instance-id")
+
+# A Property Instance may contain the following optional key-value pairs:
+optional_keys = (
+    # A string containing an optional statement of applicability of the data
+    # contained in this Property Instance. For a Prediction, this can be
+    # provided by the Test, while for an item of Reference Data, this can be
+    # provided by the contributor.
+    "disclaimer",
+)
 
 # The required fields list above are followed by an unordered set of
 # key-map pairs. Each key is associated with a map which must contain
@@ -138,10 +148,11 @@ def check_instance_id_format(instance_id, _m=INSTANCE_ID.match):
             msg += 'format specification (an integer equal to or '
             msg += 'greater than 1).'
             raise KIMPropertyError(msg)
-    else:
-        msg = 'the "instance-id" value is not an `int` '
-        msg += 'and doesn\'t meet the format specification.'
-        raise KIMPropertyError(msg)
+        return
+
+    msg = 'the "instance-id" value is not an `int` and doesn\'t meet the '
+    msg += 'format specification.'
+    raise KIMPropertyError(msg)
 
 
 # checks for optional keys
@@ -180,7 +191,7 @@ def check_optional_key_source_value_scalar(source_value_key, value_type):
     msg = 'input to the function doesn\'t comply with '
     msg += 'the defined variable type.\n'
     msg += 'The variable type can be one of ::\n'
-    msg += '"string", "float", "int", "bool", or "file".'
+    msg += '`string`, `float`, `int`, `bool`, or `file`.'
     raise KIMPropertyError(msg)
 
 
@@ -471,7 +482,7 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
 
         # Check optional fields.
         for k in pi:
-            if k not in required_keys:
+            if k not in required_keys + optional_keys:
                 if k in pd:
                     check_instance_optional_key_map(k, pi[k], pd[k], _m=_m)
                 else:
@@ -548,7 +559,7 @@ def check_property_instances(fi, fp=None, fp_path=None, _m=KEY_FORMAT.match):
 
             # Check optional fields.
             for k in pi_:
-                if k not in required_keys:
+                if k not in required_keys + optional_keys:
                     if k in pd:
                         check_instance_optional_key_map(
                             k, pi_[k], pd[k], _m=_m)

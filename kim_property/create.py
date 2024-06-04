@@ -1,6 +1,7 @@
 """Create module."""
 
 from os.path import isfile
+from typing import Optional
 
 import kim_edn
 
@@ -68,7 +69,11 @@ def unset_property_id(property_id):
                 NEW_PROPERTY_IDS = None
 
 
-def kim_property_create(instance_id, property_name, property_instances=None):
+def kim_property_create(
+    instance_id: int,
+    property_name: str,
+    property_instances: Optional[str] = None,
+    property_disclaimer: Optional[str] = None):
     """Create a new kim property instance.
 
     It takes as input the property instance ID and property definition name
@@ -112,6 +117,9 @@ def kim_property_create(instance_id, property_name, property_instances=None):
               the current working directory) of the file to be opened
         property_instances {string} -- A string containing the serialized
             KIM-EDN formatted property instances. (default: {None})
+        property_disclaimer {string} -- A string containing an optional
+            statement of applicability of the data contained in this property
+            instance. (default: {None})
 
     Returns:
         string -- serialized KIM-EDN formatted property instances.
@@ -208,6 +216,9 @@ def kim_property_create(instance_id, property_name, property_instances=None):
             raise KIMPropertyError(msg)
 
     new_property_instance["instance-id"] = instance_id
+
+    if property_disclaimer is not None:
+        new_property_instance["disclaimer"] = property_disclaimer
 
     # Add the newly created property instance to the collection
     kim_property_instances.append(new_property_instance)

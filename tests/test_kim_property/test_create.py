@@ -68,6 +68,44 @@ class TestCreateModule:
         self.assertRaises(self.KIMPropertyError, self.kim_property.kim_property_create,
                           '3', 'cohesive-energy-relation-cubic-crystal')
 
+    def test_create_with_optional_keys(self):
+        """Test the create functionality with optional keys."""
+        # Correct object
+        str_obj = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/' \
+                  'cohesive-energy-relation-cubic-crystal" "instance-id" 1 ' \
+                  '"disclaimer" "This is an example disclaimer."}]'
+
+        # Create the property instance with the property name
+        str1 = self.kim_property.kim_property_create(
+            1, 'cohesive-energy-relation-cubic-crystal',
+            property_disclaimer='This is an example disclaimer.')
+
+        self.assertTrue(str1 == str_obj)
+
+        str_obj2 = '[{"property-id" "tag:staff@noreply.openkim.org,2014-04-15:property/' \
+                   'cohesive-energy-relation-cubic-crystal" "instance-id" 1 ' \
+                   '"disclaimer" "This is an example disclaimer."} {"property-id" ' \
+                   '"tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass" ' \
+                   '"instance-id" 2 "disclaimer" "This is another example disclaimer."}]'
+
+        # Create the property instance with the property name to the already created instance
+        str3 = self.kim_property.kim_property_create(
+            2, 'atomic-mass', str1, 'This is another example disclaimer.')
+
+        self.assertTrue(str3 == str_obj2)
+
+        str4 = self.kim_property.kim_property_create(
+            2, 'atomic-mass', property_instances=str1,
+            property_disclaimer='This is another example disclaimer.')
+
+        self.assertTrue(str4 == str_obj2)
+
+        import kim_edn
+        self.assertRaises(kim_edn.decoder.KIMEDNDecodeError,
+                          self.kim_property.kim_property_create,
+                          2, 'atomic-mass',
+                          'This is another example disclaimer.')
+
     def test_create_from_a_file(self):
         """Test the create functionality for a new file as input."""
         # Correct object
