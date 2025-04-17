@@ -92,6 +92,7 @@ def ednify_kim_properties(
             "grain-boundary-symmetric-tilt-energy-relaxed-relation-cubic-crystal",
             "intrinsic-stacking-fault-relaxed-energy-fcc-crystal-npt",
             "linear-thermal-expansion-coefficient-cubic-crystal-npt",
+            "mass-density-crystal-npt",
             "melting-temperature-constant-pressure-cubic-crystal",
             "monovacancy-formation-energy-monoatomic-cubic-diamond",
             "monovacancy-neutral-formation-free-energy-crystal-npt",
@@ -157,6 +158,7 @@ def ednify_kim_properties(
             "tag:brunnels@noreply.openkim.org,2016-02-18:property/grain-boundary-symmetric-tilt-energy-relaxed-relation-cubic-crystal",  # noqa: E501
             "tag:staff@noreply.openkim.org,2015-05-26:property/intrinsic-stacking-fault-relaxed-energy-fcc-crystal-npt",
             "tag:staff@noreply.openkim.org,2015-07-30:property/linear-thermal-expansion-coefficient-cubic-crystal-npt",
+            "tag:staff@noreply.openkim.org,2025-04-15:property/mass-density-crystal-npt",
             "tag:staff@noreply.openkim.org,2014-08-21:property/melting-temperature-constant-pressure-cubic-crystal",
             "tag:staff@noreply.openkim.org,2014-04-15:property/monovacancy-formation-energy-monoatomic-cubic-diamond",
             "tag:staff@noreply.openkim.org,2015-07-28:property/monovacancy-neutral-formation-free-energy-crystal-npt",
