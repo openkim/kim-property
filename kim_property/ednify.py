@@ -121,7 +121,8 @@ def ednify_kim_properties(
             "crystal-structure-npt",
             "binding-energy-crystal",
             "bulk-modulus-isothermal-npt",
-            "elastic-constants-isothermal-npt"
+            "elastic-constants-isothermal-npt",
+            "energy-and-crystal-structure-vs-hydrostatic-pressure-relation"
         ]
 
         # KIM property full IDs.
@@ -187,7 +188,8 @@ def ednify_kim_properties(
             "tag:staff@noreply.openkim.org,2023-02-21:property/crystal-structure-npt",
             "tag:staff@noreply.openkim.org,2023-02-21:property/binding-energy-crystal",
             "tag:staff@noreply.openkim.org,2024-07-10:property/bulk-modulus-isothermal-npt",
-            "tag:staff@noreply.openkim.org,2024-07-10:property/elastic-constants-isothermal-npt"
+            "tag:staff@noreply.openkim.org,2024-07-10:property/elastic-constants-isothermal-npt",
+            "tag:staff@noreply.openkim.org,2025-08-09:property/energy-and-crystal-structure-vs-hydrostatic-pressure-relation",
         ]
 
         for _id in kim_property_ids:
