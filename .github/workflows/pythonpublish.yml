@@ -26,3 +26,7 @@ jobs:
       with:
         user: __token__
         password: ${{ secrets.PYPI_PASSWORD_OPENKIM }}
+  send-pull-request:
+    uses: openkim/developer-platform/.github/workflows/upversion-pypi-package-and-send-pr.yml@main
+    secrets: inherit
+    needs: deploy
