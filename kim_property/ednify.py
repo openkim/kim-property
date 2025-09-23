@@ -1,6 +1,7 @@
 """KIM properties object serialization/de-serialization."""
 
 from os.path import abspath, join, isdir, pardir, isfile, dirname
+from os import listdir
 from io import IOBase
 from typing import Dict, Optional, Union
 
@@ -39,9 +40,6 @@ def ednify_kim_properties(
     kim_properties_list = []
 
     if properties is None:
-        # KIM property files.
-        kim_property_files = []
-
         # KIM property files path. An absolute path (or a valid relative path)
         # to the KIM property files folder.
         kim_property_files_path = join(
@@ -59,154 +57,53 @@ def ednify_kim_properties(
             raise KIMPropertyError(msg)
 
         # KIM property names.
-        kim_property_names = [
-            "atomic-mass",
-            "bulk-modulus-isothermal-cubic-crystal-npt",
-            "bulk-modulus-isothermal-hexagonal-crystal-npt",
-            "cohesive-energy-lattice-invariant-shear-path-cubic-crystal",
-            "cohesive-energy-lattice-invariant-shear-unrelaxed-path-cubic-crystal",
-            "cohesive-energy-relation-cubic-crystal",
-            "cohesive-energy-shear-stress-path-cubic-crystal",
-            "cohesive-free-energy-cubic-crystal",
-            "cohesive-free-energy-hexagonal-crystal",
-            "cohesive-potential-energy-2d-hexagonal-crystal",
-            "cohesive-potential-energy-cubic-crystal",
-            "cohesive-potential-energy-hexagonal-crystal",
-            "configuration-cluster-fixed",
-            "configuration-cluster-relaxed",
-            "configuration-nonorthogonal-periodic-3d-cell-fixed-particles-fixed",
-            "configuration-nonorthogonal-periodic-3d-cell-fixed-particles-relaxed",
-            "configuration-nonorthogonal-periodic-3d-cell-relaxed-particles-fixed",
-            "configuration-nonorthogonal-periodic-3d-cell-relaxed-particles-relaxed",
-            "configuration-periodic-2d-cell-fixed-particles-fixed",
-            "dislocation-core-energy-cubic-crystal-npt",
-            "elastic-constants-first-strain-gradient-isothermal-cubic-crystal-npt",
-            "elastic-constants-first-strain-gradient-isothermal-monoatomic-hexagonal-crystal-npt",
-            "elastic-constants-isothermal-cubic-crystal-npt",
-            "enthalpy-of-mixing-curve-substitutional-binary-cubic-crystal-npt",
-            "enthalpy-of-mixing-curve-substitutional-binary-cubic-crystal-nvt",
-            "extrinsic-stacking-fault-relaxed-energy-fcc-crystal-npt",
-            "gamma-surface-relaxed-fcc-crystal-npt",
-            "grain-boundary-symmetric-tilt-energy-ideal-cubic-crystal",
-            "grain-boundary-symmetric-tilt-energy-relaxed-cubic-crystal",
-            "grain-boundary-symmetric-tilt-energy-relaxed-relation-cubic-crystal",
-            "intrinsic-stacking-fault-relaxed-energy-fcc-crystal-npt",
-            "linear-thermal-expansion-coefficient-cubic-crystal-npt",
-            "mass-density-crystal-npt",
-            "melting-temperature-constant-pressure-cubic-crystal",
-            "monovacancy-formation-energy-monoatomic-cubic-diamond",
-            "monovacancy-neutral-formation-free-energy-crystal-npt",
-            "monovacancy-neutral-migration-energy-crystal-npt",
-            "monovacancy-neutral-relaxation-volume-crystal-npt",
-            "monovacancy-neutral-relaxed-formation-potential-energy-crystal-npt",
-            "monovacancy-neutral-unrelaxed-formation-potential-energy-crystal-npt",
-            "phonon-dispersion-dos-cubic-crystal-npt",
-            "phonon-dispersion-relation-cubic-crystal-npt",
-            "shear-stress-path-cubic-crystal",
-            "stacking-fault-relaxed-energy-curve-fcc-crystal-npt",
-            "structure-2d-hexagonal-crystal-npt",
-            "structure-cubic-crystal-npt",
-            "structure-hexagonal-crystal-npt",
-            "structure-monoclinic-crystal-npt",
-            "structure-orthorhombic-crystal-npt",
-            "structure-rhombohedral-crystal-npt",
-            "structure-tetragonal-crystal-npt",
-            "structure-triclinic-crystal-npt",
-            "surface-energy-broken-bond-fit-cubic-bravais-crystal-npt",
-            "surface-energy-cubic-crystal-npt",
-            "surface-energy-ideal-cubic-crystal",
-            "unstable-stacking-fault-relaxed-energy-fcc-crystal-npt",
-            "unstable-twinning-fault-relaxed-energy-fcc-crystal-npt",
-            "verification-check",
-            "crystal-structure-npt",
-            "binding-energy-crystal",
-            "bulk-modulus-isothermal-npt",
-            "elastic-constants-isothermal-npt",
-            "energy-and-crystal-structure-vs-hydrostatic-pressure-relation"
-        ]
-
+        kim_property_names = []
         # KIM property full IDs.
-        kim_property_ids = [
-            "tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass",
-            "tag:staff@noreply.openkim.org,2014-04-15:property/bulk-modulus-isothermal-cubic-crystal-npt",
-            "tag:staff@noreply.openkim.org,2014-04-15:property/bulk-modulus-isothermal-hexagonal-crystal-npt",
-            "tag:staff@noreply.openkim.org,2015-05-26:property/cohesive-energy-lattice-invariant-shear-path-cubic-crystal",
-            "tag:staff@noreply.openkim.org,2015-05-26:property/cohesive-energy-lattice-invariant-shear-unrelaxed-path-cubic-crystal",  # noqa: E501
-            "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal",
-            "tag:staff@noreply.openkim.org,2015-05-26:property/cohesive-energy-shear-stress-path-cubic-crystal",
-            "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-free-energy-cubic-crystal",
-            "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-free-energy-hexagonal-crystal",
-            "tag:staff@noreply.openkim.org,2015-05-26:property/cohesive-potential-energy-2d-hexagonal-crystal",
-            "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-potential-energy-cubic-crystal",
-            "tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-potential-energy-hexagonal-crystal",
-            "tag:staff@noreply.openkim.org,2014-04-15:property/configuration-cluster-fixed",
-            "tag:staff@noreply.openkim.org,2014-04-15:property/configuration-cluster-relaxed",
-            "tag:staff@noreply.openkim.org,2014-04-15:property/configuration-nonorthogonal-periodic-3d-cell-fixed-particles-fixed",  # noqa: E501
-            "tag:staff@noreply.openkim.org,2014-04-15:property/configuration-nonorthogonal-periodic-3d-cell-fixed-particles-relaxed",  # noqa: E501
-            "tag:staff@noreply.openkim.org,2014-04-15:property/configuration-nonorthogonal-periodic-3d-cell-relaxed-particles-fixed",  # noqa: E501
-            "tag:staff@noreply.openkim.org,2014-04-15:property/configuration-nonorthogonal-periodic-3d-cell-relaxed-particles-relaxed",  # noqa: E501
-            "tag:staff@noreply.openkim.org,2015-10-12:property/configuration-periodic-2d-cell-fixed-particles-fixed",
-            "tag:staff@noreply.openkim.org,2021-02-24:property/dislocation-core-energy-cubic-crystal-npt",
-            "tag:staff@noreply.openkim.org,2016-05-24:property/elastic-constants-first-strain-gradient-isothermal-cubic-crystal-npt",  # noqa: E501
-            "tag:staff@noreply.openkim.org,2016-05-24:property/elastic-constants-first-strain-gradient-isothermal-monoatomic-hexagonal-crystal-npt",  # noqa: E501
-            "tag:staff@noreply.openkim.org,2014-05-21:property/elastic-constants-isothermal-cubic-crystal-npt",
-            "tag:staff@noreply.openkim.org,2017-07-31:property/enthalpy-of-mixing-curve-substitutional-binary-cubic-crystal-npt",  # noqa: E501
-            "tag:staff@noreply.openkim.org,2017-07-31:property/enthalpy-of-mixing-curve-substitutional-binary-cubic-crystal-nvt",  # noqa: E501
-            "tag:staff@noreply.openkim.org,2015-05-26:property/extrinsic-stacking-fault-relaxed-energy-fcc-crystal-npt",
-            "tag:staff@noreply.openkim.org,2015-05-26:property/gamma-surface-relaxed-fcc-crystal-npt",
-            "tag:brunnels@noreply.openkim.org,2016-01-23:property/grain-boundary-symmetric-tilt-energy-ideal-cubic-crystal",
-            "tag:brunnels@noreply.openkim.org,2016-01-23:property/grain-boundary-symmetric-tilt-energy-relaxed-cubic-crystal",
-            "tag:brunnels@noreply.openkim.org,2016-02-18:property/grain-boundary-symmetric-tilt-energy-relaxed-relation-cubic-crystal",  # noqa: E501
-            "tag:staff@noreply.openkim.org,2015-05-26:property/intrinsic-stacking-fault-relaxed-energy-fcc-crystal-npt",
-            "tag:staff@noreply.openkim.org,2015-07-30:property/linear-thermal-expansion-coefficient-cubic-crystal-npt",
-            "tag:staff@noreply.openkim.org,2025-04-15:property/mass-density-crystal-npt",
-            "tag:staff@noreply.openkim.org,2014-08-21:property/melting-temperature-constant-pressure-cubic-crystal",
-            "tag:staff@noreply.openkim.org,2014-04-15:property/monovacancy-formation-energy-monoatomic-cubic-diamond",
-            "tag:staff@noreply.openkim.org,2015-07-28:property/monovacancy-neutral-formation-free-energy-crystal-npt",
-            "tag:staff@noreply.openkim.org,2015-09-16:property/monovacancy-neutral-migration-energy-crystal-npt",
-            "tag:staff@noreply.openkim.org,2015-07-28:property/monovacancy-neutral-relaxation-volume-crystal-npt",
-            "tag:staff@noreply.openkim.org,2015-07-28:property/monovacancy-neutral-relaxed-formation-potential-energy-crystal-npt",  # noqa: E501
-            "tag:staff@noreply.openkim.org,2015-07-28:property/monovacancy-neutral-unrelaxed-formation-potential-energy-crystal-npt",  # noqa: E501
-            "tag:staff@noreply.openkim.org,2014-05-21:property/phonon-dispersion-dos-cubic-crystal-npt",
-            "tag:staff@noreply.openkim.org,2014-05-21:property/phonon-dispersion-relation-cubic-crystal-npt",
-            "tag:staff@noreply.openkim.org,2015-05-26:property/shear-stress-path-cubic-crystal",
-            "tag:staff@noreply.openkim.org,2015-05-26:property/stacking-fault-relaxed-energy-curve-fcc-crystal-npt",
-            "tag:staff@noreply.openkim.org,2015-05-26:property/structure-2d-hexagonal-crystal-npt",
-            "tag:staff@noreply.openkim.org,2014-04-15:property/structure-cubic-crystal-npt",
-            "tag:staff@noreply.openkim.org,2014-04-15:property/structure-hexagonal-crystal-npt",
-            "tag:staff@noreply.openkim.org,2014-04-15:property/structure-monoclinic-crystal-npt",
-            "tag:staff@noreply.openkim.org,2014-04-15:property/structure-orthorhombic-crystal-npt",
-            "tag:staff@noreply.openkim.org,2014-04-15:property/structure-rhombohedral-crystal-npt",
-            "tag:staff@noreply.openkim.org,2014-04-15:property/structure-tetragonal-crystal-npt",
-            "tag:staff@noreply.openkim.org,2014-04-15:property/structure-triclinic-crystal-npt",
-            "tag:staff@noreply.openkim.org,2014-05-21:property/surface-energy-broken-bond-fit-cubic-bravais-crystal-npt",
-            "tag:staff@noreply.openkim.org,2014-05-21:property/surface-energy-cubic-crystal-npt",
-            "tag:staff@noreply.openkim.org,2014-05-21:property/surface-energy-ideal-cubic-crystal",
-            "tag:staff@noreply.openkim.org,2015-05-26:property/unstable-stacking-fault-relaxed-energy-fcc-crystal-npt",
-            "tag:staff@noreply.openkim.org,2015-05-26:property/unstable-twinning-fault-relaxed-energy-fcc-crystal-npt",
-            "tag:tadmor@noreply.openkim.org,2017-02-01:property/verification-check",
-            "tag:staff@noreply.openkim.org,2023-02-21:property/crystal-structure-npt",
-            "tag:staff@noreply.openkim.org,2023-02-21:property/binding-energy-crystal",
-            "tag:staff@noreply.openkim.org,2024-07-10:property/bulk-modulus-isothermal-npt",
-            "tag:staff@noreply.openkim.org,2024-07-10:property/elastic-constants-isothermal-npt",
-            "tag:staff@noreply.openkim.org,2025-08-09:property/energy-and-crystal-structure-vs-hydrostatic-pressure-relation",
-        ]
+        kim_property_ids = []
+        # KIM properties dictionary indexed by properties full IDs.
+        kim_properties = {}
 
-        for _id in kim_property_ids:
-            _path, _, _, _ = get_property_id_path(_id)
-            kim_property_files.append(join(kim_property_files_path, _path))
-            if not isfile(kim_property_files[-1]):
+        # The directories under openkim-properties/properties
+        # are the property names.
+        for property_name in sorted(listdir(kim_property_files_path)):
+            # directory containing all versions of the property
+            property_name_dir = join(kim_property_files_path, property_name)
+            # relative to `kim_property_files_path`, this is the full path
+            # to the property file of the latest version of the property
+            _path = join(
+                property_name,
+                sorted(listdir(property_name_dir))[-1],
+                property_name + ".edn"
+                )
+            property_file = join(kim_property_files_path, _path)
+            if not isfile(property_file):
                 msg = 'the property file =\n"'
-                msg += kim_property_files[-1]
+                msg += property_file
                 msg += '"\ncan not be found!'
                 raise KIMPropertyError(msg)
+            # load the property dictionary
+            property = kim_edn.load(property_file)
+            # extract the property-id from the property dictionary
+            property_id = property["property-id"]
+            # consistency check between the path we got the
+            # file from and its property-id
+            _check_path, _, _, _ = get_property_id_path(property_id)
+            if _path != _check_path:
+                msg = 'the property-id\n"'
+                msg += property_id
+                msg += '"\nwas loaded from file\n"'
+                msg += _path
+                msg += '",\nbut implies the path\n"'
+                msg += _check_path
+                msg += '"!'
+                raise KIMPropertyError(msg)
+            # Everything looks correct, accumulate
+            # lists and dictionary
+            kim_property_names.append(property_name)
+            kim_property_ids.append(property_id)
+            kim_properties[property_id] = property
 
         del kim_property_files_path
-
-        # KIM properties dictionary indexed by properties full IDs.
-        kim_properties = {
-            k: kim_edn.load(v) for k, v in zip(kim_property_ids, kim_property_files)
-        }
 
         # KIM properties name to full ID dictionary.
         property_name_to_property_id = dict(zip(kim_property_names, kim_property_ids))
