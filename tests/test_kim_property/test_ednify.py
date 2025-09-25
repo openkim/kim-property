@@ -97,3 +97,24 @@ class TestEdnify:
 
 class TestPyTestEdnify(TestEdnify, PyTest):
     pass
+
+
+class TestEdnifyFromExternal:
+    """Test ednifying from external/openkim-properties/properties"""
+    def test_ednify_kim_properties(self):
+        kim_property_files_path = join(
+            "external", "openkim-properties", "properties")
+
+        if not isdir(abspath(kim_property_files_path)):
+            sio = StringIO()
+            self.assertRaises(
+                self.KIMPropertyError, ednify_kim_properties, None, sio)
+
+            msg = 'property files can not be found at.*'
+            self.assertRaisesRegex(
+                self.KIMPropertyError, msg, ednify_kim_properties, None, sio
+            )
+
+
+class TestPyTestEdnifyFromExternal(TestEdnifyFromExternal, PyTest):
+    pass
