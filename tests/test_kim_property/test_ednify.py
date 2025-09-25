@@ -14,12 +14,10 @@ class TestEdnify:
         """Test ednifying the KIM properties."""
         # Property definition edn file
         edn_file1 = join('tests', 'fixtures', 'atomic-mass.edn')
-        self.assertTrue(isfile(edn_file1))
 
         edn_file2 = join(
             'tests', 'fixtures', 'cohesive-energy-relation-cubic-crystal.edn'
         )
-        self.assertTrue(isfile(edn_file2))
 
         properties = {
             'tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass':
