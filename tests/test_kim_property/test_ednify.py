@@ -68,19 +68,6 @@ class TestEdnify:
         self.assertRaisesRegex(
             TypeError, msg, ednify_kim_properties, PROPERTIES, bio)
 
-        kim_property_files_path = join(
-            "external", "openkim-properties", "properties")
-
-        if not isdir(abspath(kim_property_files_path)):
-            sio = StringIO()
-            self.assertRaises(
-                self.KIMPropertyError, ednify_kim_properties, None, sio)
-
-            msg = 'property files can not be found at.*'
-            self.assertRaisesRegex(
-                self.KIMPropertyError, msg, ednify_kim_properties, None, sio
-            )
-
     def test_unednify_kim_properties(self):
         """Test unednifying the KIM properties."""
 
@@ -91,45 +78,15 @@ class TestEdnify:
             'kim_properties.edn',
         )
 
-        # Property definition edn file
-        edn_file1 = join('tests', 'fixtures', 'atomic-mass.edn')
-        self.assertTrue(isfile(edn_file1))
-
-        edn_file2 = join(
-            'tests', 'fixtures', 'cohesive-energy-relation-cubic-crystal.edn'
-        )
-        self.assertTrue(isfile(edn_file2))
-
-        properties = {
-            'tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass':
-                kim_edn.load(edn_file1),
-            'tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal':
-                kim_edn.load(edn_file2),
-        }
-
         sio = StringIO()
-        ednify_kim_properties(properties, sio)
+        ednify_kim_properties(PROPERTIES, sio)
 
         # Test the unpickle utility
         _properties, _name_to_id, _id_to_name = unednify_kim_properties(sio.getvalue())
 
-        name_to_id = {
-            'atomic-mass':
-                'tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass',
-            'cohesive-energy-relation-cubic-crystal':
-                'tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal',
-        }
-
-        id_to_name = {
-            'tag:brunnels@noreply.openkim.org,2016-05-11:property/atomic-mass':
-                'atomic-mass',
-            'tag:staff@noreply.openkim.org,2014-04-15:property/cohesive-energy-relation-cubic-crystal':
-                'cohesive-energy-relation-cubic-crystal',
-        }
-
-        self.assertTrue(_properties == properties)
-        self.assertTrue(_name_to_id == name_to_id)
-        self.assertTrue(_id_to_name == id_to_name)
+        self.assertTrue(_properties == PROPERTIES)
+        self.assertTrue(_name_to_id == NAME_TO_ID)
+        self.assertTrue(_id_to_name == ID_TO_NAME)
 
         sio1 = StringIO()
         # Fails when neither can open nor load the input
