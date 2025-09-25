@@ -10,7 +10,7 @@ from tests.test_kim_property import PyTest
 class TestEdnify:
     """Test KIM properties ednify module."""
 
-    def test_ednify_kim_propertieis(self):
+    def test_ednify_kim_properties(self):
         """Test ednifying the KIM properties."""
         # Property definition edn file
         edn_file1 = join('tests', 'fixtures', 'atomic-mass.edn')
