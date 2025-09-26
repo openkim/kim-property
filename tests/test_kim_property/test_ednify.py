@@ -1,5 +1,6 @@
-from os.path import abspath, join, isfile, isdir
-from os import removedirs
+from os.path import abspath, join, isdir
+from os import rename, makedirs
+from shutil import rmtree, copy
 from io import BytesIO, StringIO
 
 import kim_edn
@@ -44,6 +45,10 @@ ID_TO_NAME = {
     ID2:
         NAME2,
 }
+
+KIM_PROPERTY_FILES_PATH = join(
+    "external", "openkim-properties", "properties")
+KIM_PROPERTY_FILES_BACKUP_PATH = KIM_PROPERTY_FILES_PATH + '_'
 
 
 class TestEdnify:
@@ -101,19 +106,83 @@ class TestPyTestEdnify(TestEdnify, PyTest):
 
 class TestEdnifyFromExternal:
     """Test ednifying from external/openkim-properties/properties"""
+
+    @classmethod
+    def setUpClass(cls):
+        """
+        If KIM_PROPERTY_FILES_PATH exists (i.e. if you're running
+        locally and you've checked out the submodule), back it up.
+        Create mock directory with known properties.
+        """
+        if isdir(abspath(KIM_PROPERTY_FILES_PATH)):
+            if isdir(abspath(KIM_PROPERTY_FILES_BACKUP_PATH)):
+                raise RuntimeError(
+                    'Intended property backup path\n"'
+                    f'{KIM_PROPERTY_FILES_BACKUP_PATH}'
+                    '"\nalready exists, can\'t run test!'
+                    )
+            rename(
+                KIM_PROPERTY_FILES_PATH,
+                KIM_PROPERTY_FILES_BACKUP_PATH
+                )
+        # Place files in correct directories
+        dir1 = join(KIM_PROPERTY_FILES_PATH, NAME1, f'{DATE1}-{EMAIL1}')
+        makedirs(dir1)
+        copy(EDN_FILE1, dir1)
+        dir2 = join(KIM_PROPERTY_FILES_PATH, NAME2, f'{DATE2}-{EMAIL2}')
+        makedirs(dir2, exist_ok=True)
+        copy(EDN_FILE2, dir2)
+        # Create an intentionally invalid file in a directory with an older
+        # date, to check that only the newest version of the property is read
+        dir_invalid = join(KIM_PROPERTY_FILES_PATH, NAME2, f'1111-11-11-{EMAIL2}')
+        makedirs(dir_invalid)
+        with open(join(dir_invalid, NAME2 + '.edn'), 'w') as f:
+            f.write('foo')
+
+    @classmethod
+    def tearDownClass(cls):
+        """
+        Restore KIM_PROPERTY_FILES backup
+        """
+        # This should have been removed during the test,
+        # but in case it failed
+        if isdir(abspath(KIM_PROPERTY_FILES_PATH)):
+            rmtree(KIM_PROPERTY_FILES_PATH)
+        if isdir(abspath(KIM_PROPERTY_FILES_BACKUP_PATH)):
+            rename(
+                KIM_PROPERTY_FILES_BACKUP_PATH,
+                KIM_PROPERTY_FILES_PATH
+                )
+
     def test_ednify_kim_properties(self):
-        kim_property_files_path = join(
-            "external", "openkim-properties", "properties")
+        import debugpy
+        debugpy.listen(5678)
+        print("Waiting for debugger attach")
+        debugpy.wait_for_client()
+        debugpy.breakpoint()    
+        print('break on this line')
 
-        if not isdir(abspath(kim_property_files_path)):
-            sio = StringIO()
-            self.assertRaises(
-                self.KIMPropertyError, ednify_kim_properties, None, sio)
+        sio = StringIO()
+        # ednify with no properties argument to read from
+        # KIM_PROPERTY_FILES_PATH
+        ednify_kim_properties(fp=sio)
 
-            msg = 'property files can not be found at.*'
-            self.assertRaisesRegex(
-                self.KIMPropertyError, msg, ednify_kim_properties, None, sio
-            )
+        _properties, _name_to_id, _id_to_name = kim_edn.loads(sio.getvalue())
+
+        self.assertTrue(_properties == PROPERTIES)
+        self.assertTrue(_name_to_id == NAME_TO_ID)
+        self.assertTrue(_id_to_name == ID_TO_NAME)
+
+        # Test that it correctly fails to read a missing directory
+        rmtree(KIM_PROPERTY_FILES_PATH)
+        sio = StringIO()
+        self.assertRaises(
+            self.KIMPropertyError, ednify_kim_properties, None, sio)
+
+        msg = 'property files can not be found at.*'
+        self.assertRaisesRegex(
+            self.KIMPropertyError, msg, ednify_kim_properties, None, sio
+        )
 
 
 class TestPyTestEdnifyFromExternal(TestEdnifyFromExternal, PyTest):
