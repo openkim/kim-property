@@ -155,13 +155,6 @@ class TestEdnifyFromExternal:
                 )
 
     def test_ednify_kim_properties(self):
-        import debugpy
-        debugpy.listen(5678)
-        print("Waiting for debugger attach")
-        debugpy.wait_for_client()
-        debugpy.breakpoint()    
-        print('break on this line')
-
         sio = StringIO()
         # ednify with no properties argument to read from
         # KIM_PROPERTY_FILES_PATH
