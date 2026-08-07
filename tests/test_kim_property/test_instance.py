@@ -242,6 +242,27 @@ class TestPropertyInstanceModuleComponents:
 
     def test_check_instance_optional_key_standard_pairs_format(self):
         """Test the standard key-map pairs correctness."""
+        si_uncertainty_keys = {
+            "si-std-uncert-value": [0.1, 0.2],
+            "si-expand-uncert-value": [0.2, 0.4],
+            "si-asym-std-uncert-neg": [0.05, 0.1],
+            "si-asym-std-uncert-pos": [0.15, 0.3],
+            "si-asym-expand-uncert-neg": [0.1, 0.2],
+            "si-asym-expand-uncert-pos": [0.3, 0.6],
+        }
+        self.kim_property.check_instance_optional_key_standard_pairs_format(
+            {
+                "source-value": [1.0, 2.0],
+                "source-unit": "eV",
+                **si_uncertainty_keys,
+            },
+            {
+                "type": "float",
+                "has-unit": True,
+                "extent": [2],
+                "required": True,
+            })
+
         # input is not a dict
         self.assertRaises(self.KIMPropertyError,
                           self.kim_property.check_instance_optional_key_standard_pairs_format,

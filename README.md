@@ -787,8 +787,8 @@ An example with two property instances,
 
 ### Requirements
 
-You need Python 3.8 or later to run `kim-property`. You can have multiple
-Python versions (2.x and 3.x) installed on the same system without problems.
+You need Python 3.10 or later to run `kim-property`. You can have multiple
+Python 3 versions installed on the same system without problems.
 
 To install Python 3 for different Linux flavors, macOS and Windows, packages
 are available at\
@@ -884,7 +884,7 @@ mamba repoquery depends kim-property --channel conda-forge
 
 ## Copyright
 
-Copyright (c) 2020-2024, Regents of the University of Minnesota.\
+Copyright (c) 2020-2026, Regents of the University of Minnesota.\
 All Rights Reserved
 
 ## Contributing
