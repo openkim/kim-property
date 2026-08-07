@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "versioneer[toml]==0.29", "kim-edn>1.4.0"]
+requires = ["setuptools>=80", "setuptools-scm>=9.2"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -28,13 +28,11 @@ Issues = "https://github.com/openkim/kim-property/issues"
 [tool.setuptools.packages.find]
 include = [ "kim_property*" ]
 
-[tool.setuptools.dynamic]
-version = { attr = "kim_property.__version__" }
+[tool.setuptools_scm]
+version_file = "kim_property/_version.py"
+write_to_source = true
+parentdir_prefix_version = "kim_property-"
 
-[tool.versioneer]
-VCS = "git"
-style = "pep440"
-versionfile_source = "kim_property/_version.py"
-versionfile_build = "kim_property/_version.py"
-tag_prefix = "v"
-parentdir_prefix = "kim_property-"
+[tool.setuptools_scm.tag]
+prefix = "v"
+strict = true

@@ -1,10 +1,101 @@
+from unittest.mock import patch
+
 import kim_edn
 
 from tests.test_kim_property import PyTest
 
 
-class TestModifyModule:
+class ModifyModuleMixin:
     """Test kim_property utility module (modify)."""
+
+    def test_si_uncertainty_keys(self):
+        """Test SI uncertainty keys with scalar and array values."""
+        property_inst = self.kim_property.kim_property_create(
+            1, 'cohesive-energy-relation-cubic-crystal')
+
+        property_inst = self.kim_property.kim_property_modify(
+            property_inst, 1,
+            "key", "cohesive-potential-energy",
+            "source-value", "1:2", "3.324", "3.3576",
+            "si-std-uncert-value", "1:2", "0.002", "0.0001",
+            "si-expand-uncert-value", "0.004",
+            "si-asym-std-uncert-neg", "1:2", "0.001", "0.0001",
+            "si-asym-std-uncert-pos", "0.003",
+            "si-asym-expand-uncert-neg", "1:2", "0.002", "0.0002",
+            "si-asym-expand-uncert-pos", "0.006")
+
+        uncertainty = kim_edn.load(property_inst)[0][
+            "cohesive-potential-energy"]
+        assert uncertainty["si-std-uncert-value"] == [0.002, 0.0001]
+        assert uncertainty["si-expand-uncert-value"] == 0.004
+        assert uncertainty["si-asym-std-uncert-neg"] == [0.001, 0.0001]
+        assert uncertainty["si-asym-std-uncert-pos"] == 0.003
+        assert uncertainty["si-asym-expand-uncert-neg"] == [0.002, 0.0002]
+        assert uncertainty["si-asym-expand-uncert-pos"] == 0.006
+
+    def test_si_uncertainty_key_high_dimensional_extents(self):
+        """Test SI uncertainty range updates for 2D through 6D extents."""
+        property_id = (
+            "tag:test@noreply.openkim.org,2026-08-07:property/"
+            "high-dimensional")
+
+        def get_nested_value(values, indices):
+            for index in indices:
+                values = values[index]
+            return values
+
+        for dimensions in range(2, 7):
+            properties = {
+                property_id: {
+                    "property-id": property_id,
+                    "tensor": {
+                        "type": "float",
+                        "has-unit": True,
+                        "extent": [2] * dimensions,
+                        "required": False,
+                        "description": "Synthetic high-dimensional tensor.",
+                    },
+                },
+            }
+
+            for ranged_axis in range(dimensions):
+                property_inst = kim_edn.dumps([{
+                    "property-id": property_id,
+                    "instance-id": 1,
+                }])
+                ranged_indices = ["1"] * dimensions
+                ranged_indices[ranged_axis] = "1:2"
+                exact_indices = ["2"] * dimensions
+
+                with patch(
+                    "kim_property.modify.get_properties",
+                    return_value=properties):
+                    property_inst = self.kim_property.kim_property_modify(
+                        property_inst, 1,
+                        "key", "tensor",
+                        "si-std-uncert-value", *ranged_indices, 1.0, 2.0)
+                    property_inst = self.kim_property.kim_property_modify(
+                        property_inst, 1,
+                        "key", "tensor",
+                        "si-std-uncert-value", *exact_indices, 9.0)
+                    property_inst = self.kim_property.kim_property_modify(
+                        property_inst, 1,
+                        "key", "tensor",
+                        "si-std-uncert-value", *ranged_indices, 3.0, 4.0)
+
+                uncertainty = kim_edn.loads(property_inst)[0]["tensor"][
+                    "si-std-uncert-value"]
+                first_range_index = [0] * dimensions
+                second_range_index = [0] * dimensions
+                second_range_index[ranged_axis] = 1
+
+                case = f"{dimensions}D extent, range on axis {ranged_axis}"
+                assert get_nested_value(
+                    uncertainty, first_range_index) == 3.0, case
+                assert get_nested_value(
+                    uncertainty, second_range_index) == 4.0, case
+                assert get_nested_value(
+                    uncertainty, [1] * dimensions) == 9.0, case
 
     def test_modify(self):
         """Test the modify functionality."""
@@ -799,5 +890,5 @@ class TestModifyModule:
                             ["source-asym-std-uncert-pos"][i] == E_core_nonsingular_max[i])
 
 
-class TestPyTestModifyModule(TestModifyModule, PyTest):
+class TestPyTestModifyModule(ModifyModuleMixin, PyTest):
     pass

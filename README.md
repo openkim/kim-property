@@ -510,17 +510,26 @@ to the
 and the
 [ThermoML standard notation](https://www.degruyter.com/view/journals/ci/28/3/article-p22.xml).
 
+The `source-*` uncertainty values are expressed in `source-unit`, while the
+corresponding `si-*` uncertainty values are expressed in `si-unit`.
+
 The keys associated with uncertainty and precision of the
 [KIM Property Instances](https://openkim.org/doc/schema/properties-framework)
 are:
 
 - source-std-uncert-value
+- si-std-uncert-value
 - source-expand-uncert-value
+- si-expand-uncert-value
 - coverage-factor
 - source-asym-std-uncert-neg
+- si-asym-std-uncert-neg
 - source-asym-std-uncert-pos
+- si-asym-std-uncert-pos
 - source-asym-expand-uncert-neg
+- si-asym-expand-uncert-neg
 - source-asym-expand-uncert-pos
+- si-asym-expand-uncert-pos
 - uncert-lev-of-confid
 - digits
 

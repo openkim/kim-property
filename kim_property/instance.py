@@ -63,37 +63,53 @@ standard_keys = (
     # For numerical values, a machine-generated translation of the
     # source-value to SI units. A Test should not provide this information.
     "si-value",
-    # For numerical values,the standard SI unit corresponding to
+    # For numerical values, the standard SI unit corresponding to
     # source-unit. A Test should not provide this information.
     "si-unit",
-    # A float set to the numerical standard uncertainty value u. (u
-    # represents one standard deviation.)
+    # A float set to the numerical standard uncertainty value u, expressed
+    # in source-unit. (u represents one standard deviation.)
     "source-std-uncert-value",
+    # The corresponding standard uncertainty value expressed in si-unit.
+    "si-std-uncert-value",
     # A float set to the expanded uncertainty value U defined as the
     # “interval about the result of a measurement that may be expected to
     # encompass a large fraction of the distribution of values that could
-    # reasonably be attributed to the measurand”.
+    # reasonably be attributed to the measurand”, expressed in source-unit.
     "source-expand-uncert-value",
+    # The corresponding expanded uncertainty value expressed in si-unit.
+    "si-expand-uncert-value",
     # A float set to the coverage factor k. The coverage factor k is a
     # numerical factor which is the multiplier of the standard uncertainty
     # in order to obtain an expanded uncertainty (i.e. U = ku).
     "coverage-factor",
     # A float set to the variable u− associated with a standard uncertainty
     # that is asymmetric about the key value y, with a range
-    # [y − u−, y + u+].
+    # [y − u−, y + u+], expressed in source-unit.
     "source-asym-std-uncert-neg",
+    # The corresponding negative asymmetric standard uncertainty value
+    # expressed in si-unit.
+    "si-asym-std-uncert-neg",
     # A float set to the variable u+ associated with a standard uncertainty
     # that is asymmetric about the key value yp, with a range
-    # [y − u−, y + u+].
+    # [y − u−, y + u+], expressed in source-unit.
     "source-asym-std-uncert-pos",
+    # The corresponding positive asymmetric standard uncertainty value
+    # expressed in si-unit.
+    "si-asym-std-uncert-pos",
     # A float set to the variable U− associated with an expanded
     # uncertainty that is asymmetric about the key value y, with a range
-    # [y − U−,y + U+].
+    # [y − U−,y + U+], expressed in source-unit.
     "source-asym-expand-uncert-neg",
+    # The corresponding negative asymmetric expanded uncertainty value
+    # expressed in si-unit.
+    "si-asym-expand-uncert-neg",
     # A float set to the variable U+ associated with an expanded
     # uncertainty that is asymmetric about the key value y, with a range
-    # [y − U−,y + U+].
+    # [y − U−,y + U+], expressed in source-unit.
     "source-asym-expand-uncert-pos",
+    # The corresponding positive asymmetric expanded uncertainty value
+    # expressed in si-unit.
+    "si-asym-expand-uncert-pos",
     # A float set to the level of confidence L associated with the expanded
     # uncertainty U. The level of confidence is expressed as a percentage.
     "uncert-lev-of-confid",
@@ -225,10 +241,13 @@ def check_instance_optional_key_standard_pairs_format(property_instance_map,
     Each key is associated with a map which must contain the following
     standard keys-value pairs:
     "source-value", "source-unit", "si-value", "si-unit",
-    "source-std-uncert-value", "source-expand-uncert-value",
+    "source-std-uncert-value", "si-std-uncert-value",
+    "source-expand-uncert-value", "si-expand-uncert-value",
     "coverage-factor", "source-asym-std-uncert-neg",
-    "source-asym-std-uncert-pos", "source-asym-expand-uncert-neg",
-    "source-asym-expand-uncert-pos", "uncert-lev-of-confid", "digits"
+    "si-asym-std-uncert-neg", "source-asym-std-uncert-pos",
+    "si-asym-std-uncert-pos", "source-asym-expand-uncert-neg",
+    "si-asym-expand-uncert-neg", "source-asym-expand-uncert-pos",
+    "si-asym-expand-uncert-pos", "uncert-lev-of-confid", "digits"
 
     Arguments:
         property_instance_map {dict} -- property instance map
