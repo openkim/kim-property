@@ -98,14 +98,14 @@ standard_keys = (
     "si-asym-std-uncert-pos",
     # A float set to the variable U− associated with an expanded
     # uncertainty that is asymmetric about the key value y, with a range
-    # [y − U−,y + U+], expressed in source-unit.
+    # [y − U−, y + U+], expressed in source-unit.
     "source-asym-expand-uncert-neg",
     # The corresponding negative asymmetric expanded uncertainty value
     # expressed in si-unit.
     "si-asym-expand-uncert-neg",
     # A float set to the variable U+ associated with an expanded
     # uncertainty that is asymmetric about the key value y, with a range
-    # [y − U−,y + U+], expressed in source-unit.
+    # [y − U−, y + U+], expressed in source-unit.
     "source-asym-expand-uncert-pos",
     # The corresponding positive asymmetric expanded uncertainty value
     # expressed in si-unit.
