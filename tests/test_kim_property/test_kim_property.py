@@ -1,4 +1,7 @@
+import builtins
+import importlib
 from io import StringIO
+from unittest.mock import patch
 
 import kim_edn
 
@@ -7,6 +10,23 @@ from tests.test_kim_property import PyTest
 
 class TestPropertyModule:
     """Test kim_property utility module components."""
+
+    def test_version_fallback_without_generated_module(self):
+        """Use a fallback version when setuptools-scm output is absent."""
+        original_import = builtins.__import__
+
+        def import_without_generated_version(name, *args, **kwargs):
+            if name == "_version" and kwargs.get("level") == 1:
+                raise ModuleNotFoundError(name="kim_property._version")
+            return original_import(name, *args, **kwargs)
+
+        try:
+            with patch("builtins.__import__",
+                       side_effect=import_without_generated_version):
+                importlib.reload(self.kim_property)
+            self.assertEqual(self.kim_property.__version__, "0+unknown")
+        finally:
+            importlib.reload(self.kim_property)
 
     def test_create(self):
         """Test the create functionality."""
