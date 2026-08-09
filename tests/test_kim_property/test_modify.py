@@ -97,6 +97,98 @@ class ModifyModuleMixin:
                 assert get_nested_value(
                     uncertainty, [1] * dimensions) == 9.0, case
 
+    def test_source_value_type_and_dimension_dispatch(self):
+        """Test source-value ranges for every non-float value type."""
+        property_id = (
+            "tag:test@noreply.openkim.org,2026-08-09:property/"
+            "typed-high-dimensional")
+        type_cases = {
+            "int": ([1, 2], 9, [3, 4]),
+            "bool": ([True, False], True, [True, True]),
+            "string": (["one", "two"], "nine", ["three", "four"]),
+            "file": (
+                ["one.edn", "two.edn"],
+                "nine.edn",
+                ["three.edn", "four.edn"],
+            ),
+        }
+
+        def get_nested_value(values, indices):
+            for index in indices:
+                values = values[index]
+            return values
+
+        for value_type, values in type_cases.items():
+            initial_values, exact_value, updated_values = values
+
+            for dimensions in range(1, 7):
+                properties = {
+                    property_id: {
+                        "property-id": property_id,
+                        "tensor": {
+                            "type": value_type,
+                            "has-unit": False,
+                            "extent": [2] * dimensions,
+                            "required": False,
+                            "description": "Synthetic typed tensor.",
+                        },
+                    },
+                }
+
+                for ranged_axis in range(dimensions):
+                    property_inst = kim_edn.dumps([{
+                        "property-id": property_id,
+                        "instance-id": 1,
+                    }])
+                    ranged_indices = ["1"] * dimensions
+                    ranged_indices[ranged_axis] = "1:2"
+                    exact_indices = ["2"] * dimensions
+
+                    with patch(
+                        "kim_property.modify.get_properties",
+                        return_value=properties):
+                        property_inst = self.kim_property.kim_property_modify(
+                            property_inst, 1,
+                            "key", "tensor", "source-value",
+                            *ranged_indices, *initial_values)
+
+                        tensor = kim_edn.loads(property_inst)[0]["tensor"][
+                            "source-value"]
+                        first_range_index = [0] * dimensions
+                        second_range_index = [0] * dimensions
+                        second_range_index[ranged_axis] = 1
+                        case = (
+                            f"{value_type}, {dimensions}D extent, "
+                            f"range on axis {ranged_axis}")
+                        assert get_nested_value(
+                            tensor, first_range_index) == initial_values[0], case
+                        assert get_nested_value(
+                            tensor, second_range_index) == initial_values[1], case
+
+                        property_inst = self.kim_property.kim_property_modify(
+                            property_inst, 1,
+                            "key", "tensor", "source-value",
+                            *exact_indices, exact_value)
+                        tensor = kim_edn.loads(property_inst)[0]["tensor"][
+                            "source-value"]
+                        assert get_nested_value(
+                            tensor, [1] * dimensions) == exact_value, case
+
+                        property_inst = self.kim_property.kim_property_modify(
+                            property_inst, 1,
+                            "key", "tensor", "source-value",
+                            *ranged_indices, *updated_values)
+
+                    tensor = kim_edn.loads(property_inst)[0]["tensor"][
+                        "source-value"]
+                    assert get_nested_value(
+                        tensor, first_range_index) == updated_values[0], case
+                    assert get_nested_value(
+                        tensor, second_range_index) == updated_values[1], case
+                    if dimensions > 1:
+                        assert get_nested_value(
+                            tensor, [1] * dimensions) == exact_value, case
+
     def test_modify(self):
         """Test the modify functionality."""
         # Create the property instance with the property name
