@@ -3,13 +3,11 @@ coverage:
     patch: false
     project:
       default:
-        threshold: 50%
+        target: auto
+        threshold: 1%
 comment:
   layout: "header"
-  require_changes: false
-  branches: null
   behavior: default
-  flags: null
-  paths: null
+  require_changes: false
 ignore:
   - "kim_property/_version.py"
