@@ -403,6 +403,70 @@ class TestPropertyInstanceModuleComponents:
         self.assertRaises(self.KIMPropertyError, self.kim_property.check_property_instances,
                           pi, fp=fp)
 
+    def test_check_property_instances_multiple_instances(self):
+        """Test validation of multiple property instances."""
+        property_id = (
+            "tag:brunnels@noreply.openkim.org,2016-05-11:property/"
+            "atomic-mass")
+        property_definition = kim_edn.load(
+            join("tests", "fixtures", "atomic-mass.edn"))
+
+        def property_instance(instance_id):
+            return {
+                "property-id": property_id,
+                "instance-id": instance_id,
+                "species": {"source-value": "Ar"},
+                "mass": {
+                    "source-value": 39.948,
+                    "source-unit": "grams/mole",
+                },
+            }
+
+        properties = {property_id: property_definition}
+        instances = [property_instance(1), property_instance(2)]
+
+        self.kim_property.check_property_instances(
+            property_instance(1), fp_path=join("tests", "fixtures"))
+        self.kim_property.check_property_instances(
+            instances, fp_path=properties)
+        self.kim_property.check_property_instances(
+            instances, fp_path=join("tests", "fixtures"))
+
+        self.assertRaises(
+            self.KIMPropertyError,
+            self.kim_property.check_property_instances,
+            property_instance(1),
+            fp_path={})
+
+        duplicate_instances = [property_instance(1), property_instance(1)]
+        self.assertRaises(
+            self.KIMPropertyError,
+            self.kim_property.check_property_instances,
+            duplicate_instances,
+            fp_path=properties)
+
+        self.assertRaises(
+            self.KIMPropertyError,
+            self.kim_property.check_property_instances,
+            instances,
+            fp_path={})
+
+        wrong_definition = kim_edn.load(
+            join(
+                "tests", "fixtures",
+                "cohesive-energy-relation-cubic-crystal.edn"))
+        self.assertRaises(
+            self.KIMPropertyError,
+            self.kim_property.check_property_instances,
+            instances,
+            fp=wrong_definition)
+
+        self.assertRaises(
+            self.KIMPropertyError,
+            self.kim_property.check_property_instances,
+            '"not-a-property-instance"',
+            fp=property_definition)
+
 
 property_instance_names = [
     "RD_000018659700_000_data.edn",

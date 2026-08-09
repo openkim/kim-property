@@ -180,6 +180,9 @@ class TestNumericComponents:
         for a in MULTIDIMENSION_ARRAYS_NONUNIFORM:
             self.assertFalse(is_array_uniform(a))
 
+        self.assertFalse(is_array_uniform([1, "1"]))
+        self.assertEqual(shape([1, "1"]), [2])
+
     def test_create_full_array(self):
         """Test the create_full_array function."""
         a1 = create_full_array([2, 3], 1)

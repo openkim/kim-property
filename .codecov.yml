@@ -4,7 +4,7 @@ coverage:
     project:
       default:
         target: auto
-        threshold: 12%
+        threshold: 1%
 comment:
   layout: "header"
   behavior: default

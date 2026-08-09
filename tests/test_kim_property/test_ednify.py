@@ -2,6 +2,7 @@ from os.path import abspath, join, isdir
 from os import rename, makedirs
 from shutil import rmtree, copy
 from io import BytesIO, StringIO
+from unittest.mock import patch
 
 import kim_edn
 
@@ -72,6 +73,35 @@ class TestEdnify:
         msg = 'a bytes-like object is required.*'
         self.assertRaisesRegex(
             TypeError, msg, ednify_kim_properties, PROPERTIES, bio)
+
+    def test_ednify_kim_properties_invalid_properties(self):
+        """Reject invalid explicitly provided property collections."""
+        self.assertRaises(
+            self.KIMPropertyError, ednify_kim_properties, [], StringIO())
+        self.assertRaises(
+            self.KIMPropertyError, ednify_kim_properties, {}, StringIO())
+
+    def test_ednify_kim_properties_missing_discovered_file(self):
+        """Reject a discovered property version without its EDN file."""
+        with patch("kim_property.ednify.isdir", return_value=True), \
+                patch("kim_property.ednify.listdir",
+                      side_effect=[[NAME1], [f'{DATE1}-{EMAIL1}']]), \
+                patch("kim_property.ednify.isfile", return_value=False):
+            self.assertRaises(
+                self.KIMPropertyError, ednify_kim_properties,
+                fp=StringIO())
+
+    def test_ednify_kim_properties_mismatched_discovered_path(self):
+        """Reject a property ID inconsistent with its discovered path."""
+        with patch("kim_property.ednify.isdir", return_value=True), \
+                patch("kim_property.ednify.listdir",
+                      side_effect=[[NAME2], [f'{DATE1}-{EMAIL1}']]), \
+                patch("kim_property.ednify.isfile", return_value=True), \
+                patch("kim_property.ednify.kim_edn.load",
+                      return_value=PROPERTIES[ID1]):
+            self.assertRaises(
+                self.KIMPropertyError, ednify_kim_properties,
+                fp=StringIO())
 
     def test_unednify_kim_properties(self):
         """Test unednifying the KIM properties."""
