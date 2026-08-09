@@ -1,5 +1,6 @@
 import importlib
 from io import StringIO
+from os.path import abspath
 from unittest.mock import patch
 
 import kim_edn
@@ -9,6 +10,14 @@ from tests.test_kim_property import PyTest
 
 class TestPropertyModule:
     """Test kim_property utility module components."""
+
+    def test_error_string(self):
+        """Return the formatted KIM property error message."""
+        error = self.KIMPropertyError("test message")
+        self.assertEqual(str(error), error.msg)
+        self.assertEqual(
+            error.__reduce__(),
+            (self.KIMPropertyError, (error.msg,)))
 
     def test_version_fallback_without_generated_module(self):
         """Use a fallback version when setuptools-scm output is absent."""
@@ -488,6 +497,10 @@ class TestPropertyModule:
         self.kim_property.kim_property_dump(str_obj, sio, indent=0)
 
         self.assertTrue(sio.getvalue() == out_str)
+
+        self.kim_property.kim_property_dump(
+            str_obj, StringIO(), indent=0,
+            fp_path=abspath("tests/fixtures"))
 
         # Fail to create a file to dump the property
         self.assertRaises(self.KIMPropertyError,
