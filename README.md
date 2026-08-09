@@ -820,6 +820,20 @@ Depending on your configuration, you may have to run `pip` like this:
 python3 -m pip install kim-property
 ```
 
+### Using uv
+
+To add `kim-property` as a dependency of a project managed by `uv`:
+
+```sh
+uv add kim-property
+```
+
+To install `kim-property` into an existing virtual environment:
+
+```sh
+uv pip install kim-property
+```
+
 ### Using pip (GIT Support)
 
 `pip` currently supports cloning over `git`
