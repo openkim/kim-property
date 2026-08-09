@@ -55,8 +55,6 @@ def unset_property_id(property_id):
 
     """
     global NEW_PROPERTY_IDS
-    global PROPERTY_NAME_TO_PROPERTY_ID
-    global PROPERTY_ID_TO_PROPERTY_NAME
 
     if NEW_PROPERTY_IDS is not None:
         if property_id in NEW_PROPERTY_IDS:
@@ -125,9 +123,6 @@ def kim_property_create(
         string -- serialized KIM-EDN formatted property instances.
 
     """  # noqa: E501
-    global KIM_PROPERTIES
-    global PROPERTY_NAME_TO_PROPERTY_ID
-    global PROPERTY_ID_TO_PROPERTY_NAME
     global NEW_PROPERTY_IDS
 
     if not isinstance(instance_id, int):

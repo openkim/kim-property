@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "versioneer[toml]==0.29", "kim-edn>1.4.0"]
+requires = ["setuptools>=80", "setuptools-scm>=9.2"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -9,7 +9,7 @@ authors = [{ name = "Yaser Afshar", email = "ya.afshar@gmail.com" }]
 maintainers = [{ name = "Yaser Afshar", email = "ya.afshar@gmail.com" }]
 description = "kim-property - KIM-PROPERTY utility module."
 readme = { file = "README.md", content-type = "text/markdown" }
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Science/Research",
@@ -17,6 +17,11 @@ classifiers = [
     "Operating System :: OS Independent",
     "License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
 dynamic = [ "version" ]
 keywords = [ "kim-property" ]
@@ -28,13 +33,11 @@ Issues = "https://github.com/openkim/kim-property/issues"
 [tool.setuptools.packages.find]
 include = [ "kim_property*" ]
 
-[tool.setuptools.dynamic]
-version = { attr = "kim_property.__version__" }
+[tool.setuptools_scm]
+version_file = "kim_property/_version.py"
+write_to_source = true
+parentdir_prefix_version = "kim_property-"
 
-[tool.versioneer]
-VCS = "git"
-style = "pep440"
-versionfile_source = "kim_property/_version.py"
-versionfile_build = "kim_property/_version.py"
-tag_prefix = "v"
-parentdir_prefix = "kim_property-"
+[tool.setuptools_scm.tag]
+prefix = "v"
+strict = true

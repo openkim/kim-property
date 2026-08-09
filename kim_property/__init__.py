@@ -431,5 +431,7 @@ __all__ = [
 
 __author__ = 'Yaser Afshar <yafshar@umn.edu>'
 
-from . import _version  # noqa: E402
-__version__ = _version.get_versions()['version']
+try:
+    from ._version import version as __version__  # noqa: E402
+except ModuleNotFoundError:
+    __version__ = '0+unknown'

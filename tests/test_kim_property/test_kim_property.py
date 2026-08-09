@@ -1,4 +1,6 @@
+import importlib
 from io import StringIO
+from unittest.mock import patch
 
 import kim_edn
 
@@ -7,6 +9,15 @@ from tests.test_kim_property import PyTest
 
 class TestPropertyModule:
     """Test kim_property utility module components."""
+
+    def test_version_fallback_without_generated_module(self):
+        """Use a fallback version when setuptools-scm output is absent."""
+        try:
+            with patch.dict("sys.modules", {"kim_property._version": None}):
+                importlib.reload(self.kim_property)
+            self.assertEqual(self.kim_property.__version__, "0+unknown")
+        finally:
+            importlib.reload(self.kim_property)
 
     def test_create(self):
         """Test the create functionality."""
